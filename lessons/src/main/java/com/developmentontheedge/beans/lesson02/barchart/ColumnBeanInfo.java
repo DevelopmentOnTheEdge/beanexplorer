@@ -1,0 +1,39 @@
+package com.developmentontheedge.beans.lesson02.barchart;
+
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+
+import com.developmentontheedge.beans.BeanInfoEx;
+import com.developmentontheedge.beans.IndexedPropertyDescriptorEx;
+import com.developmentontheedge.beans.PropertyDescriptorEx;
+
+public class ColumnBeanInfo extends BeanInfoEx
+{
+    public ColumnBeanInfo()
+    {
+        super( Column.class, new ColumnMessageBundle().getClass().getName() );
+        beanDescriptor.setDisplayName( getResourceString("CN_CLASS") );
+        beanDescriptor.setShortDescription( getResourceString("CD_CLASS") );
+    }
+
+    public void initProperties() throws Exception
+    {
+        PropertyDescriptorEx pde;
+
+        pde = new PropertyDescriptorEx("label",beanClass);
+        pde.setBound(true);
+        add( pde,getResourceString("PN_LABEL"),getResourceString( "PD_LABEL") );
+
+        pde = new PropertyDescriptorEx("value",beanClass);
+        pde.setBound(true);
+        add( pde,getResourceString("PN_VALUE"),getResourceString( "PD_VALUE") );
+
+        pde = new PropertyDescriptorEx("color",beanClass);
+        pde.setBound(true);
+        add( pde,getResourceString("PN_COLOR"),getResourceString( "PD_COLOR") );
+
+        pde = new PropertyDescriptorEx("visible",beanClass);
+        pde.setBound(true);
+        add( pde,getResourceString("PN_VISIBLE"),getResourceString( "PD_VISIBLE") );
+    }
+}
