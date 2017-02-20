@@ -32,7 +32,7 @@ public class BeanTableModelAdapter extends AbstractTableModel implements RowMode
             {
                 for( int i = rm.size() - 1; i >= 0; i-- )
                 {
-                    ComponentModel model = ComponentFactory.getModel( rm.getBean( i ) );
+                    ComponentModel model = ComponentFactory.getModel( rm.getBean(i), ComponentFactory.Policy.UI );
                     model.addPropertyChangeListener( (PropertyChangeListener)rm );
                 }
             }
@@ -52,7 +52,7 @@ public class BeanTableModelAdapter extends AbstractTableModel implements RowMode
             {
                 for( int i = rm.size() - 1; i >= 0; i-- )
                 {
-                    ComponentModel model = ComponentFactory.getModel( rm.getBean( i ) );
+                    ComponentModel model = ComponentFactory.getModel( rm.getBean(i), ComponentFactory.Policy.UI );
                     model.removePropertyChangeListener( (PropertyChangeListener)rm );
                 }
             }
@@ -226,7 +226,7 @@ public class BeanTableModelAdapter extends AbstractTableModel implements RowMode
             {
                 RowHeaderBean rowHeaderBean = new RowHeaderBean();
                 rowHeaderBean.setNumber( row + 1 );
-                ComponentModel rowHeaderModel = ComponentFactory.getModel( rowHeaderBean );
+                ComponentModel rowHeaderModel = ComponentFactory.getModel( rowHeaderBean, ComponentFactory.Policy.UI );
                 return rowHeaderModel.findProperty( "number" );
             }
 
@@ -241,7 +241,7 @@ public class BeanTableModelAdapter extends AbstractTableModel implements RowMode
             {
                 throw new ArrayIndexOutOfBoundsException( "Bean for row " + row + " not found." );
             }
-            Property property = ComponentFactory.getModel( bean ).findProperty( propertyName );
+            Property property = ComponentFactory.getModel( bean, ComponentFactory.Policy.UI ).findProperty( propertyName );
             //            Property property = componentModel.findProperty(propertyName);
             //Logger.debug( cat,"property = " + property + "; value = " +
             //(property == null ? "null" : property.getValue()) + " Model=" + beanModel );

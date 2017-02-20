@@ -36,6 +36,12 @@ public class CompositeProperty extends Property
     // This flag is aimed to prevent this
     private boolean propertiesInitializing = false;
 
+    protected ComponentFactory.Policy policy;
+    public ComponentFactory.Policy getPolicy()
+    {
+        return policy;
+    }
+
     // //////////////////////////////////////
     // Constructor
     //
@@ -45,11 +51,13 @@ public class CompositeProperty extends Property
      * <p>
      * In general, this function should be called by ComponentFactory only.
      */
-    protected CompositeProperty(Property parent, Object owner, PropertyDescriptor descriptor, BeanInfo beanInfo)
+    protected CompositeProperty(Property parent, Object owner, PropertyDescriptor descriptor, BeanInfo beanInfo, ComponentFactory.Policy policy)
     {
         super( parent, owner, descriptor );
         this.bean = owner;
         this.beanInfo = beanInfo;
+        this.policy = policy;
+
         setExpanded( false );
 
         propertiesInitialized = false;
@@ -89,12 +97,12 @@ public class CompositeProperty extends Property
                                 value = defValue;
                         }
                     }
-                    ComponentFactory.createProperties( value, getValueClass(), beanInfo, this, properties );
+                    ComponentFactory.createProperties( value, getValueClass(), beanInfo, this, properties, policy );
                 }
                 else
                 {
                     // we are called for bean itself
-                    ComponentFactory.createProperties( bean, bean.getClass(), beanInfo, this, properties );
+                    ComponentFactory.createProperties( bean, bean.getClass(), beanInfo, this, properties, policy );
                 }
             }
             catch( Exception e )
@@ -146,6 +154,8 @@ public class CompositeProperty extends Property
     // //////////////////////////////////////
     // utilites
     //
+
+    
     @Override
     public int getPropertyCount()
     {

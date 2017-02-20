@@ -14,6 +14,7 @@ public class ComponentModel extends CompositeProperty
 {
     /** Property used to display component name. */
     protected Property displayNameProperty;
+
     ////////////////////////////////////////
     // Constructor
     //
@@ -22,11 +23,11 @@ public class ComponentModel extends CompositeProperty
      * Creates new ComponentModel for the specified component.
      * <p> In general, this function should be called by ComponentFactory only.
      */
-    protected ComponentModel(Object comp, BeanInfo beanInfo)
+    protected ComponentModel(Object comp, BeanInfo beanInfo, ComponentFactory.Policy policy)
     {
         super(null, comp, 
               ComponentFactory.merge( beanInfo.getBeanDescriptor(), null, false ), 
-              beanInfo);
+              beanInfo, policy);
         setExpanded(true);
     }
 

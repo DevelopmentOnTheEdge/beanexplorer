@@ -281,11 +281,6 @@ AbstractPropertyInspector, Transactable
      */
     public void explore( Object bean )
     {
-        //$check_register_message_box$
-        //$check_trial_dialog$
-        //$check_integrity_dialog$
-        //$check_regtrial_dialog$
-
         if ( bean == null )
         {
             if ( treeTable != null )
@@ -302,7 +297,7 @@ AbstractPropertyInspector, Transactable
         }
 
         this.bean = bean;
-        ComponentModel mdl = ComponentFactory.getModel( bean );
+        ComponentModel mdl = ComponentFactory.getModel( bean, ComponentFactory.Policy.UI );
         setComponentModel( mdl );
     }
 
@@ -313,10 +308,6 @@ AbstractPropertyInspector, Transactable
      */
     public void explore( Object bean, String[] filter )
     {
-        //$check_register_message_box$
-        //$check_trial_dialog$
-        //$check_integrity_dialog$
-        //$check_regtrial_dialog$
         if ( bean == null )
         {
             if ( treeTable != null )
@@ -328,7 +319,7 @@ AbstractPropertyInspector, Transactable
         }
 
         this.bean = bean;
-        ComponentModel mdl = ComponentFactory.getModel( bean );
+        ComponentModel mdl = ComponentFactory.getModel( bean, ComponentFactory.Policy.UI );
         ComponentModel fmdl = ComponentFactory.filterComponentModel( mdl, filter );
         setComponentModel( fmdl );
 

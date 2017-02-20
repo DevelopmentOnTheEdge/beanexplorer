@@ -115,7 +115,7 @@ public class HtmlPropertyInspector extends HtmlPane
         {
             try
             {
-                model = ComponentFactory.getModel(bean, true);
+                model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT, true);
                 Method method = getHtmlGeneratorMethod(model.getDescriptor());
                 if( method != null )    
                     result = (String)method.invoke(bean, ( Object[] )null); 

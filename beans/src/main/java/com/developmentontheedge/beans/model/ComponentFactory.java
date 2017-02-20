@@ -68,6 +68,40 @@ public class ComponentFactory implements InternalConstants
     }
 
     /**
+     * Specify policy how to create component model.
+     * Added for compatibility issues.
+     */
+    public static class Policy
+    {
+        public static final Policy DEFAULT = new Policy(false, false);
+        public static final Policy UI      = new Policy(true,  true);
+
+        public Policy()
+        {
+            this(false, false);
+        }
+
+        public Policy(boolean addPropertyChangeListeners, boolean skipClassProperty)
+        {
+            this.addPropertyChangeListeners = addPropertyChangeListeners;
+            this.skipClassProperty = skipClassProperty;
+        }
+
+        private boolean addPropertyChangeListeners;
+        public boolean getAddPropertyChangeListeners()
+        {
+            return addPropertyChangeListeners;
+        }
+        
+        private boolean skipClassProperty;
+        public boolean getSkipClassProperty()
+        {
+            return skipClassProperty;
+        }
+    }
+
+
+    /**
      * Initialize a vector of properties for the specified object instance (<code>owner</code>)
      * or object class (<code>c</code>).
      * @param owner the properties owner. If null, then new instance of the
@@ -91,7 +125,7 @@ public class ComponentFactory implements InternalConstants
      * Currently we cath all <code>Throwable</code> exceptions and log it
      * in log4j.DEBUG category.
      */
-    protected static void createProperties(Object owner, Class<?> c, BeanInfo info, Property parent, Vector<Property> vProperties)
+    protected static void createProperties(Object owner, Class<?> c, BeanInfo info, Property parent, Vector<Property> vProperties, Policy policy)
     {
         if( owner instanceof Property.PropWrapper )
             owner = ( (Property.PropWrapper)owner ).getOwner();
@@ -140,12 +174,14 @@ public class ComponentFactory implements InternalConstants
                     DynamicProperty dynamicProperty = iterator.next();
                     if( dynamicProperty != null )
                     {
-                        Property p = createProperty( dynamicProperty.getType(), owner, dynamicProperty.getDescriptor(), parent );
-                        if( p != null /* && !p.getName().equals( "class" ) */)
+                        Property p = createProperty( dynamicProperty.getType(), owner, dynamicProperty.getDescriptor(), parent, policy );
+                        
+                        if( p != null && !(policy.getSkipClassProperty() && p.getName().equals("class")) )
                         {
                             vProperties.addElement( p );
-                            // commented out since it is now initialized lazily
-                            // p.addPropertyChangeListener( parent );
+
+                            if( policy.getAddPropertyChangeListeners() )
+                                p.addPropertyChangeListener( parent );
                         }
                     }
                     else
@@ -168,12 +204,14 @@ public class ComponentFactory implements InternalConstants
                 {
                     descr = properties[i];
                     propType = derivePropertyType( owner, descr );
-                    p = createProperty( propType, owner, descr, parent );
-                    if( p != null /* && !p.getName().equals( "class" ) */)
+                    p = createProperty( propType, owner, descr, parent, policy );
+
+                    if( p != null && !(policy.getSkipClassProperty() && p.getName().equals("class")) )
                     {
                         vProperties.addElement( p );
-                        // commented out since it is now initialized lazily
-                        // p.addPropertyChangeListener( parent );
+
+                        if( policy.getAddPropertyChangeListeners() )
+                            p.addPropertyChangeListener( parent );
                     }
                 }
             }
@@ -194,7 +232,7 @@ public class ComponentFactory implements InternalConstants
      * and rebuild its model if the type is changed.
      * @todo medium comments and docs
      */
-    protected static Property createProperty(Class<?> type, Object owner, PropertyDescriptor descriptor, Property parent)
+    protected static Property createProperty(Class<?> type, Object owner, PropertyDescriptor descriptor, Property parent, Policy policy)
             throws IntrospectionException
     {
         Method readMethod = descriptor.getReadMethod();
@@ -235,7 +273,7 @@ public class ComponentFactory implements InternalConstants
 
         if( descriptor instanceof IndexedPropertyDescriptor || ( type.isArray() && !byte[].class.equals( type ) ) ) // byte[].class actually is String
         {
-            ArrayProperty arrayProperty = new ArrayProperty( parent, owner, descriptor );
+            ArrayProperty arrayProperty = new ArrayProperty( parent, owner, descriptor, policy );
             Object itemPrototype = descriptor.getValue( "item-prototype" );//TODO: move constant to other place, I don't know where.
             if( itemPrototype != null )
             {
@@ -295,7 +333,7 @@ public class ComponentFactory implements InternalConstants
         // define whether the property is DynamicPropertySet
         if( DynamicPropertySet.class.isAssignableFrom( type ) )
         {
-            return new DynamicSetProperty( parent, owner, descriptor, typeBeanInfo );
+            return new DynamicSetProperty( parent, owner, descriptor, typeBeanInfo, policy );
         }
 
         // supress recursion
@@ -312,7 +350,7 @@ public class ComponentFactory implements InternalConstants
             }
         }
 
-        return new CompositeProperty( parent, owner, descriptor, typeBeanInfo );
+        return new CompositeProperty( parent, owner, descriptor, typeBeanInfo, policy );
     }
 
     /**
@@ -416,17 +454,13 @@ public class ComponentFactory implements InternalConstants
     /**
      * @todo trial check commented
      */
-    private static ComponentModel createComponentModel(Object comp)
+    private static ComponentModel createComponentModel(Object comp, Policy policy)
     {
-        //$check_register_message_box$
-        //$check_trial_dialog$
-        //$check_regtrial_dialog$
-
         try
         {
             Class<?> c = comp.getClass();
             BeanInfo beanInfo = Introspector.getBeanInfo( c );
-            ComponentModel model = new ComponentModel( comp, beanInfo );
+            ComponentModel model = new ComponentModel( comp, beanInfo, policy );
             return model;
         }
         catch( Exception e )
@@ -464,17 +498,12 @@ public class ComponentFactory implements InternalConstants
      */
     public static ComponentModel filterComponentModel(ComponentModel origin, String[] filter)
     {
-        //$check_register_message_box$
-        //$check_trial_dialog$
-        //$check_regtrial_dialog$
-
-
         if( filter == null )
         {
             return origin;
         }
         // constructor without setting the presentation peer
-        ComponentModel filtered = new ComponentModel( origin.getBean(), origin.getBeanInfo() );
+        ComponentModel filtered = new ComponentModel( origin.getBean(), origin.getBeanInfo(), origin.getPolicy() );
         filtered.properties = new Vector<>();
 
         Property property;
@@ -503,14 +532,10 @@ public class ComponentFactory implements InternalConstants
     /** filter passed model excluding properties of the superclass */
     public static ComponentModel filterByRemovingParentProperties(ComponentModel origin)
     {
-        //$check_register_message_box$
-        //$check_trial_dialog$
-        //$check_regtrial_dialog$
-
         try
         {
             // constructor without setting the presentation peer
-            ComponentModel filtered = new ComponentModel( origin.getBean(), origin.getBeanInfo() );
+            ComponentModel filtered = new ComponentModel( origin.getBean(), origin.getBeanInfo(), origin.getPolicy() );
             filtered.properties = new Vector<>();
 
             BeanInfo parentBeanInfo = Introspector.getBeanInfo( origin.getBean().getClass().getSuperclass() );
@@ -697,17 +722,17 @@ public class ComponentFactory implements InternalConstants
     }
 
     /** Return ComponentModel instance for class with the specified name. */
-    public static ComponentModel getModel(String aName)
+    public static ComponentModel getModel(String aName, Policy policy)
     {
         Class<?> clazz = forName( aName );
-        return getModel( clazz );
+        return getModel( clazz, policy );
     }
 
-    public static ComponentModel getModel(Class<?> c)
+    public static ComponentModel getModel(Class<?> c, Policy policy)
     {
         try
         {
-            return getModel( c.newInstance() );
+            return getModel(c.newInstance(), policy);
         }
         catch( Exception e )
         {
@@ -716,12 +741,12 @@ public class ComponentFactory implements InternalConstants
         return null;
     }
 
-    public static ComponentModel getModel(Object bean) // throws NoSuchMethodException
+    public static ComponentModel getModel(Object bean, Policy policy) // throws NoSuchMethodException
     {
-        return getModel( bean, false );
+        return getModel( bean, policy, false );
     }
 
-    public static ComponentModel getModel(Object bean, boolean bIgnoreCache) // throws NoSuchMethodException
+    public static ComponentModel getModel(Object bean, Policy policy, boolean bIgnoreCache) // throws NoSuchMethodException
     {
         // if component model itself is supplied
         // just use it itself
@@ -733,7 +758,7 @@ public class ComponentFactory implements InternalConstants
             model = getFromComponentCache( bean );
         if( model == null )
         {
-            model = createComponentModel( bean );
+            model = createComponentModel( bean, policy );
             if( model != null && !bIgnoreCache )
             {
                 putIntoComponentCache( bean, model );
@@ -893,7 +918,7 @@ public class ComponentFactory implements InternalConstants
         if( property.properties != null )
             property.properties.removeAllElements();
 
-        createProperties( property.getValue(), property.getBean().getClass(), property.getBeanInfo(), property, property.properties );
+        createProperties( property.getValue(), property.getBean().getClass(), property.getBeanInfo(), property, property.properties, property.getPolicy() );
         ///*
         if( property instanceof ComponentModel && ( (ComponentModel)property ).hasPropertiesToRemove() )
         {

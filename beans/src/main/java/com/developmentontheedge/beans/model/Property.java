@@ -737,7 +737,7 @@ abstract public class Property implements PropertyChangeListener
             Class<?> ejbClass = Class.forName("javax.ejb.EJBObject");
             if(ejbClass.isAssignableFrom(ownerClass) && !bComponentFiresPropertyEventsItself)
             {
-                Property model = ComponentFactory.getModel(owner);
+                Property model = ComponentFactory.getModel(owner, ComponentFactory.Policy.DEFAULT);
                 if(model != null)
                 {
                     model.firePropertyChange(new PropertyChangeEvent(evt.getSource(), "*", null, null));

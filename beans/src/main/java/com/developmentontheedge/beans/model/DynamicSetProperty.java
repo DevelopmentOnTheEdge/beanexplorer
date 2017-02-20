@@ -7,9 +7,9 @@ import java.beans.PropertyDescriptor;
 public class DynamicSetProperty extends CompositeProperty 
 {
     protected DynamicSetProperty(Property parent, Object owner,
-                                 PropertyDescriptor descriptor, BeanInfo beanInfo)
+                                 PropertyDescriptor descriptor, BeanInfo beanInfo, ComponentFactory.Policy policy)
     {
-        super(parent, owner, descriptor, beanInfo);
+        super(parent, owner, descriptor, beanInfo, policy);
     }
 
     /**

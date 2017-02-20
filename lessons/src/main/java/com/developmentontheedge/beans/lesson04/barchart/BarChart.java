@@ -68,7 +68,7 @@ public class BarChart extends JComponent implements PropertyChangeListener
 /*->*/  firePropertyChange("title" + EventConstants.EVT_DISPLAY_NAME, null, null);
         update();
     }
-
+    
     private Column[] columns;
     public Column [] getColumns()
     {

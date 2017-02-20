@@ -88,7 +88,7 @@ public class HtmlBeanGenerator
         if( bean == null )
             return;
 
-        ComponentModel model = ComponentFactory.getModel(bean, true);
+        ComponentModel model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT, true);
         generate(model, out);
     }
 

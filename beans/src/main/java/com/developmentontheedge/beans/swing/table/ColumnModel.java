@@ -48,7 +48,7 @@ public class ColumnModel extends Option implements PropertyChangeListener
      */
     public ColumnModel( Object templateBean, int showMode )
     {
-        this( ComponentFactory.getModel( templateBean ), showMode );
+        this( ComponentFactory.getModel( templateBean, ComponentFactory.Policy.UI ), showMode );
     }
 
     /**
@@ -59,7 +59,7 @@ public class ColumnModel extends Option implements PropertyChangeListener
      */
     public ColumnModel( Class<?> templateBeanClass, int showMode )
     {
-        this( ComponentFactory.getModel( templateBeanClass ), showMode );
+        this( ComponentFactory.getModel( templateBeanClass, ComponentFactory.Policy.UI ), showMode );
     }
 
     /**
@@ -68,7 +68,7 @@ public class ColumnModel extends Option implements PropertyChangeListener
      */
     public ColumnModel( Object templateBean )
     {
-        this( ComponentFactory.getModel( templateBean ) );
+        this( ComponentFactory.getModel( templateBean, ComponentFactory.Policy.UI ) );
     }
 
 

@@ -19,7 +19,6 @@ import com.developmentontheedge.beans.log.Logger;
 
 /**
  * ... PENDING: - array element display name
- * @author Fedor A. Kolpakov
  */
 public class ArrayProperty extends Property implements IndexedPropertyConstants
 {
@@ -42,14 +41,22 @@ public class ArrayProperty extends Property implements IndexedPropertyConstants
     /** Prototype for creating new array items. For example, DynamicPropertySet object with set of properties.*/
     protected Object itemPrototype; 
     
+    protected ComponentFactory.Policy policy;
+    public ComponentFactory.Policy getPolicy()
+    {
+        return policy;
+    }
+
     /**
      * Creates a new ArrayProperty. In general, this function should be called by ComponentFactory
      */
-    protected ArrayProperty( Property parent, Object theOwner, PropertyDescriptor theDescriptor )
+    protected ArrayProperty( Property parent, Object theOwner, PropertyDescriptor theDescriptor, ComponentFactory.Policy policy)
     {
         super( parent, theOwner, theDescriptor );
         // from now on we shouldn't use 'theDescriptor' value
         // since it can be replaced by wrapper
+
+        this.policy = policy;
 
         try
         {
@@ -161,7 +168,7 @@ public class ArrayProperty extends Property implements IndexedPropertyConstants
              pd = new ValuePropertyDescriptor( newItemInfo, this, index );
              type = realType;
          }
-         Property p = ComponentFactory.createProperty( type, owner, pd, this );
+         Property p = ComponentFactory.createProperty( type, owner, pd, this, policy );
          if( p != null ) { itemProperties.addElement( p ); }
     }
 

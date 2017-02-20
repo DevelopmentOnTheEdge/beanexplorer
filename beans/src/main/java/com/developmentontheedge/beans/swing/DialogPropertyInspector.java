@@ -50,7 +50,7 @@ AbstractPropertyInspector
     private static final Dimension zeroDimension = new Dimension( 0, 0 );
     private static final JTable dummyTable = new JTable();
 
-    private final static int MAX_RECURSION = 3;
+    private static final int MAX_RECURSION = 3;
 
     private JComponent contents = null; // test variable
 
@@ -625,7 +625,7 @@ AbstractPropertyInspector
      */
     public void explore( Object bean )
     {
-        ComponentModel mdl = ComponentFactory.getModel( bean );
+        ComponentModel mdl = ComponentFactory.getModel( bean, ComponentFactory.Policy.UI );
         setComponentModel( mdl );
     }
 
@@ -635,7 +635,7 @@ AbstractPropertyInspector
      */
     public void explore( Class<?> beanClass )
     {
-        setComponentModel( beanClass==null?null:ComponentFactory.getModel( beanClass ) );
+        setComponentModel( beanClass == null ? null : ComponentFactory.getModel(beanClass, ComponentFactory.Policy.UI) );
     }
 
     /**

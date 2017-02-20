@@ -43,7 +43,7 @@ public class SortedBeanTableModelAdapter extends BeanTableModelAdapter implement
         {
             RowHeaderBean rowHeaderBean = new RowHeaderBean();
             rowHeaderBean.setNumber( row );
-            ComponentModel rowHeaderModel = ComponentFactory.getModel( rowHeaderBean );
+            ComponentModel rowHeaderModel = ComponentFactory.getModel( rowHeaderBean, ComponentFactory.Policy.UI );
             property = rowHeaderModel.findProperty( "number" );
         }
         else

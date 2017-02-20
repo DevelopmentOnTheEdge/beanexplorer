@@ -100,7 +100,7 @@ public class DefaultRowModel extends AbstractRowModel implements PropertyChangeL
      */
     protected void addListener( Object bean )
     {
-        ComponentModel model = ComponentFactory.getModel( bean );
+        ComponentModel model = ComponentFactory.getModel( bean, ComponentFactory.Policy.UI );
         if ( model != null )
         {
             model.addPropertyChangeListener( this );
@@ -114,7 +114,7 @@ public class DefaultRowModel extends AbstractRowModel implements PropertyChangeL
      */
     protected void removeListener( Object bean )
     {
-        ComponentModel model = ComponentFactory.getModel( bean );
+        ComponentModel model = ComponentFactory.getModel( bean, ComponentFactory.Policy.UI );
         if ( model != null )
         {
             model.removePropertyChangeListener( this );

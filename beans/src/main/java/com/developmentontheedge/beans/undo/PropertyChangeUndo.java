@@ -78,7 +78,7 @@ public class PropertyChangeUndo extends AbstractUndoableEdit
     public Property getProperty()
     {
         Object source = pce.getSource();
-        ComponentModel model = ComponentFactory.getModel(source, true);
+        ComponentModel model = ComponentFactory.getModel(source, ComponentFactory.Policy.UI, true);
         String name = pce.getPropertyName();
         return model.findProperty(name);
     }

@@ -35,8 +35,8 @@ public class Beans
     {
         if( src == null || dst == null )
             return;
-        ComponentModel srcModel = ComponentFactory.getModel( src );
-        ComponentModel dstModel = ComponentFactory.getModel( dst );
+        ComponentModel srcModel = ComponentFactory.getModel( src, ComponentFactory.Policy.DEFAULT );
+        ComponentModel dstModel = ComponentFactory.getModel( dst, ComponentFactory.Policy.DEFAULT );
         for( int i = 0; i < srcModel.getPropertyCount(); i++ )
         {
             Property srcProperty = srcModel.getPropertyAt( i );
@@ -261,7 +261,7 @@ public class Beans
                     accessor = classAccessors.get( component );
                     if( accessor == null )
                     {
-                        ComponentModel model = ComponentFactory.getModel( bean );
+                        ComponentModel model = ComponentFactory.getModel( bean, ComponentFactory.Policy.DEFAULT );
                         Property property = model.findProperty( component );
                         if( property == null )
                         {
