@@ -1,4 +1,4 @@
-package com.developmentontheedge.beans.lesson01.barchart;
+package com.developmentontheedge.beans.lesson03.barchart;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;

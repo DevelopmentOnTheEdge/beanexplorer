@@ -11,7 +11,7 @@ public class ColumnBeanInfo extends BeanInfoEx
 {
     public ColumnBeanInfo()
     {
-        super( Column.class, new ColumnMessageBundle().getClass().getName() );
+        super( Column.class, ColumnMessageBundle.class.getName() );
         beanDescriptor.setDisplayName( getResourceString("CN_CLASS") );
         beanDescriptor.setShortDescription( getResourceString("CD_CLASS") );
     }
@@ -20,20 +20,16 @@ public class ColumnBeanInfo extends BeanInfoEx
     {
         PropertyDescriptorEx pde;
 
-        pde = new PropertyDescriptorEx("label",beanClass);
-        pde.setBound(true);
-        add( pde,getResourceString("PN_LABEL"),getResourceString( "PD_LABEL") );
+        pde = new PropertyDescriptorEx("label", beanClass);
+        add(pde, getResourceString("PN_LABEL"), getResourceString("PD_LABEL") );
 
-        pde = new PropertyDescriptorEx("value",beanClass);
-        pde.setBound(true);
-        add( pde,getResourceString("PN_VALUE"),getResourceString( "PD_VALUE") );
+        pde = new PropertyDescriptorEx("value", beanClass);
+        add(pde, getResourceString("PN_VALUE"), getResourceString("PD_VALUE") );
 
-        pde = new PropertyDescriptorEx("color",beanClass);
-        pde.setBound(true);
-        add( pde,getResourceString("PN_COLOR"),getResourceString( "PD_COLOR") );
+        pde = new PropertyDescriptorEx("color", beanClass);
+        add(pde, getResourceString("PN_COLOR"), getResourceString("PD_COLOR") );
 
-        pde = new PropertyDescriptorEx("visible",beanClass);
-        pde.setBound(true);
-        add( pde,getResourceString("PN_VISIBLE"),getResourceString( "PD_VISIBLE") );
+        pde = new PropertyDescriptorEx("visible", beanClass);
+        add(pde, getResourceString("PN_VISIBLE"), getResourceString("PD_VISIBLE") );
     }
 }
