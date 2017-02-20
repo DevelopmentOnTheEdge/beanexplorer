@@ -2,20 +2,21 @@
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
 
- <artifactId>beans</artifactId>
+ <artifactId>beans-lessons</artifactId>
  <version>3.0.1</version>
  <packaging>jar</packaging>
 
- <name>BeanExplorer</name>
- <description>BeanExplorer (Basic version)</description>
+ <name>BeanExplorer lessons</name>
+ <description>Lessons on usage of BeanExplorer</description>
 
  <groupId>com.developmentontheedge</groupId>
 
- <properties>
-  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
- </properties>
-
  <dependencies>
+  <dependency>
+   <groupId>com.developmentontheedge</groupId>
+   <artifactId>beans</artifactId>
+   <version>3.0.1</version>
+  </dependency>
  </dependencies>
 
  <build>
@@ -30,6 +31,22 @@
       <id>attach-sources</id>
       <goals>
        <goal>jar-no-fork</goal>
+      </goals>
+     </execution>
+    </executions>
+   </plugin>
+
+   <plugin>
+    <groupId>org.apache.felix</groupId>
+    <artifactId>maven-bundle-plugin</artifactId>
+    <version>2.4.0</version>
+    <extensions>true</extensions>
+    <executions>
+     <execution>
+      <id>bundle-manifest</id>
+      <phase>process-classes</phase>
+      <goals>
+       <goal>manifest</goal>
       </goals>
      </execution>
     </executions>
@@ -58,7 +75,8 @@
      </compilerArgs>
     </configuration>
    </plugin>
-   <plugin>
+
+   <!--plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-javadoc-plugin</artifactId>
     <version>2.10.3</version>
@@ -86,9 +104,9 @@
       </configuration>
      </execution>
     </executions>
-   </plugin>
+   </plugin-->
 
-   <plugin>
+   <!--plugin>
     <groupId>org.apache.felix</groupId>
     <artifactId>maven-bundle-plugin</artifactId>
     <version>2.4.0</version>
@@ -107,10 +125,27 @@
       </configuration>
      </execution>
     </executions>
-   </plugin>
+   </plugin-->
 
+   <!--plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>1.5.0</version>
+    <executions>
+     <execution>
+      <goals>
+       <goal>java</goal>
+      </goals>
+     </execution>
+    </executions>
+    <configuration>
+     <mainClass>com.developmentontheedge.beans.lesson01.BarChartApplication</mainClass>
+    </configuration>
+   </plugin-->
+  
   </plugins>
  </build>
+
 </project>
 
 
