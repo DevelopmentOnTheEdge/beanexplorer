@@ -1,6 +1,5 @@
 package com.developmentontheedge.beans.lesson03;
 
-import java.beans.Introspector;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
