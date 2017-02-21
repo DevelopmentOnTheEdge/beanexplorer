@@ -39,11 +39,9 @@ public class BarChartApplication extends JFrame
 
         // Visualize the bean in BeanExplorer
         propertyInspector.explore(bean);
-        propertyInspector.setPreferredSize(new Dimension(300,400));
  
         // create panes for bean's view and for the PropertyInspector
         JPanel beanPane = new JPanel(new BorderLayout());
-        beanPane.setPreferredSize(new Dimension(150,400));
         beanPane.add(bean, BorderLayout.CENTER);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, bean, propertyInspector);
         getContentPane().add(splitPane, BorderLayout.CENTER);
