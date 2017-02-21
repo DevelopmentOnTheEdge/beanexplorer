@@ -122,19 +122,6 @@ public class BarChart extends JComponent implements PropertyChangeListener
         update();
     }
 
-
-    ////////////////////////////////////////
-    //  Methods for dynamic properties
-    public String getDisplayNameForTitle()
-    {
-        return "Title of "+(getOrientation()==1?"Horizontal":"Vertical")+" chart";
-    }
-
-    public String getOrientationToolTip()
-    {
-        return getOrientation()==1?"Horizontal":"Vertical";
-    }
-
     ////////////////////////////////////////
 
     private int maxLabelWidth;
