@@ -203,42 +203,6 @@ AbstractPropertyInspector
         contents = createGroupPropertyView( componentModel, columnCount, maxRecursion );
         add(new JScrollPane( contents ), BorderLayout.CENTER );
         validate();
-
-        // add Ok & Cancel buttons
-
-        /*
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
-        JButton okButton     = new JButton("Ok");
-        okButton.setDefaultCapable(true);
-        JButton cancelButton = new JButton("Cancel");
-
-        okButton.setPreferredSize(cancelButton.getPreferredSize());
-
-        buttonPanel.add(okButton);
-        buttonPanel.add(cancelButton);
-
-        buttonPanel.setBorder( new CompoundBorder(new EtchedBorder(EtchedBorder.RAISED), new EmptyBorder(5, 5, 5, 5)));
-
-        add(buttonPanel, BorderLayout.SOUTH);
-        cancelButton.addActionListener(new ActionListener()
-                                       {
-                                           public void actionPerformed(ActionEvent e)
-                                           {
-                                               cancelPressed();
-                                           }
-                                       });
-
-
-
-        okButton.addActionListener(new ActionListener()
-                                   {
-                                       public void actionPerformed(ActionEvent e)
-                                       {
-                                           okPressed();
-                                       }
-                                   });
-        */
     }
 
     /** Default width of the property editor. */
@@ -306,17 +270,6 @@ AbstractPropertyInspector
 
         if ( editor != null )
         {
-            /*
-            JLabel label = new JLabel( childProperty.getDisplayName() );
-            contents.add( label,
-                new GridBagConstraints( column * 2, row, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE,
-                new Insets( 0, 5, 0, 5 ), 0, 0 ) );
-            contents.add( editor,
-                new GridBagConstraints( column * 2 + 1, row, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE,
-                new Insets( 0, 0, 0, 5 ), 0, 0 ) );
-            */
             JPanel panel = new PropertyPanel( childProperty.getDisplayName(), editor );
             contents.add( panel,
                 new GridBagConstraints( column, row, 1, 1, 0.0, 0.0,
@@ -324,6 +277,7 @@ AbstractPropertyInspector
                 new Insets( 0, 5, 0, 5 ), 0, 0 ) );
 
             map.put(childProperty.getCompleteName(), panel);
+
             return true;
         }
         return false;
@@ -343,10 +297,7 @@ AbstractPropertyInspector
         }
         JTabbedPane tabbedPane = null;
         JPanel contents = new JPanel();
-        contents.setLayout(
-            new GridBagLayout() );
-        //contents.setLayout(new GridLayout(0, 1));
-        //contents.setLayout(new BoxLayout(contents, BoxLayout.Y_AXIS));
+        contents.setLayout( new GridBagLayout() );
 
         int row = 0;
         int column = 0;
@@ -372,7 +323,7 @@ AbstractPropertyInspector
         for ( int i = 0; i < propCount; i++ )
         {
             Property childProperty = property.getVisiblePropertyAt( i, propertyShowMode );
-//            if ( childProperty instanceof CompositeProperty )
+
             if ( !( childProperty instanceof SimpleProperty ) )
             {
                 if ( tabbedPane == null )
@@ -455,7 +406,6 @@ AbstractPropertyInspector
         for ( int i = 0; i < propCount; i++ )
         {
             Property childProperty = property.getVisiblePropertyAt( i, propertyShowMode );
-//            if ( childProperty instanceof CompositeProperty )
             if ( !( childProperty instanceof SimpleProperty ) )
             {
                 JPanel childPropertyView =
@@ -476,7 +426,6 @@ AbstractPropertyInspector
                 column = 0;
                 row++;
                 contents.add( childPropertyView,
-                    //new GridBagConstraints( 0, row, columns * 2, 1, 0.0, 0.0,
                     new GridBagConstraints( 0, row, columns, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets( 0, 5, 5, 5 ), 0, 0 ) );
@@ -515,7 +464,6 @@ AbstractPropertyInspector
         PropertyPanel( String name, Component editor )
         {
             super(new GridBagLayout());
-            //JLabel label = new JLabel( name, SwingConstants.RIGHT );
             JLabel label = new JLabel(name);
 
             add(label, labelGridBagConstraints);
@@ -525,25 +473,6 @@ AbstractPropertyInspector
             //setBorder( BorderFactory.createLineBorder( Color.blue ) );
             // debug
         }
-    }
-
-
-    /**
-     * "Ok" button is pressed.<br>
-     * Override this method when specific
-     * processing is needed for "Ok" button.
-     */
-    protected void okPressed()
-    {
-    }
-
-    /**
-     * "Cancel" button is pressed.<br>
-     * Override this method when specific
-     * processing is needed for "Cancel" button.
-     */
-    protected void cancelPressed()
-    {
     }
 
     /** Indicates whether is needed to show tool tip (property description). */
@@ -754,7 +683,6 @@ AbstractPropertyInspector
     {
         columnCount = value;
     }
-
 
 
     private int maxRecursion = MAX_RECURSION;
