@@ -1,0 +1,68 @@
+<div id="main-concepts">
+
+<h1>Property Inspector concepts</h1>
+
+<p>Property Inspector is a component designed for displaying and editing of
+properties of the bean.
+
+<p>BeanExplorer provides Property Inspectors of three types:
+   <ul>
+     <a>
+     <li>Classic Property Inspector uses tree-table for displaying
+         and editing properties. First column displays property names, second column displays property values. 
+     </li>
+     <li>Dialog Property Inspector uses dialog-like
+         representation of hierarchy of the properties.
+         Pairs 'property name - property value' organized in columns and laid
+         out in a unified manner.</li>
+     <li>Tabular Property Inspector presents beans in the form of a table
+         where rows are beans and columns are property values.</li>
+     </a>
+   </ul>    
+   
+The picture below demonstrates how the same bean looks like in different Property Inspectors.
+
+<p align="left"><img border="0" src="beaninfoeditor/images/ClassicPI.jpg" width="320" height="498">
+<img border="0" src="beaninfoeditor/images/DialogPI.jpg" width="321" height="498">
+<img border="0" src="beaninfoeditor/images/TabularPI.jpg" width="320" height="498"></p>
+
+<hr>
+
+<h3>Property types</h3>
+By type of its value properties are divided into three groups:</p>
+<ul>
+  <li><i>Simple properties</i> - as a rule value type of simple property is <code>String</code>
+  or simple Java type: <code>boolean</code>, <code>byte</code>, <code>char</code>, <code>short</code>,
+  <code>int</code>, <code>long</code>, <code>float</code> or <code>double</code>.
+    In the picture below <code>title</code>, <code>orientation</code> and <code>autoLayout</code> 
+    are examples of simple properties.</li>
+  <li><i>Array properties</i> - value of such property is an array. 
+      Simple or composite property is associated with each array item value.
+      In the picture below <code>columns</code> is array property,
+      and composite property is associated with each array item.</li>
+  <li><i>Composite properties</i>. Value of composite property is another bean, characterized
+    by its own set of properties.</li>
+</ul>
+
+<h3>Hierarchy of the properties</h3>
+
+<p>Bean properties can form a hierarchy, represented in Property Inspector as a
+tree. In the example below <code> BarChart</code> bean has array property <code>columns</code>. Array items
+presented by composite properties consisting from 4 simple properties: <code>label</code>,
+<code>value</code>, <code>color</code> and <code>visible</code>.</p>
+
+<p align="center"><img border="0" src="property_inspector.jpg" width="515" height="477">
+<br>Property Inspector exploring <code>BarChart</code> bean.</p>
+
+<h3>&nbsp;</h3>
+
+<h3>Property editors</h3>
+
+<p>Property editor is used to display and edit the value of the property. For each value
+type a specialized editor is required.</p>
+
+<p>BeanExplorer comes pre-equipped with editors for all simple Java types (<code>boolean</code>, <code>byte</code>, <code>char</code>, <code>short</code>,
+  <code>int</code>, <code>long</code>, <code>float</code>  and <code>double</code>),
+as well as for more frequently used types like <code>String</code>, <code>Dimension</code>,
+<code>Color</code> and <code>Font</code> (see the picture above).</p>
+</div>
