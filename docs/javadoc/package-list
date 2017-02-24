@@ -1,0 +1,14 @@
+com.developmentontheedge.beans
+com.developmentontheedge.beans.annot
+com.developmentontheedge.beans.awt.infos
+com.developmentontheedge.beans.editors
+com.developmentontheedge.beans.log
+com.developmentontheedge.beans.model
+com.developmentontheedge.beans.swing
+com.developmentontheedge.beans.swing.infos
+com.developmentontheedge.beans.swing.table
+com.developmentontheedge.beans.swing.treetable
+com.developmentontheedge.beans.undo
+com.developmentontheedge.beans.util
+com.developmentontheedge.beans.web
+com.developmentontheedge.beans.web.resources
