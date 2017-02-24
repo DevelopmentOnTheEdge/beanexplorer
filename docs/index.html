@@ -34,16 +34,11 @@
                 load("#main-content", "./" + topic);
             }
 
-
-            Path.map("#/home").to(function () {
-                load2("./menu_empty.shtml", "home.shtml");
+            Path.map("#/empty/:file").to(function () {
+                load2("./menu_empty.shtml", this.params['file']);
             });
 
-            Path.map("#/overview/:file").to(function () {
-                load2("./menu_overview.shtml", this.params['file']);
-            });
-
-            Path.root("#/home");
+            Path.root("#/empty/home.shtml");
             $(document).ready(function () {
                 Path.listen();
 
@@ -65,8 +60,8 @@
         <div id="flex-container">
             <div id="menu">
                 <div id="menu-top">
-                    <a href="#/home">Home</a><br/>
-                    <a href="#/overview/introduction.shtml">Overview</a><br/>
+                    <a href="#/empty/home.shtml">Home</a><br/>
+                    <a href="#/empty/overview.shtml">Overview</a><br/>
                     <a href="#/details/javabeans/index.shtml">JavaBeans technology</a><br/>
                     <a href="#/details/beaninfoex/index.shtml">BeanHelpers technology</a><br>
                     <a href="#/details/api.shtml">API</a><br/>
@@ -76,7 +71,7 @@
                 <div id="menu-details">&nbsp;</div>
             </div>
 
-            <div id="main-content"> <hr/>  </div>
+            <div id="main-content"> </div>
         </div>
     </body>
 </html>
