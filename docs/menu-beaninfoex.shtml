@@ -1,0 +1,26 @@
+<a href="#/beaninfoex/overview">Overview</a>
+<br><a href="#/beaninfoex/goals">Goals</a>
+
+<br><a href="#/beaninfoex/architecture">Architecture overview</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/com.beanexplorer.beans">com.beanexplorer.beans</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/com.beanexplorer.swing.editors">com.beanexplorer.swing.editors</a>
+<br><a href="#/beaninfoex/introspection">Java Introspection</a>
+
+<br><a href="#/beaninfoex/metainformation">Definition of additional meta information</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/constants_declaration">Constants declaration</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/type_safety">Type safety</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/properties_order">Properties order</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/semantic_control">Semantic control of property values</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/other_metadata">Other meta data</a>
+
+<br><a href="#/beaninfoex/property_editor">Property Editor extension</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/composite_editor">Composite editor</a>
+
+<br><a href="#/beaninfoex/dynamic_property_attributes">Modification of behavior of the properties at runtime</a>
+
+<br><a href="#/beaninfoex/hierarchy">Hierarchy of the properties</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/type">Property types and their customization</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/array_items">Controlling array items</a>
+<br>&nbsp;&nbsp;<a href="#/beaninfoex/merging">Merging</a>
+
+<br><a href="#/beaninfoex/summary">Summary table</a>
