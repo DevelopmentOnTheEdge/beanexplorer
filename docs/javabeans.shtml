@@ -1,0 +1,148 @@
+<div id="main-javabeans">
+
+    <h1>JavaBeans</h1>
+    <p><i>JavaBeans component architecture is the platform-neutral
+            architecture for the Java application environment. It's the ideal choice for
+            developing or assembling network-aware solutions for heterogeneous hardware and
+            operating system environments--within the enterprise or across the Internet. In
+            fact, it's the only component architecture you should consider if you're
+            developing for the Java platform</i>&quot;.</p>
+    <p align="right"><i>Sun Microsystems Inc.</i></p>
+
+    <p><u>Note to the developers:</u></p>
+    <p>This documentation is not included as replacement of the JavaBeans(TM)
+        documentation. Here we describe basic JavaBeans concepts but it is done only to
+        describe BeanExplorer technology. All developers are encouraged to study
+        JavaBeans techology using links below:</p>
+
+    <ul>
+        <li><a target="blanck" href="http://www.oracle.com/technetwork/java/javase/documentation/spec-136004.html">JavaBeans specification</a></li>
+        <li><a target="blanck" href="http://download.oracle.com/javase/tutorial/javabeans/">Oracle's JavaBeans tutorials</a></li>
+    </ul>
+
+    <hr>
+    <h2><a name="javabean">What is a JavaBean?</a></h2>
+    <p>A Java Bean is a reusable software component that can be manipulated visually
+        in a builder tool. Some Java Beans may be simple GUI elements such as buttons and sliders. 
+        Other Java Beans may be sophisticated visual software components such as database viewers, 
+        or data feeds.</p>
+
+    <p>Individual Java Beans will vary in the functionality they support, but the typical unifying
+        features that distinguish a Java Bean are:</p>
+    <ul>
+        <li>Support for "introspection" so that a builder tool can analyze how a bean works.</li>
+        <li>Support for "customization" so that when using an application builder a user can
+            customize the appearance and behaviour of a bean.</li>
+        <li>Support for "events" as a simple communication metaphor than can be used to connect up
+            beans</li>
+        <li>Support for "properties", both for customization and for programmatic
+            use.</li>
+        <li>Support for persistence, so that a bean can be customized in an application builder and
+            then have its customized state saved away and reloaded later.</li>
+    </ul>
+
+    <p>A bean is not required to inherit from any particular base class or interface. Visible beans must
+        inherit from java.awt.Component so that they can be added to visual containers, but invisible
+        beans aren't required to do this. All the key APIs such as events, properties, and persistence, have been
+        designed to work well both for human programmers and for builder tools. 
+        Many beans will have a strong visual aspect, in both the application builder and in the final
+        constructed application, but while this is common it is not required.</p>
+
+    <hr>
+    <h2><a name="beaninfo">BeanInfo</a></h2>
+
+    <p>A bean implementer who wishes to provide explicit information about their bean 
+        may provide a <code>BeanInfo</code> class that implements 
+        <a target="blanck" href="https://docs.oracle.com/javase/8/docs/api/java/beans/BeanInfo.html"</a><code>BeanInfo</code></a>
+        interface and provides explicit information about the methods, properties, events, etc, of
+        their bean. A bean implementer doesn't need to provide a complete set of explicit information. You can pick and choose which
+        information you want to provide and the rest will be obtained by automatic analysis using low-level reflection of the
+        bean classes' methods and applying standard design patterns.</p> 
+
+    <p>Similarly to its properties JavaBean itself contains special descriptors named
+        <a target="blanck" href="https://docs.oracle.com/javase/8/docs/api/java/beans/BeanDescriptor.html"><code>BeanDescriptor</code></a>
+        which consist from the same set of attributes as property descriptor 
+        and additionally have an information about Java class that must be
+        used to customize the JavaBean as a whole.</p>
+
+    <p>In addition to property descriptors <code>BeanInfo</code> allows the developer 
+        to obtain event descriptors containing information about the events the JavaBean
+        component can fire; method descriptors containing information about
+        externally visible methods of this JavaBean (note that most JavaBean developers
+        rarely define these).</p>
+
+    <hr>
+    <h2><a name="property">Property</a></h2>
+    <p>The most important feature of a JavaBean is the set of properties.
+        Basically properties are named attributes associated with a bean 
+        that can be read or written by calling appropriate methods on the bean.</p>
+
+    <p>Thus for example, a bean might have a "foreground" property that represents 
+        its foreground color. This property might be read by calling a 
+        <code>Color getForeground()</code> method and updated by calling 
+        a <code>void setForeground(Color c)</code> method. 
+        The methods a Java Bean exports are just normal Java methods which can be called from other
+        components or from a scripting environment. By default all of a bean's public methods will be
+        exported, but a bean can choose to export only a subset of its public methods.</p>
+
+    <h3><a name="accessor-methods"> Accessor methods</a></h3>
+    <p>Properties are always accessed via method calls on their owning object. For readable properties
+        there will be a getter method to read the property value. For writable properties there will be a
+        setter method to allow the property value to be updated. Thus even when a script writer types
+        in something such as <code>b.label = foo</code> there is still a method call into the target object to set the
+        property, and the target object has full programmatic control. 
+        So properties need not just be simple data fields, they can actually be computed values. 
+        Updates may have various programmatic side effects. For example, changing a bean's background color
+        property might also cause the bean to be repainted with the new color. For simple properties the accessor type signatures are:
+    </p>
+
+    <pre>
+public PropertyType getFoo();           // simple getter
+public void         setFoo(PropertyType value); // simple setter</pre>
+
+    <p>Accessor methods can have arbitrary names.</p>
+
+    <h3><a name="indexedp-properties">Indexed Properties</a></h3>
+    <p>An indexed property supports a range of values.</p>
+
+    <p>Whenever the property is read or written you just specify an index to 
+        identify which value you want. Property indexes must be Java <code>int</code>.</p>
+
+    <p>A component may also expose an indexed property as a single array value.</p>
+
+    <p>For indexed properties the accessor type signatures are:</p>
+    <pre>
+public void           setter(int index, PropertyType value); // indexed setter;
+public PropertyType   getter(int index);                     // indexed getter
+public void           setter(PropertyType values[]);         // array setter
+public PropertyType[] getter();                              // array getter
+    </pre>
+
+    <p>The indexed getter and setter methods may throw a 
+        <code>java.lang.ArrayIndexOutOfBoundsException</code>
+        runtime exception if an index is used that is outside the current array bounds.
+        In order to change the size of the array you must use the array setter method to set a new 
+        (or updated) array.</p>
+
+    <h3><a name="property-attributes">Property attributes</a></h3>
+    <p>Every property has the set of attributes or metadata associated with it.
+        JavaBeans specification defines the following attributes of properties: 
+    <ul>
+        <li><code>Programmatic name</code> - name that programmers will use to look up the property;</li>
+        <li><code>Display name</code> - localized name under which property should be present to humans;</li>
+        <li><code>Short description</code> - more detailed description of the property useful for instance in
+            tooltips;</li>
+        <li><code>Editor class</code> - Java class that must be used to edit value of the property;</li>
+        <li>Various flags: <code>expert</code>, <code>preferred</code>, <code>hidden</code> - describing how critical
+            is property depending on context where it is used;</li>
+        <li><code>Bound attribute</code> - allows other components to bind special behaviour to property changes;</li>
+        <li><code>Constrained attribute</code> - supports the <code>PropertyVetoException</code>;</li>
+        <li><code>Read/write methods</code> - allows to define getter/setter method as
+            alternative for accessor type signature agreement.</li>
+    </ul>
+    <p>This meta information about properties retrieved using property descriptors (see
+        <a target="blanck" href="https://docs.oracle.com/javase/8/docs/api/java/beans/PropertyDescriptor.html"> PropertyDescriptor</a>).</p>
+
+    <p>&nbsp;</p>
+</div>
+
