@@ -1,7 +1,5 @@
 <div id="main-beaninfoex">
-    <h1>BeanHelpers<sup>TM</sup> technology</h1>
-
-    <h2 id="overview">Overview</h2>
+    <h1 id="beanhelpers">BeanHelpers<sup>TM</sup> technology</h1>
 
     <p>BeanHelpers is an extension of JavaBeans<sup>TM</sup> technology that is used to implement
         JavaBeans with an advanced functionality. These beans are still backward
@@ -24,204 +22,199 @@
     <hr>
     <h2 id="architecture">Architecture Overview</h2>
 
-    <p>BeanHelpers consist of two java packages: <code>com.beanexplorer.beans</code> 
-        and <code>com.beanexplorer.swing.editors</code>.
+    <p>BeanHelpers consist of two java packages: 
 
-    <h3 id="com.beanexplorer.beans">Package <code>com.beanexplorer.beans</code></h3>
-    <p>This package defines common BeanExplorer constants 
-        (<code><a href="../../javadoc/com/beanexplorer/beans/BeanInfoConstants.html">BeanInfoConstants</a></code> and 
-        <code><a href="../../javadoc/com/beanexplorer/beans/IndexedPropertyConstants.html">IndexedPropertyConstants</a></code>) 
-        and provides extensions of the standard <code>java.beans</code> classes:</p>
-
+    <h3 id="com.developmentontheedge.beans">Package <code>com.developmentontheedge.beans</code></h3>
+    <p>This package defines common BeanExplorer constants:
     <ul>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/BeanInfoEx.html">BeanInfoEx</a></code>
-            extends standard <code>BeanInfo</code> class to specify an explicit ordering of the properties
-            and supply additional meta information about the bean.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html">PropertyDescriptorEx</a></code> extends standard <code>PropertyDescriptor</code> class to supply
-            additional meta information about the property.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/IndexedPropertyDescriptorEx.html">IndexedPropertyDescriptorEx</a></code> extends of standard <code>IndexedPropertyDescriptor</code> class to
-            supply additional meta information about the indexed property.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/ChoicePropertyDescriptorEx.html">ChoicePropertyDescriptorEx</a></code> 
-            - the utility class to simplify creation of the properties with predefined list of values.</li>
+        <li><code><a href="./javadoc/com/developmentontheedge/beans/BeanInfoConstants.html">BeanInfoConstants</a></code></li> 
+        <li><code><a href="./javadoc/com/developmentontheedge/beans/IndexedPropertyConstants.html">IndexedPropertyConstants</a></code></li> 
     </ul>
+    and provides extensions of the standard <code>java.beans</code> classes:</p>
 
-    There are also several helper classes for creation of dynamic beans which properties can be 
-    added or removed by application at runtime: 
-    <ul>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/DynamicProperty.html">DynamicProperty</a></code> 
-            - describes individual property that can be dynamically added to the bean.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/DynamicPropertySet.html">DynamicPropertySet</a></code> 
-            - an interface that defines a container for <code>DynamicPropertie</code>s 
-            which can be added or removed from the container at runtime.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/DynamicPropertySetSupport.html">DynamicPropertySetSupport</a></code> 
-            - default implementation of <code>DynamicPropertySet</code> interface.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/JDBCRecordAdapter.html">JDBCRecordAdapter</a></code> 
-            -&nbsp; abstract class to map JDBC result sets to dynamic <code>
-                DynamicPropertySet</code>. When subclassing developer should define getResultSet() 
-            function which then will be used to fetch records from the database as well as 
-            a database metadata.</li>
-    </ul>
+<ul>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/BeanInfoEx.html">BeanInfoEx</a></code>
+        extends standard <code>BeanInfo</code> class to specify an explicit ordering of the properties
+        and supply additional meta information about the bean.</li>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html">PropertyDescriptorEx</a></code> extends standard <code>PropertyDescriptor</code> class to supply
+        additional meta information about the property.</li>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/IndexedPropertyDescriptorEx.html">IndexedPropertyDescriptorEx</a></code> extends of standard <code>IndexedPropertyDescriptor</code> class to
+        supply additional meta information about the indexed property.</li>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/ChoicePropertyDescriptorEx.html">ChoicePropertyDescriptorEx</a></code> 
+        - the utility class to simplify creation of the properties with predefined list of values.</li>
+</ul>
 
-    <p>In additions the following classes can be used:
-    <ul>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/DefaultValue.html">DefaultValue</a></code> 
-            an interface to provide default values for properties with null values.</li>
-    </ul>
+There are also several helper classes for creation of dynamic beans which properties can be 
+added or removed by application at runtime: 
+<ul>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/DynamicProperty.html">DynamicProperty</a></code> 
+        - describes individual property that can be dynamically added to the bean.</li>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/DynamicPropertySet.html">DynamicPropertySet</a></code> 
+        - an interface that defines a container for <code>DynamicPropertie</code>s 
+        which can be added or removed from the container at runtime.</li>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/DynamicPropertySetSupport.html">DynamicPropertySetSupport</a></code> 
+        - default implementation of <code>DynamicPropertySet</code> interface.</li>
+</ul>
 
-    <h3 id="com.beanexplorer.swing.editors">Package <code>com.beanexplorer.swing.editors</code></h3>
-    <p>This package provides extensions of <code>java.beans.PropertyEditor</code> and contains following classes: 
-    <ul>
-        <li><code><a href="../../javadoc/com/beanexplorer/editors/PropertyEditorEx.html">PropertyEditorEx</a></code> 
-            - extends standard <code>java.beans.PropertyEditor</code> interface to 
-            provide editor with access to the bean which property is being edited. Property 
-            Inspector(s) may also supply to the editor implementing this interface additional 
-            arguments <CODE>isSelected </CODE>and<CODE> hasFocus</CODE> for 
-            finer integration&nbsp; into JTable components.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/editors/CustomEditorSupport.html">CustomEditorSupport</a></code>
-            - a support class to simplify creation of the property editors implementing <code><a href="../../javadoc/com/beanexplorer/editors/PropertyEditorEx.html">PropertyEditorEx</a></code> 
-            interface.<br>
-        <li><code><a href="../../javadoc/com/beanexplorer/editors/TagEditorSupport.html">TagEditorSupport</a></code>
-            - utility class&nbsp; to present property value defined using an enumeration.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/editors/TagEditorSupport.html">StringTagEditorSupport</a></code>
-            - another utility class&nbsp; to present property value defined an enumeration where values are Strings.</li>
-    </ul>
+<p>In additions the following classes can be used:
+<ul>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/DefaultValue.html">DefaultValue</a></code> 
+        an interface to provide default values for properties with null values.</li>
+</ul>
+
+<h3 id="com.developmentontheedge.swing.editors">Package <code>com.developmentontheedge.swing.editors</code></h3>
+<p>This package provides extensions of <code>java.beans.PropertyEditor</code>: 
+<ul>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/editors/PropertyEditorEx.html">PropertyEditorEx</a></code> 
+        - extends standard <code>java.beans.PropertyEditor</code> interface to 
+        provide editor with access to the bean which property is being edited. 
+        Property  Inspector(s) may also supply to the editor implementing 
+        this interface additional arguments <CODE>isSelected </CODE> and 
+        <CODE> hasFocus</CODE> for finer integration into JTable components.</li>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/editors/CustomEditorSupport.html">CustomEditorSupport</a></code>
+        - a support class to simplify creation of the property editors implementing 
+        <code><a href="./javadoc/com/developmentontheedge/editors/PropertyEditorEx.html">PropertyEditorEx</a></code> 
+        interface.<br>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/editors/TagEditorSupport.html">TagEditorSupport</a></code>
+        - utility class to present property value defined using an enumeration.</li>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/editors/StringTagEditorSupport.html">StringTagEditorSupport</a></code>
+        - another utility class to present property value defined an enumeration where values are Strings.</li>
+</ul>
 
 
-    <hr>
-    <h2 id="introspection">Java Introspection</h2>
+<hr>
+<h2 id="introspection">Java Introspection</h2>
 
-    <p><i>Introspection</i> is a runtime process used by builder environment or
-        Property Inspector to figure out which properties and methods a JavaBean supports.
-        This information or meta information presented as instance of class implementing
-        <a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/BeanInfo.html"><code>BeanInfo</code></a>
-        interface.</p>
+<p><i>Introspection</i> is a runtime process used by builder environment or
+    Property Inspector to figure out which properties and methods a JavaBean supports.
+    This information or meta information presented as instance of class implementing
+    <a href="http://docs.oracle.com/javase/8/docs/api/java/beans/BeanInfo.html"><code>BeanInfo</code></a>
+    interface.</p>
 
-    <p>By default a low level <i>reflection</i> mechanism is used to study the methods supported 
-        by a target bean and then apply simple <i>design patterns</i> to deduce from those methods 
-        what properties, events, and public methods are supported. However, bean implementer may 
-        provide explicit meta information for his bean supplying <code>BeanInfo</code> class describing the bean. 
-        This <code>BeanInfo</code> class will be used to programmatically discover behavior of the bean.</p>
+<p>By default a low level <i>reflection</i> mechanism is used to study the methods supported 
+    by a target bean and then apply simple <i>design patterns</i> to deduce from those methods 
+    what properties, events, and public methods are supported. However, bean implementer may 
+    provide explicit meta information for his bean supplying <code>BeanInfo</code> class describing the bean. 
+    This <code>BeanInfo</code> class will be used to programmatically discover behavior of the bean.</p>
 
-    <p>JavaBeans technology expect introspection information to be
-        immutable and not to vary in normal use. Only if a bean is updated with a new improved set
-        of class files, then the information may change.</p>
+<p>JavaBeans technology expect introspection information to be
+    immutable and not to vary in normal use. Only if a bean is updated with a new improved set
+    of class files, then the information may change.</p>
 
-    <p>JavaBeans API provides special 
-        <a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/Introspector.html"><code>java.beans.Introspector</code></a>
-        class allowing application builders and other tools to analyze beans. 
-        Introspector understands the various design patterns and standard interfaces and
-        provides a uniform way of introspecting on different beans. The
-        Introspector class walks over the class/superclass chain of the target class. 
-        At each level it checks if there is a matching <code>BeanInfo</code> class which provides
-        explicit information about the bean, and if so uses that explicit information.
-        Otherwise it uses the low level reflection APIs to study the target class and
-        uses design patterns to analyze its behaviour and then proceeds to continue the
-        introspection with its baseclass.</p>
+<p>JavaBeans API provides special 
+    <a href="http://docs.oracle.com/javase/8/docs/api/java/beans/Introspector.html"><code>java.beans.Introspector</code></a>
+    class allowing application builders and other tools to analyze beans. 
+    Introspector understands the various design patterns and standard interfaces and
+    provides a uniform way of introspecting on different beans. The
+    Introspector class walks over the class/superclass chain of the target class. 
+    At each level it checks if there is a matching <code>BeanInfo</code> class which provides
+    explicit information about the bean, and if so uses that explicit information.
+    Otherwise it uses the low level reflection APIs to study the target class and
+    uses design patterns to analyze its behaviour and then proceeds to continue the
+    introspection with its baseclass.</p>
 
-    <p> For example, if an implementer supplies class <code>Foo</code> and 
-        possibly <code>FooBeanInfo</code>  class, then builder tool can use 
-        <code>Introspector</code> in following way to get BeanInfo describing Foo bean:</p>
+<p> For example, if an implementer supplies class <code>Foo</code> and 
+    possibly <code>FooBeanInfo</code>  class, then builder tool can use 
+    <code>Introspector</code> in following way to get BeanInfo describing Foo bean:</p>
 
-    <pre>BeanInfo beanInfo = Introspector.getBeanInfo(Foo.class);</pre>
+<pre>BeanInfo beanInfo = Introspector.getBeanInfo(Foo.class);</pre>
 
-    <p>Here we need to highlight some important details, how the Introspector works.
-        Ingenuously you can suppose, that if implementer supplies <code>FooBeanInfo</code> class,
-        then <code>beanInfo</code> returned by Introspector will be instance of 
-        <code>FooBeanInfo</code>. No, it will be instance <code>GenericBeanInfo</code>. Indeed
-        Introspector will instantiate <code>FooBeanInfo</code> and use it as 
-        &quot;informant&quot; for creating <code>GenericBeanInfo</code>, copying and 
-        validating all data from &quot;informant&quot;.</p>
+<p>Here we need to highlight some important details, how the Introspector works.
+    Ingenuously you can suppose, that if implementer supplies <code>FooBeanInfo</code> class,
+    then <code>beanInfo</code> returned by Introspector will be instance of 
+    <code>FooBeanInfo</code>. No, it will be instance <code>GenericBeanInfo</code>. Indeed
+    Introspector will instantiate <code>FooBeanInfo</code> and use it as 
+    &quot;informant&quot; for creating <code>GenericBeanInfo</code>, copying and 
+    validating all data from &quot;informant&quot;.</p>
 
-    <hr>
-    <h2 id="metainformation">Definition of additional meta information</h2>
+<hr>
+<h2 id="metainformation">Additional meta information</h2>
 
-    <p>At a first glance the introspection algorithm described above does not allows a
-        developer to extend standard <code>BeanInfo</code> interface with methods to provide
-        additional meta information. Indeed, if a developer provides additional methods in
-        <code>FooBeanInfo</code> class, they will not be available at <code>beanInfo</code> 
-        returned by Introspector, since it will be an instance of 
-        <code>GenericBeanInfo</code>. Moreover, if <code>FooBeanInfo</code> will use 
-        classes that are extensions of <code>BeanDescriptor</code> or
-        <code>PropertyDescriptor</code> with additional methods there, these methods will not be
-        available, because <code>GenericBeanInfo</code> will contain instances of 
-        <code>BeanDescriptor</code> or <code>PropertyDescriptor</code>, 
-        rather than their extension.</p>
+<p>At a first glance the introspection algorithm described above does not allows a
+    developer to extend standard <code>BeanInfo</code> interface with methods to provide
+    additional meta information. Indeed, if a developer provides additional methods in
+    <code>FooBeanInfo</code> class, they will not be available at <code>beanInfo</code> 
+    returned by Introspector, since it will be an instance of 
+    <code>GenericBeanInfo</code>. Moreover, if <code>FooBeanInfo</code> will use 
+    classes that are extensions of <code>BeanDescriptor</code> or
+    <code>PropertyDescriptor</code> with additional methods there, these methods will not be
+    available, because <code>GenericBeanInfo</code> will contain instances of 
+    <code>BeanDescriptor</code> or <code>PropertyDescriptor</code>, 
+    rather than their extension.</p>
 
-    <p>Fortunately, we can put key-value pairs into the internal hashtable provided by
-        <a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/FeatureDescriptor.html"><code>FeartureDescriptor</code></a>
-        - a common ancestor for <code>BeanDescriptor</code> and <code>PropertyDescriptor</code> 
-        and this information will be copied from &quot;informant&quot;.
-        <code>FeartureDescriptor</code> declares three public methods to get access to
-        the supplied values.&nbsp;</p>
+<p>Fortunately, we can put key-value pairs into the internal hashtable provided by
+    <a href="http://docs.oracle.com/javase/8/docs/api/java/beans/FeatureDescriptor.html"><code>FeartureDescriptor</code></a>
+    - a common ancestor for <code>BeanDescriptor</code> and <code>PropertyDescriptor</code> 
+    and this information will be copied from &quot;informant&quot;.
+    <code>FeartureDescriptor</code> declares three public methods to get access to
+    the supplied values.&nbsp;</p>
 
-    <table cellSpacing="0" cellPadding="3" width="100%" border="1">
-        <tbody>
-            <tr class="TableHeadingColor" bgColor="#ccccff">
-                <td colSpan="2"><p align="left">
-                        FeartureDescriptor methods to store additional meta
-                        information as key-value pairs in its internal hashtable</p>
-                </td>
-            </tr>
-            <tr class="TableRowColor" bgColor="white">
-                <td vAlign="top" align="right" width="1%"><font size="-1"><code><a href="http://java.sun.com/j2se/1.3/docs/api/java/util/Enumeration.html">Enumeration</a></code></font></td>
-                <td><code><b><a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/FeatureDescriptor.html#attributeNames()">attributeNames</a></b>()</code><br>
-                    &nbsp;&nbsp; Gets an enumeration of the locale-independent names of this feature.</td>
-            </tr>
-            <tr class="TableRowColor" bgColor="white">
-                <td vAlign="top" align="right" width="1%"><font size="-1"><code>&nbsp;<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/Object.html">Object</a></code></font></td>
-                <td><code><b><a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/FeatureDescriptor.html#getValue(java.lang.String)">getValue</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html">String</a>&nbsp;attributeName)</code><br>
-                    &nbsp;&nbsp;&nbsp;Retrieve a named attribute with this feature.</td>
-            </tr>
-            <tr class="TableRowColor" bgColor="white">
-                <td vAlign="top" align="right" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td><code><b><a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/FeatureDescriptor.html#setValue(java.lang.String, java.lang.Object)">setValue</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html">String</a>&nbsp;attributeName,
-                        <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/Object.html">Object</a>&nbsp;value)</code><br>
-                    &nbsp;&nbsp;&nbsp;Associate a named attribute with this feature.</td>
-            </tr>
-        </tbody>
-    </table>
+<table cellSpacing="0" cellPadding="3" width="100%" border="1">
+    <tbody>
+        <tr class="TableHeadingColor" bgColor="#ccccff">
+            <td colSpan="2"><p align="left">
+                    FeartureDescriptor methods to store additional meta
+                    information as key-value pairs in its internal hashtable</p>
+            </td>
+        </tr>
+        <tr class="TableRowColor" bgColor="white">
+            <td vAlign="top" align="right" width="1%"><font size="-1"><code><a href="http://docs.oracle.com/javase/8/docs/api/java/util/Enumeration.html">Enumeration</a></code></font></td>
+            <td><code><b><a href="http://docs.oracle.com/javase/8/docs/api/java/beans/FeatureDescriptor.html#attributeNames()">attributeNames</a></b>()</code><br>
+                &nbsp;&nbsp; Gets an enumeration of the locale-independent names of this feature.</td>
+        </tr>
+        <tr class="TableRowColor" bgColor="white">
+            <td vAlign="top" align="right" width="1%"><font size="-1"><code>&nbsp;<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html">Object</a></code></font></td>
+            <td><code><b><a href="http://docs.oracle.com/javase/8/docs/api/java/beans/FeatureDescriptor.html#getValue(java.lang.String)">getValue</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a>&nbsp;attributeName)</code><br>
+                &nbsp;&nbsp;&nbsp;Retrieve a named attribute with this feature.</td>
+        </tr>
+        <tr class="TableRowColor" bgColor="white">
+            <td vAlign="top" align="right" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+            <td><code><b><a href="http://docs.oracle.com/javase/8/docs/api/java/beans/FeatureDescriptor.html#setValue(java.lang.String, java.lang.Object)">setValue</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a>&nbsp;attributeName,
+                    <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html">Object</a>&nbsp;value)</code><br>
+                &nbsp;&nbsp;&nbsp;Associate a named attribute with this feature.</td>
+        </tr>
+    </tbody>
+</table>
 
-    <h3 id="constants_declaration">Constants declaration</h3>
+<h3 id="constants_declaration">Constants declaration</h3>
+<p>
+    <code><a href="./javadoc/com/developmentontheedge/beans/BeanInfoConstants.html">BeanInfoConstants</a></code>
+    interface declares all keys to get access for additional meta information provided by
+    BeanHelpers technology. This constants are summarized in the <a href="#summary">
+        table</a> in the end of document.</p>
 
-    <p>
-        <code><a href="../../javadoc/com/beanexplorer/beans/BeanInfoConstants.html">BeanInfoConstants</a></code>
-        interface declares all keys to get access for additional meta information provided by
-        BeanHelpers technology. This constants are summarized in the <a href="#summary">
-            table</a> in the end of document.</p>
-    <br>
+<h3 id="type_safety">Type safety</h3>
 
-    <h3 id="type_safety">Type safety</h3>
+<p>BeanHelpers technology provides type safe methods to associate correct
+    type of meta information value with the specified key. This methods are declared in
+    following classes:</p>
 
-    <p>BeanHelpers technology provides type safe methods to associate correct
-        type of meta information value with the specified key. This methods are declared in
-        following classes:</p>
+<ul>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/BeanInfoEx.html">BeanInfoEx</a></code>
+        extends standard <code>BeanInfo</code> class to specify an explicit ordering of the properties
+        and supply additional meta information about the bean.</li>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html">PropertyDescriptorEx</a></code> extends standard <code>PropertyDescriptor</code> class to supply
+        additional meta information about the property.</li>
+    <li><code><a href="./javadoc/com/developmentontheedge/beans/IndexedPropertyDescriptorEx.html">IndexedPropertyDescriptorEx</a></code> extends of standard <code>IndexedPropertyDescriptor</code> class to
+        supply additional meta information about the indexed property.</li>
+</ul>
 
-    <ul>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/BeanInfoEx.html">BeanInfoEx</a></code>
-            extends standard <code>BeanInfo</code> class to specify an explicit ordering of the properties
-            and supply additional meta information about the bean.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html">PropertyDescriptorEx</a></code> extends standard <code>PropertyDescriptor</code> class to supply
-            additional meta information about the property.</li>
-        <li><code><a href="../../javadoc/com/beanexplorer/beans/IndexedPropertyDescriptorEx.html">IndexedPropertyDescriptorEx</a></code> extends of standard <code>IndexedPropertyDescriptor</code> class to
-            supply additional meta information about the indexed property.</li>
-    </ul>
+<h3 id="properties_order">Order of the properties</h3>
 
-    <h3 id="properties_order">Order of the properties</h3>
+<p> JavaBeans technology does not provide mechanism to order the properties of a bean.
+    Trying to solve this problem builder tools allows to developer sort properties
+    by its name or value class. BeanHelpers technology allows bean implementer to 
+    specifies explicitly the order for the properties.&nbsp;</p>
+<p>From the BeanHelpers' view point the order is still some
+    additional meta information. This information is stored in <code>BeanDescriptor</code>
+    internal hashtable as array of <code>PropertyDescriptor</code>s with <code>BeanInfoConstants.ORDER</code>
+    key.</p>
 
-    <p> JavaBeans technology does not provide mechanism to order the properties of a bean.
-        Trying to solve this problem builder tools allows to developer sort properties
-        by its name or value class. BeanHelpers technology allows bean implementer to 
-        specifies explicitly the order for the properties.&nbsp;</p>
-    <p>From the BeanHelpers' view point the order is still some
-        additional meta information. This information is stored in <code>BeanDescriptor</code>
-        internal hashtable as array of <code>PropertyDescriptor</code>s with <code>BeanInfoConstants.ORDER</code>
-        key.</p>
+<p>Property Inspector or builder tool should use a following algorithm to
+    get&nbsp;<code>PropertyDescriptor</code>s describing properties provided by the
+    bean:</p>
 
-    <p>Property Inspector or builder tool should use a following algorithm to
-        get&nbsp;<code>PropertyDescriptor</code>s describing properties provided by the
-        bean:</p>
-
-    <pre>    BeanInfo beanInfo = Introspetor.getBeanInfo(Foo.class);
+<pre>    BeanInfo beanInfo = Introspetor.getBeanInfo(Foo.class);
 
     // try to get ordered PropertyDescriptors array
     // provided by BeanHelpers technology
@@ -233,12 +226,12 @@
     if(properties == null)
         properties = beanInfo.getPropertyDescriptors();</pre>
 
-    <p><code>BeanInfoEx</code> provides a special <code>add</code> method allowing a bean implementer
-        to specify the order while creaing a BeanEinfo. The properties will be arranged by Property Inspector in ths same order
-        in which they were added. For example if <code>Foo</code> bean class has properties named <code>a</code>, <code>b</code>, <code>c</code>,
-        then bean implementer can specify the order in the following way:</p>
+<p><code>BeanInfoEx</code> provides a special <code>add</code> method allowing a bean implementer
+    to specify the order while creaing a BeanEinfo. The properties will be arranged by Property Inspector in ths same order
+    in which they were added. For example if <code>Foo</code> bean class has properties named <code>a</code>, <code>b</code>, <code>c</code>,
+    then bean implementer can specify the order in the following way:</p>
 
-    <pre>public class FooBeanInfo extends BeanInfoEx
+<pre>public class FooBeanInfo extends BeanInfoEx
 {
     public FooBeanInfo()
     {
@@ -250,742 +243,604 @@
     }
 }</pre>
 
-    <p>When <code>add</code> method is invoked, BeanInfoEx instance puts the specified
-        PropertyDescriptor into its internal vector. Later when BeanInfoEx used as
-        &quot;informant&quot; it returns BeanDescriptor with ordered array of PropertyDescriptors 
-        from the vector.</p>
+<p>When <code>add</code> method is invoked, BeanInfoEx instance puts the specified
+    PropertyDescriptor into its internal vector. Later when BeanInfoEx used as
+    &quot;informant&quot; it returns BeanDescriptor with ordered array of PropertyDescriptors 
+    from the vector.</p>
 
-    <table cellSpacing="0" cellPadding="3" width="1101" border="1">
-        <tbody>
-            <tr class="TableHeadingColor" bgColor="#ccccff">
-                <td colSpan="2" width="1091"><p align="left">
-                        BeanInfoEx methods to provide properties order</p>
-                </td>
-            </tr>
-            <tr class="TableRowColor" bgColor="white">
-                <td vAlign="top" align="right" width="41"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td width="1042"><code><b><a href="../../../../../Program%20Files/BeanExplorerTrial/javadoc/com/beanexplorer/beans/BeanInfoEx.html#add(java.beans.PropertyDescriptor)">add</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/PropertyDescriptor.html">PropertyDescriptor</a>&nbsp;pd)</code><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds the
-                    specified property.</td>
-            </tr>
-            <tr class="TableRowColor" bgColor="white">
-                <td vAlign="top" align="right" width="41"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td width="1042"><code><b><a href="../../../../../Program%20Files/BeanExplorerTrial/javadoc/com/beanexplorer/beans/BeanInfoEx.html#add(java.beans.PropertyDescriptor, java.lang.Class)">add</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/PropertyDescriptor.html">PropertyDescriptor</a>&nbsp;pd,
-                        <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/Class.html">Class</a>&nbsp;propertyEditor)</code><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds the
-                    property with the specified PropertyEditor.</td>
-            </tr>
-            <tr class="TableRowColor" bgColor="white">
-                <td vAlign="top" align="right" width="41"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td width="1042"><code><b><a href="../../../../../Program%20Files/BeanExplorerTrial/javadoc/com/beanexplorer/beans/BeanInfoEx.html#add(java.beans.PropertyDescriptor, java.lang.Class, java.lang.String, java.lang.String)">add</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/PropertyDescriptor.html">PropertyDescriptor</a>&nbsp;pd,
-                        <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/Class.html">Class</a>&nbsp;propertyEditor,
-                        <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html">String</a>&nbsp;displayName,
-                        <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html">String</a>&nbsp;description)</code><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds the
-                    property with the specified PropertyEditor and short description.</td>
-            </tr>
-            <tr class="TableRowColor" bgColor="white">
-                <td vAlign="top" align="right" width="41"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td width="1042"><code><b><a href="../../../../../Program%20Files/BeanExplorerTrial/javadoc/com/beanexplorer/beans/BeanInfoEx.html#add(java.beans.PropertyDescriptor, java.lang.String, java.lang.String)">add</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/PropertyDescriptor.html">PropertyDescriptor</a>&nbsp;pd,
-                        <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html">String</a>&nbsp;displayName,
-                        <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html">String</a>&nbsp;description)</code><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds the
-                    property with the given display name and description.</td>
-            </tr>
-            <tr class="TableRowColor" bgColor="white">
-                <td vAlign="top" align="right" width="41"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td width="1042"><code><b><a href="../../../../../Program%20Files/BeanExplorerTrial/javadoc/com/beanexplorer/beans/BeanInfoEx.html#addHidden(java.beans.PropertyDescriptor)">addHidden</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/PropertyDescriptor.html">PropertyDescriptor</a>&nbsp;pd)</code><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds the
-                    specified property as 'hidden'.</td>
-            </tr>
-            <tr class="TableRowColor" bgColor="white">
-                <td vAlign="top" align="right" width="41"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td width="1042"><code><b><a href="../../../../../Program%20Files/BeanExplorerTrial/javadoc/com/beanexplorer/beans/BeanInfoEx.html#addHidden(java.beans.PropertyDescriptor, java.lang.Class)">addHidden</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/PropertyDescriptor.html">PropertyDescriptor</a>&nbsp;pd,
-                        <a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/Class.html">Class</a>&nbsp;propertyEditor)</code><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds the
-                    specified property as 'hidden'.</td>
-            </tr>
-        </tbody>
-    </table>
+<p><a href="./javadoc/com/developmentontheedge/beans/BeanInfoEx.html">BeanInfoEx</a> 
+    provides many utility <code>add</code> methods with extra arguments.</p> 
 
-    <p>BeanInfoEx provides several utility <code>add</code> methods with extra arguments (see the
-        table above). For example, <code>add(PropertyDescriptor pd, Class propertyEditor)</code>
-        method allows the developer to set up property editor class for the given property descriptor. 
-        The code of the method you can see below.</p>
+<p>For example, <code>add(PropertyDescriptor pd, Class propertyEditor)</code>
+    method allows the developer to set up property editor class for the given property descriptor. 
+    The code of the method you can see below.</p>
 
-    <pre>public void add(PropertyDescriptor pd, Class propertyEditor)
+<pre>public void add(PropertyDescriptor pd, Class propertyEditor)
 {
     pd.setPropertyEditor(propertyEditor);
     add(pd);
 }</pre>
 
-    <h3 id="semantic_control">Semantic control of property values</h3>
+<hr>
+<h2 id="property_editor">Property Editor extension</h2>
 
-    <table border="1" cellPadding="3" cellSpacing="0" width="100%" height="163">
-        <tr bgColor="#ccccff" class="TableHeadingColor">
-            <td colSpan="2" height="17">PropertyDescriptorEx methods for semantic 
-                control of property values</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%" height="38"><font size="-1"><code>
-                    &nbsp;void</code></font></td>
-            <td height="38"><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setCanBeNull(boolean)">
-                            setCanBeNull</a></b>(boolean&nbsp;value)</code> <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates that the property can be <code>null</code>.</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%" height="38"><font size="-1"><code>
-                    &nbsp;void</code></font></td>
-            <td height="38"><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setDefaultValue(com.beanexplorer.beans.DefaultValue)">
-                            setDefaultValue</a></b>(<a href="../../javadoc/com/beanexplorer/beans/DefaultValue.html">DefaultValue</a>&nbsp;value)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the initial value for the property when its getter method 
-                returns <code>null</code>.</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%" height="38"><font size="-1"><code>
-                    &nbsp;void</code></font></td>
-            <td height="38"><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setDefaultValue(java.lang.reflect.Method)">
-                            setDefaultValue</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;method)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method to generate initial value for the property when its 
-                getter method returns <code>null</code>.</td>
-        </tr>
-    </table>
+<p>BeanHelpers technology introduce <code><a href="./javadoc/com/developmentontheedge/beans/editors/PropertyEditorEx.html">PropertyEditorEx</a> </code> class
+    that extends standard <code>java.beans.PropertyEditor</code> interface to provide 
+    editor with access to the bean which property is being edited. Property sets up 
+    the such editors using <code>PropertyEditorEx.setBean</code> method. Later property editor 
+    can get access to the bean using <code>PropertyEditorEx.getBean</code> 
+    method. </p>
 
-    <h3 id="other_metadata">Other meta data</h3>
+<p>Property Inspector may also pass to a editor implementing this interface 
+    additional arguments <CODE>isSelected </CODE>and<CODE> hasFocus</CODE> to provide 
+    finer integration&nbsp; into JTable components, using methods <code>
+    getCustomRenderer</code> and <code>getCustomEditor</code> methods.</p>
+
+<p>There is a support class <code><a href="./javadoc/com/developmentontheedge/beans/editors/CustomEditorSupport.html">
+    CustomEditorSupport</a></code> to simplify creation of the property editors implementing 
+    <code><a href="./javadoc/com/developmentontheedge/beans/editors/PropertyEditorEx.html">PropertyEditorEx</a></code> 
+    intrface.</p>
+
+<p>Another extension (part of <code>PropertyDescriptoEx</code>) allows the
+    developer to specify preferred size of the property when it is  being displayed in some 
+    visual UI like PropertyInspector or DialogPropertyInspector, 
+    as well as specify format string for the property value.</p>
+
+<table border="1" cellPadding="3" cellSpacing="0" width="100%">
+    <tr bgColor="#ccccff" class="TableHeadingColor">
+        <td colSpan="2">PropertyDescriptorEx concerning property editors</td>
+    </tr>
+    <tr>
+        <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+        <td><code><b>
+                    <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setEditorPreferredSize-java.awt.Dimension-">
+                        setEditorPreferredSize</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/awt/Dimension.html">Dimension</a>&nbsp;editorPreferredSize)</code>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This method allows the developer to specify preferred size of the 
+            property when it is displayed in some visual UI like PropertyInspector or 
+            DialogPropertyInspector</td>
+    </tr>
+    <tr>
+        <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+        <td><code><b>
+                    <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setFormatMask-java.lang.reflect.Method-">
+                        setFormatMask</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;method)</code>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which generates format string for the property 
+            value.</td>
+    </tr>
+</table>
+
+
+<h3 id="composite_editor">Composite editor</h3>
+
+<p>Composite Editor is a container editor allowing the developer to group 
+    several property editors into one panel. Composite Editor can be specified both 
+    as bean editor and property editor.
+    <a href="../../lessons/lesson06/lesson06.html">Lesson 6</a> give you a detailed 
+    example how composite editor can be used.</p>
+
+
+<table border="1" cellPadding="3" cellSpacing="0" width="100%">
+    <tr bgColor="#ccccff" class="TableHeadingColor">
+        <td colSpan="2">BeanInfoEx method to specify composite editor</td>
+    </tr>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD><CODE><B>
+                <A HREF="./javadoc/com/developmentontheedge/beans/BeanInfoEx.html#setCompositeEditor-java.lang.String, java.awt.LayoutManager-">setCompositeEditor</A></B>
+                (<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A>&nbsp;propertyList,
+                <A HREF="http://docs.oracle.com/javase/8/docs/api/java/awt/LayoutManager.html">LayoutManager</A>&nbsp;layoutManager)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set and setup composite editor for some properties of bean.</TD>
+    </tr>
+</table>
+
+<h2 id="dynamic_property_attributes">Modification of behavior of the properties at runtime</h2>
+
+<p>Possibility to control properties behavior by the bean or changing behavior of the properties at run time
+    is one of the central in BeanHelpers technology.</p>
+
+<p>According to JavaBeans technology <code>BeanInfo</code> is associated with class, not with
+    particular instance of the class. Because class definition is immutable all class instances
+    share
+    the same <code>BeanInfo</code> instance and consequently have the same outlook 
+    in Property Inspector. Such approach is good enough for application builder 
+    tools. But in practice it is often necessary to have values of property 
+    attributes depending on some conditions. Here are some examples:
+<ul>
+    <li>property's display name should be controlled by the bean;</li>
+    <li>property &quot;a&quot; should be read only if property &quot;b&quot; has some
+        value;</li>
+    <li>property &quot;a&quot; should be hidden if property &quot;b&quot; has some
+        value.</li>
+</ul>
+<p>To solve this task BeanHelpers introduce the concept of dynamic property 
+    attribute. We say that property attribute is dynamic when its value is 
+    controlled by some method of the bean, specified in <code>PropertyDescriptor</code>. 
+    PropertyInspector invokes the specified method of the bean to get&nbsp; value 
+    of the property attribute. This allows a bean to control behavior of the property. </p>
+
+<p>The table below summarizes methods of <code>PropertyDescriptorEx</code> 
+    that can be used to specify property attributes that values can be calculated 
+    dynamically by a bean.<a href="../../lessons/lesson04/lesson04.html" target=mainFrame>
+        Lesson 4</a> gives an example how you can use dynamic  property attribute in your application.</p>
+
+
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="835">
+    <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+        <TD COLSPAN=2 width="825">PropertyDecriptorEx methods to specify property attributes that values 
+            will be calculated dynamically by a bean</TD>
+    </TR>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setDisplayName(java.lang.reflect.Method)">setDisplayName</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for generating display name of the property.</TD>
+    </tr>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setToolTip(java.lang.reflect.Method)">setToolTip</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for generating tooltip for the property.</TD>
+    </tr>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setReadOnly(java.lang.reflect.Method)">setReadOnly</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether the property is 'read only'.</TD>
+    </tr>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setHidden(java.lang.reflect.Method)">setHidden</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for determining visibility of the property.</TD>
+    </tr>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setDefaultValue(java.lang.reflect.Method)">setDefaultValue</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method to generate initial value for the property when its getter method returns <code>null</code>.</TD>
+    </tr>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setFormatMask(java.lang.reflect.Method)">setFormatMask</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which generates format string for the property value.</TD>
+    </tr>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setChildDisplayName(java.lang.reflect.Method)">setChildDisplayName</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for calculating display names for the elements of the indexed property.</TD>
+    </tr>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setHideChildren(java.lang.reflect.Method)">setHideChildren</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for determining whether the children of composite property should be visible or not.</TD>
+    </tr>
+    <tr>
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setResizable(java.lang.reflect.Method)">setResizable</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;m)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed property can be changed at run time.</TD>
+    </tr>
+    <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setCanDelete(java.lang.reflect.Method)">setCanDelete</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;m)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed property can be removed at run time.</TD>
+    </TR>
+    <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setCanInsert(java.lang.reflect.Method)">setCanInsert</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;m)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed property can be added at run time.</TD>
+    </TR>
+    <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE></FONT></TD>
+        <TD width="777"><CODE><B>
+                    <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setCanMove(java.lang.reflect.Method)">setCanMove</A></B>(<A HREF="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;m)</CODE>
+
+            <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether the order of the elements of the indexed property can be changed at run time.</TD>
+    </TR>
+</TABLE>
+
+<br>
+<hr>
+<h2 id="hierarchy">Hierarchy of the properties</h2>
+
+<p>Bean properties can form a hierarchy, represented in Property Inspector as a 
+    tree. In the example below <code>BarChart</code> bean has array property <code>
+        columns</code>. Array items presented by composite properties that consists of 4 
+    simple properties: <code>label</code>, <code>value</code>, <code>color</code> 
+    and <code>visible</code>. Thus in this example we have three level hierarchy:
+<ul>
+    <li>first level - properties of <code>BarChart</code>;</li>
+    <li>second level - array items of <code>columns</code> property;</li>
+    <li>third level - properties of array items.</li>
+</ul>
+
+<img border="0" src="../images/property_inspector.jpg"/>
+
+<p>BeanHelpers technology provides two extensions to address complications arising for such
+    hierarchies. First extension provides fine control on array item 
+    properties. Second extensions concerns merging metadata from <code>BeanDescriptor</code> and 
+    <code>PropertyDescriptor</code> when some bean (child)&nbsp; is used as property of other 
+    bean (parent). </p>
+
+
+<h3 id="type">Property types and their customization</h3>
+
+
+<span class="normaltext">
+    <p>By type of its value properties are divided into three groups:</p>
+    <ul>
+        <li><i>Simple properties</i> - as a rule value type of simple property is one of
+            <code>java.lang.XXXXXX</code> types or simple Java type: <code>boolean</code>, <code>byte</code>,
+            <code>char</code>, <code>short</code>, <code>int</code>, <code>long</code>,
+            <code>float</code> or <code>double</code>. In the picture above <code>title</code>,
+            <code>orientation</code> and <code>autoLayout</code> are examples of simple 
+            properties. </li>
+        <li><i>Array properties</i> - value of such property is an array. Simple or 
+            composite property is associated with each array item value. In the picture 
+            above <code>columns</code> is array property, and composite property is 
+            associated with each array item. </li>
+        <li><i>Composite properties</i>. Value of composite property is another bean, 
+            characterized by its own set of properties. </li>
+    </ul>
+    <p>BeanHelpers technology provides following methods for dealing with  
+        hierarchies of the properties:</p>
+
+
     <table border="1" cellPadding="3" cellSpacing="0" width="100%">
         <tr bgColor="#ccccff" class="TableHeadingColor">
-            <td colSpan="2">Other PropertyDescriptorEx methods for meta data</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setHelpId(java.lang.String)">
-                            setHelpId</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html">String</a>&nbsp;helpId)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets context for the property in some help system defined by an 
-                application.</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setNodeIcon(int, java.awt.Image)">
-                            setNodeIcon</a></b>(int&nbsp;type,
-                    <a href="http://java.sun.com/j2se/1.3/docs/api/java/awt/Image.html">Image</a>&nbsp;icon)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets an icon for the property.</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setReadOnly(boolean)">
-                            setReadOnly</a></b>(boolean&nbsp;value)</code> <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates that property as 'read only'.</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setReadOnly(java.lang.reflect.Method)">
-                            setReadOnly</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;method)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether the property is 'read 
-                only'.</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setToolTip(java.lang.reflect.Method)">
-                            setToolTip</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;method)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for generating tooltip for the property.</td>
-        </tr>
-    </table>
-    <p id="methods_inherited_from_class_java.beans.PropertyDescriptor">
-        <!-- --></p>
-
-    <hr>
-    <h2 id="property_editor">Property Editor extension</h2>
-
-    <p>BeanHelpers technology introduce <code><a href="../../javadoc/com/beanexplorer/editors/PropertyEditorEx.html">PropertyEditorEx</a> </code> class
-        that extends standard <code>java.beans.PropertyEditor</code> interface to provide 
-        editor with access to the bean which property is being edited. Property sets up 
-        the such editors using <code>PropertyEditorEx.setBean</code> method. Later property editor 
-        can get access to the bean using <code>PropertyEditorEx.getBean</code> 
-        method. </p>
-
-    <p>Property Inspector may also pass to a editor implementing this interface 
-        additional arguments <CODE>isSelected </CODE>and<CODE> hasFocus</CODE> to provide 
-        finer integration&nbsp; into JTable components, using methods <code>
-            getCustomRenderer</code> and <code>getCustomEditor</code> methods.</p>
-    <p>There is a support class <code><a href="../../javadoc/com/beanexplorer/editors/CustomEditorSupport.html">
-                CustomEditorSupport</a></code> to simplify creation of the property editors implementing <code><a href="../../javadoc/com/beanexplorer/editors/PropertyEditorEx.html">PropertyEditorEx</a></code> 
-        intrface.</p>
-    <p>Another extension (part of <code>PropertyDescriptoEx</code>) allows the
-        developer to specify preferred size of the property when it is  being displayed in some 
-        visual UI like PropertyInspector or  DialogPropertyInspector, as well as specify format string for the property 
-        value. The tables below provides summary of such methods.</p>
-
-    <table border="1" cellPadding="3" cellSpacing="0" width="100%">
-        <tr bgColor="#ccccff" class="TableHeadingColor">
-            <td colSpan="2">PropertyDescriptorEx concerning property editors</td>
+            <td colSpan="2">PropertyDescriptorEx methods to <span class="normaltext">
+                    concerning properties hierarchy</span></td>
         </tr>
         <tr>
             <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
             <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setEditorPreferredSize(java.awt.Dimension)">
-                            setEditorPreferredSize</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/awt/Dimension.html">Dimension</a>&nbsp;editorPreferredSize)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This method allows the developer to specify preferred size of the 
-                property when it is displayed in some visual UI like PropertyInspector or 
-                DialogPropertyInspector</td>
-        </tr>
-        <tr>
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setFormatMask(java.lang.reflect.Method)">
-                            setFormatMask</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;method)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which generates format string for the property 
-                value.</td>
-        </tr>
-    </table>
-
-
-    <h3 id="composite_editor">Composite editor</h3>
-
-    <p>Composite Editor is a container editor allowing the developer to group 
-        several property editors into one panel. Composite Editor can be specified both 
-        as bean editor and property editor.
-        <a href="../../lessons/lesson06/lesson06.html">Lesson 6</a> give you a detailed 
-        example how composite editor can be used.</p>
-
-
-    <table border="1" cellPadding="3" cellSpacing="0" width="100%">
-        <tr bgColor="#ccccff" class="TableHeadingColor">
-            <td colSpan="2">BeanInfoEx method to specify composite editor</td>
+                        <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setSimple(boolean)">
+                            setSimple</a></b>(boolean&nbsp;value)</code> <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This flag forces interpretation of composite properties as simple.</td>
         </tr>
         <tr>
             <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
                 <CODE>&nbsp;void</CODE></FONT></TD>
             <TD><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/BeanInfoEx.html#setCompositeEditor(java.lang.String, java.awt.LayoutManager)">setCompositeEditor</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html">String</A>&nbsp;propertyList,
-                    <A HREF="http://java.sun.com/j2se/1.3/docs/api/java/awt/LayoutManager.html">LayoutManager</A>&nbsp;layoutManager)</CODE>
+                        <A HREF="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setNoRecursionCheck(boolean)">setNoRecursionCheck</A></B>(boolean&nbsp;noRecursionCheck)</CODE>
 
                 <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set and setup composite editor for some properties of bean.</TD>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a flag for no recursion check.
+            </TD>
+        </tr>
+        <tr>
+            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+            <td><code><b>
+                        <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setHideChildren(boolean)">
+                            setHideChildren</a></b>(boolean&nbsp;value)</code> <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies whether the children of a composite property should be 
+                visible or not.</td>
+        </tr>
+        <tr>
+            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+            <td><code><b>
+                        <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setHideChildren(java.lang.reflect.Method)">
+                            setHideChildren</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;method)</code>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for determining whether the children of composite 
+                property should be visible or not.</td>
         </tr>
     </table>
 
 
-    </font>
-    &nbsp;<hr>
-    <h2 id="dynamic_property_attributes">Modification of behavior of the properties at runtime</h2>
+</span>
 
-    <p>Possibility to control properties behavior by the bean or changing behavior of the properties at run time
-        is one of the central in BeanHelpers technology.</p>
+<h3 id="array_items">Controlling array items</h3>
 
-    <p>According to JavaBeans technology <code>BeanInfo</code> is associated with class, not with
-        particular instance of the class. Because class definition is immutable all class instances
-        share
-        the same <code>BeanInfo</code> instance and consequently have the same outlook 
-        in Property Inspector. Such approach is good enough for application builder 
-        tools. But in practice it is often necessary to have values of property 
-        attributes depending on some conditions. Here are some examples:
-    <ul>
-        <li>property's display name should be controlled by the bean;</li>
-        <li>property &quot;a&quot; should be read only if property &quot;b&quot; has some
-            value;</li>
-        <li>property &quot;a&quot; should be hidden if property &quot;b&quot; has some
-            value.</li>
-    </ul>
-    <p>To solve this task BeanHelpers introduce the concept of dynamic property 
-        attribute. We say that property attribute is dynamic when its value is 
-        controlled by some method of the bean, specified in <code>PropertyDescriptor</code>. 
-        PropertyInspector invokes the specified method of the bean to get&nbsp; value 
-        of the property attribute. This allows a bean to control behavior of the property. </p>
+<p>BeanHelpers extends JavaBeans technology to provide fine control on array 
+    items. The table below summarizes methods of <code>PropertyDescriptorEx</code> 
+    for dealing with array items. </p>
 
-    <p>The table below summarizes methods of <code>PropertyDescriptorEx</code> 
-        that can be used to specify property attributes that values can be calculated 
-        dynamically by a bean.<a href="../../lessons/lesson04/lesson04.html" target=mainFrame>
-            Lesson 4</a> gives an example how you can use dynamic  property attribute in your application.</p>
+<p>By default display names of array elements are shown as [0], [1], 
+    [2] etc. Using <code>
+        <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setChildDisplayName(java.lang.reflect.Method)">
+            setChildDisplayName</a></code> method a bean can provide a method for 
+    calculating display names for the elements of the indexed property. The detailed 
+    example you can find in <a href="../../lessons/lesson07/lesson07.html">lesson 7</a>.</p>
 
+<p>Other methods allow a bean to control insertion or 
+    deletion of array items*.</p>
 
-    <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="835">
-        <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-            <TD COLSPAN=2 width="825">PropertyDecriptorEx methods to specify property attributes that values 
-                will be calculated dynamically by a bean</TD>
-        </TR>
-        <tr>
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setDisplayName(java.lang.reflect.Method)">setDisplayName</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+<table border="1" cellPadding="3" cellSpacing="0" width="100%">
+    <tr bgColor="#ccccff" class="TableHeadingColor">
+        <td colSpan="2"><span class="normaltext">PropertyDescriptorEx methods to 
+            </span>control on array items</td>
+    </tr>
+    <tr>
+        <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+        <td><code><b>
+                    <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setChildDisplayName(java.lang.reflect.Method)">
+                        setChildDisplayName</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;method)</code>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for calculating display names for the elements of 
+            the indexed property.</td>
+    </tr>
+    <tr>
+        <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+        <td><code><b>
+                    <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setResizable(java.lang.Boolean)">
+                        setResizable</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html">Boolean</a>&nbsp;value)</code>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies that number elements of the indexed property can be 
+            changed at run time.</td>
+    </tr>
+    <tr>
+        <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+        <td><code><b>
+                    <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setResizable(java.lang.reflect.Method)">
+                        setResizable</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;m)</code>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed 
+            property can be changed at run time.</td>
+    </tr>
+    <tr bgColor="white" class="TableRowColor">
+        <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+        <td><code><b>
+                    <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setCanDelete(java.lang.reflect.Method)">
+                        setCanDelete</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;m)</code>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed 
+            property can be removed at run time.</td>
+    </tr>
+    <tr bgColor="white" class="TableRowColor">
+        <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+        <td><code><b>
+                    <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setCanInsert(java.lang.reflect.Method)">
+                        setCanInsert</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;m)</code>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed 
+            property can be added at run time.</td>
+    </tr>
+    <tr bgColor="white" class="TableRowColor">
+        <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
+        <td><code><b>
+                    <a href="./javadoc/com/developmentontheedge/beans/PropertyDescriptorEx.html#setCanMove(java.lang.reflect.Method)">
+                        setCanMove</a></b>(<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;m)</code>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether the order of the elements 
+            of the indexed property can be changed at run time.</td>
+    </tr>
+</table>
 
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for generating display name of the property.</TD>
-        </tr>
-        <tr>
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setToolTip(java.lang.reflect.Method)">setToolTip</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
+<p>* This feature is not yet supported by standard Property Editors.</p>
 
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for generating tooltip for the property.</TD>
-        </tr>
-        <tr>
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setReadOnly(java.lang.reflect.Method)">setReadOnly</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether the property is 'read only'.</TD>
-        </tr>
-        <tr>
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setHidden(java.lang.reflect.Method)">setHidden</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for determining visibility of the property.</TD>
-        </tr>
-        <tr>
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setDefaultValue(java.lang.reflect.Method)">setDefaultValue</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method to generate initial value for the property when its getter method returns <code>null</code>.</TD>
-        </tr>
-        <tr>
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setFormatMask(java.lang.reflect.Method)">setFormatMask</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which generates format string for the property value.</TD>
-        </tr>
-        <tr>
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setChildDisplayName(java.lang.reflect.Method)">setChildDisplayName</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for calculating display names for the elements of the indexed property.</TD>
-        </tr>
-        <tr>
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setHideChildren(java.lang.reflect.Method)">setHideChildren</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;method)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for determining whether the children of composite property should be visible or not.</TD>
-        </tr>
-        <tr>
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setResizable(java.lang.reflect.Method)">setResizable</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;m)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed property can be changed at run time.</TD>
-        </tr>
-        <TR BGCOLOR="white" CLASS="TableRowColor">
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setCanDelete(java.lang.reflect.Method)">setCanDelete</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;m)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed property can be removed at run time.</TD>
-        </TR>
-        <TR BGCOLOR="white" CLASS="TableRowColor">
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setCanInsert(java.lang.reflect.Method)">setCanInsert</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;m)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed property can be added at run time.</TD>
-        </TR>
-        <TR BGCOLOR="white" CLASS="TableRowColor">
-            <TD ALIGN="right" VALIGN="top" WIDTH="40"><FONT SIZE="-1">
-                <CODE>&nbsp;void</CODE></FONT></TD>
-            <TD width="777"><CODE><B>
-                        <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setCanMove(java.lang.reflect.Method)">setCanMove</A></B>(<A HREF="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</A>&nbsp;m)</CODE>
-
-                <BR>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether the order of the elements of the indexed property can be changed at run time.</TD>
-        </TR>
-    </TABLE>
-
-    <br>
-    <hr>
-    <h2 id="hierarchy">Hierarchy of the properties</h2>
-
-    <p>Bean properties can form a hierarchy, represented in Property Inspector as a 
-        tree. In the example below <code>BarChart</code> bean has array property <code>
-            columns</code>. Array items presented by composite properties that consists of 4 
-        simple properties: <code>label</code>, <code>value</code>, <code>color</code> 
-        and <code>visible</code>. Thus in this example we have three level hierarchy:
-    <ul>
-        <li>first level - properties of <code>BarChart</code>;</li>
-        <li>second level - array items of <code>columns</code> property;</li>
-        <li>third level - properties of array items.</li>
-    </ul>
-
-    <img border="0" src="../property_inspector.jpg" width="515" height="477">
-
-    <p>BeanHelpers technology provides two extensions to address complications arising for such
-        hierarchies. First extension provides fine control on array item 
-        properties. Second extensions concerns merging metadata from <code>BeanDescriptor</code> and 
-        <code>PropertyDescriptor</code> when some bean (child)&nbsp; is used as property of other 
-        bean (parent). </p>
+<h3 id="merging">Merging</h3>
 
 
-    <h3 id="type">Property types and their customization</h3>
+<p>Any bean (child) can be used as a value of the property of another bean (parent). In 
+    such case we consider metadata from child <code>BeanDescriptor</code> as 
+    default, while parent <code>PropertyDescriptor</code> can redefine some child 
+    property attributes. </p>
+<p>BeanExplorer merges information from <code>PropertyDescriptor</code> and
+    <code>BeanDescriptor </code>when a property is created. Property attributes 
+    defined in <code>BeanDescriptor</code> are replaced by corresponding attributes 
+    from <code>PropertyDescriptor</code> if such attributes exist. </p>
 
 
-    <span class="normaltext">
-        <p>By type of its value properties are divided into three groups:</p>
-        <ul>
-            <li><i>Simple properties</i> - as a rule value type of simple property is one of
-                <code>java.lang.XXXXXX</code> types or simple Java type: <code>boolean</code>, <code>byte</code>,
-                <code>char</code>, <code>short</code>, <code>int</code>, <code>long</code>,
-                <code>float</code> or <code>double</code>. In the picture above <code>title</code>,
-                <code>orientation</code> and <code>autoLayout</code> are examples of simple 
-                properties. </li>
-            <li><i>Array properties</i> - value of such property is an array. Simple or 
-                composite property is associated with each array item value. In the picture 
-                above <code>columns</code> is array property, and composite property is 
-                associated with each array item. </li>
-            <li><i>Composite properties</i>. Value of composite property is another bean, 
-                characterized by its own set of properties. </li>
-        </ul>
-        <p>BeanHelpers technology provides following methods for dealing with  
-            hierarchies of the properties:</p>
+<hr>
+<h2 id="summary">Summary table</h2>
 
+<p>&nbsp;</p>
 
-        <table border="1" cellPadding="3" cellSpacing="0" width="100%">
-            <tr bgColor="#ccccff" class="TableHeadingColor">
-                <td colSpan="2">PropertyDescriptorEx methods to <span class="normaltext">
-                        concerning properties hierarchy</span></td>
-            </tr>
-            <tr>
-                <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td><code><b>
-                            <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setSimple(boolean)">
-                                setSimple</a></b>(boolean&nbsp;value)</code> <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This flag forces interpretation of composite properties as simple.</td>
-            </tr>
-            <tr>
-                <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-                    <CODE>&nbsp;void</CODE></FONT></TD>
-                <TD><CODE><B>
-                            <A HREF="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setNoRecursionCheck(boolean)">setNoRecursionCheck</A></B>(boolean&nbsp;noRecursionCheck)</CODE>
-
-                    <BR>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a flag for no recursion check.
-                </TD>
-            </tr>
-            <tr>
-                <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td><code><b>
-                            <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setHideChildren(boolean)">
-                                setHideChildren</a></b>(boolean&nbsp;value)</code> <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies whether the children of a composite property should be 
-                    visible or not.</td>
-            </tr>
-            <tr>
-                <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-                <td><code><b>
-                            <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setHideChildren(java.lang.reflect.Method)">
-                                setHideChildren</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;method)</code>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for determining whether the children of composite 
-                    property should be visible or not.</td>
-            </tr>
-        </table>
-
-
-    </span>
-
-    <h3 id="array_items">Controlling array items</h3>
-
-    <p>BeanHelpers extends JavaBeans technology to provide fine control on array 
-        items. The table below summarizes methods of <code>PropertyDescriptorEx</code> 
-        for dealing with array items. </p>
-
-    <p>By default display names of array elements are shown as [0], [1], 
-        [2] etc. Using <code>
-            <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setChildDisplayName(java.lang.reflect.Method)">
-                setChildDisplayName</a></code> method a bean can provide a method for 
-        calculating display names for the elements of the indexed property. The detailed 
-        example you can find in <a href="../../lessons/lesson07/lesson07.html">lesson 7</a>.</p>
-
-    <p>Other methods allow a bean to control insertion or 
-        deletion of array items*.</p>
-
-    <table border="1" cellPadding="3" cellSpacing="0" width="100%">
-        <tr bgColor="#ccccff" class="TableHeadingColor">
-            <td colSpan="2"><span class="normaltext">PropertyDescriptorEx methods to 
-                </span>control on array items</td>
-        </tr>
-        <tr>
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setChildDisplayName(java.lang.reflect.Method)">
-                            setChildDisplayName</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;method)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method for calculating display names for the elements of 
-                the indexed property.</td>
-        </tr>
-        <tr>
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setResizable(java.lang.Boolean)">
-                            setResizable</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/Boolean.html">Boolean</a>&nbsp;value)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies that number elements of the indexed property can be 
-                changed at run time.</td>
-        </tr>
-        <tr>
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setResizable(java.lang.reflect.Method)">
-                            setResizable</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;m)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed 
-                property can be changed at run time.</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setCanDelete(java.lang.reflect.Method)">
-                            setCanDelete</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;m)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed 
-                property can be removed at run time.</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setCanInsert(java.lang.reflect.Method)">
-                            setCanInsert</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;m)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether elements of the indexed 
-                property can be added at run time.</td>
-        </tr>
-        <tr bgColor="white" class="TableRowColor">
-            <td align="right" vAlign="top" width="1%"><font size="-1"><code>&nbsp;void</code></font></td>
-            <td><code><b>
-                        <a href="../../javadoc/com/beanexplorer/beans/PropertyDescriptorEx.html#setCanMove(java.lang.reflect.Method)">
-                            setCanMove</a></b>(<a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a>&nbsp;m)</code>
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a method which determines whether the order of the elements 
-                of the indexed property can be changed at run time.</td>
-        </tr>
-    </table>
-
-    <p>* This feature is not yet supported by standard Property Editors.</p>
-
-    <h3 id="merging">Merging</h3>
-
-
-    <p>Any bean (child) can be used as a value of the property of another bean (parent). In 
-        such case we consider metadata from child <code>BeanDescriptor</code> as 
-        default, while parent <code>PropertyDescriptor</code> can redefine some child 
-        property attributes. </p>
-    <p>BeanExplorer merges information from <code>PropertyDescriptor</code> and
-        <code>BeanDescriptor </code>when a property is created. Property attributes 
-        defined in <code>BeanDescriptor</code> are replaced by corresponding attributes 
-        from <code>PropertyDescriptor</code> if such attributes exist. </p>
-
-
-    <hr>
-    <h2 id="summary">Summary table</h2>
-
-    <p>&nbsp;</p>
-
-    <table width="100%" height="1329">
-        <tr>
-            <td width="21%" align="center" height="25"><b>Key</b></td>
-            <td width="23%" align="center" height="25"><b>Value class</b></td>
-            <td width="56%" align="center" height="25"><b>Description</b></td>
-        </tr>
-        <tr>
-            <td width="21%" height="90"><code>ORDER</code></td>
-            <td width="23%" height="90"><code><a href="http://java.sun.com/j2se/1.3/docs/api/java/beans/PropertyDescriptor.html">PropertyDescriptor</a>[]</code></td>
-            <td width="56%" height="90">Key to get SpecifiesThis attrubute allows passing the order in which properties were added in
-                using BeanInfoEx interface. This attribute can be extracted by visualization
-                UI and used to display properties in order.&nbsp;</td>
-        </tr>
-        <tr>
-            <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
-                <p align="left">Meta information to display a property</p>
-            </td>
-        </tr>
-        <tr>
-            <td width="21%" height="24"><code>BEAN_DISPLAY_NAME</code></td>
-            <td width="23%" height="24"><code><a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a></code>
-            </td>
-            <td width="56%" height="24">Key for&nbsp; method to be invoked to calculate display name
-                for the bean</td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>DISPLAY_NAME</code></td>
-            <td width="23%" height="46"><code><a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a></code></td>
-            <td width="56%" height="46">Specifies the method to be invoked to calculate display name
-                for the property</td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>CHILD_DISPLAY_NAME</code></td>
-            <td width="23%" height="46"><code><a href="http://java.sun.com/j2se/1.3/docs/api/java/lang/reflect/Method.html">Method</a></code></td>
-            <td width="56%" height="46">Specifies the method to be invoked to calculate display for
-                array items in array property</td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>TOOLTIP</code></td>
-            <td width="23%" height="46">&nbsp;</td>
-            <td width="56%" height="46">This attribute is used as a placeholder for specifying methods to
-                calculate tooltip for properties at run time</td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>HELP_ID</code></td>
-            <td width="23%" height="46">&nbsp;</td>
-            <td width="56%" height="46">This attribute is used a context help for the property. It can be some
-                identifier of help resource as well as help message itself</td>
-        </tr>
-        <tr>
-            <td width="21%" height="90"><code>NODE_ICON_COLOR_16x16</code>
-                <br><code>NODE_ICON_COLOR_32x32</code>
-                <br><code>NODE_ICON_MONO_16x16</code>
-                <br><code>NODE_ICON_MONO_32x32</code>
-            </td>
-            <td width="23%" height="90">&nbsp;</td>
-            <td width="56%" height="90">Flags are used to specify icons for the individual
-                properties. Java Beans technology allows the developer to specify icons for
-                the bean-level only, though modern UI approaches are based on tree models
-                where icons are required for the leaves</td>
-        </tr>
-        <tr>
-            <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
-                <p align="left">Meta information to control property behavior</p>
-            </td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>READ_ONLY</code></td>
-            <td width="23%" height="46">&nbsp;</td>
-            <td width="56%" height="46">This flag is used to force the properties to be read only even if they
-                have setter methods</td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>HIDDEN</code></td>
-            <td width="23%" height="46">&nbsp;</td>
-            <td width="56%" height="46">This attribute is used as a placeholder for specifying method that will
-                calculate visiblity of the property at run time</td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>HIDE_CHILDREN</code></td>
-            <td width="23%" height="46">&nbsp;</td>
-            <td width="56%" height="46">This attribute is used for composite properties when the developer doesn't
-                want to show its children</td>
-        </tr>
-        <tr>
-            <td width="21%" height="68"><code>SIMPLE</code></td>
-            <td width="23%" height="68">&nbsp;</td>
-            <td width="56%" height="68">This attribute is used to disable recursive introspection of some
-                properties. Normally introspection is applied to all non-promitive
-                properties to find out whether they are itself Beans.</td>
-        </tr>
-        <tr>
-            <td width="21%" height="156"><code>NO_RECURSION_CHECK</code></td>
-            <td width="23%" height="156">&nbsp;</td>
-            <td width="56%" height="156">This flag is caused by classes like <code>java.awt.Dimension</code> which
-                contain property of the type <code>java.awt.Dimension</code> thus causing
-                endless loop while recursively introspecting beans. Normally we suppress
-                recursion but in some situations this screens out required properties. In
-                such situation the developer can use this flag to aviod recusrion suppresion,
-                but he may be required to write BeanInfo for the class in this case.</td>
-        </tr>
-        <tr>
-            <td width="21%" height="68"><code>SUBSTITUTE_BY_CHILD</code></td>
-            <td width="23%" height="68">&nbsp;</td>
-            <td width="56%" height="68">This attribute is used for composite properties when they contain the only
-                visible child property. If this attribute is specified parent peoprty wil be
-                replaced by child</td>
-        </tr>
-        <tr>
-            <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
-                <p align="left">Meta information used by property editor</p>
-            </td>
-        </tr>
-        <tr>
-            <td width="21%" height="24"><code>FORMAT_MASK</code></td>
-            <td width="23%" height="24">&nbsp;String</td>
-            <td width="56%" height="24">Property format string</td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>EDITOR_PREFERRED_SIZE</code></td>
-            <td width="23%" height="46">&nbsp;Dimension</td>
-            <td width="56%" height="46">Specifies preferred size of the
-                property control when it is displayed in some visual UI like PropertyInspector or
-                DialogPropertyInspector</td>
-        </tr>
-        <tr>
-            <td width="21%" height="24"><code>COMPOSITE_EDITOR_PROPERTY_LIST</code></td>
-            <td width="23%" height="24">&nbsp;String</td>
-            <td width="56%" height="24">
-                List of property names for composite editor.</td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>COMPOSITE_EDITOR_LAYOUT_MANAGER</code></td>
-            <td width="23%" height="46">&nbsp;LayoutManager</td>
-            <td width="56%" height="46">
-                Layout manager to arrange property renderers/editors inside the composite editor.</td>
-        </tr>
-        <tr>
-            <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
-                <p align="left">Meta information to control property value</p>
-            </td>
-        </tr>
-        <tr>
-            <td width="21%" height="46"><code>DEFAULT_VALUE</code></td>
-            <td width="23%" height="46">&nbsp;Object</td>
-            <td width="56%" height="46">Specifies an initial value for the property when its getter method returns null.
-            </td>
-        </tr>
-        <tr>
-            <td width="21%" height="24"><code>CAN_BE_NULL</code></td>
-            <td width="23%" height="24">&nbsp;</td>
-            <td width="56%" height="24">This attribute is used to specify the property can be null</td>
-        </tr>
-        <tr>
-            <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
-                <p align="left">Reserved for internal usage constants</p>
-            </td>
-        </tr>
-        <tr>
-            <td width="21%" height="24"><code>RESOURCES</code></td>
-            <td width="23%" height="24">&nbsp;</td>
-            <td width="56%" height="24">Bean resources</td>
-        </tr>
-        <tr>
-            <td width="21%" height="24"><code>PARENT_RESOURCES</code></td>
-            <td width="23%" height="24">&nbsp;</td>
-            <td width="56%" height="24">Resources of beans parent</td>
-        </tr>
-    </table>
+<table width="100%" height="1329">
+    <tr>
+        <td width="21%" align="center" height="25"><b>Key</b></td>
+        <td width="23%" align="center" height="25"><b>Value class</b></td>
+        <td width="56%" align="center" height="25"><b>Description</b></td>
+    </tr>
+    <tr>
+        <td width="21%" height="90"><code>ORDER</code></td>
+        <td width="23%" height="90"><code><a href="http://docs.oracle.com/javase/8/docs/api/java/beans/PropertyDescriptor.html">PropertyDescriptor</a>[]</code></td>
+        <td width="56%" height="90">Key to get SpecifiesThis attrubute allows passing the order in which properties were added in
+            using BeanInfoEx interface. This attribute can be extracted by visualization
+            UI and used to display properties in order.&nbsp;</td>
+    </tr>
+    <tr>
+        <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
+            <p align="left">Meta information to display a property</p>
+        </td>
+    </tr>
+    <tr>
+        <td width="21%" height="24"><code>BEAN_DISPLAY_NAME</code></td>
+        <td width="23%" height="24"><code><a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a></code>
+        </td>
+        <td width="56%" height="24">Key for&nbsp; method to be invoked to calculate display name
+            for the bean</td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>DISPLAY_NAME</code></td>
+        <td width="23%" height="46"><code><a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a></code></td>
+        <td width="56%" height="46">Specifies the method to be invoked to calculate display name
+            for the property</td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>CHILD_DISPLAY_NAME</code></td>
+        <td width="23%" height="46"><code><a href="http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html">Method</a></code></td>
+        <td width="56%" height="46">Specifies the method to be invoked to calculate display for
+            array items in array property</td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>TOOLTIP</code></td>
+        <td width="23%" height="46">&nbsp;</td>
+        <td width="56%" height="46">This attribute is used as a placeholder for specifying methods to
+            calculate tooltip for properties at run time</td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>HELP_ID</code></td>
+        <td width="23%" height="46">&nbsp;</td>
+        <td width="56%" height="46">This attribute is used a context help for the property. It can be some
+            identifier of help resource as well as help message itself</td>
+    </tr>
+    <tr>
+        <td width="21%" height="90"><code>NODE_ICON_COLOR_16x16</code>
+            <br><code>NODE_ICON_COLOR_32x32</code>
+            <br><code>NODE_ICON_MONO_16x16</code>
+            <br><code>NODE_ICON_MONO_32x32</code>
+        </td>
+        <td width="23%" height="90">&nbsp;</td>
+        <td width="56%" height="90">Flags are used to specify icons for the individual
+            properties. Java Beans technology allows the developer to specify icons for
+            the bean-level only, though modern UI approaches are based on tree models
+            where icons are required for the leaves</td>
+    </tr>
+    <tr>
+        <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
+            <p align="left">Meta information to control property behavior</p>
+        </td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>READ_ONLY</code></td>
+        <td width="23%" height="46">&nbsp;</td>
+        <td width="56%" height="46">This flag is used to force the properties to be read only even if they
+            have setter methods</td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>HIDDEN</code></td>
+        <td width="23%" height="46">&nbsp;</td>
+        <td width="56%" height="46">This attribute is used as a placeholder for specifying method that will
+            calculate visiblity of the property at run time</td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>HIDE_CHILDREN</code></td>
+        <td width="23%" height="46">&nbsp;</td>
+        <td width="56%" height="46">This attribute is used for composite properties when the developer doesn't
+            want to show its children</td>
+    </tr>
+    <tr>
+        <td width="21%" height="68"><code>SIMPLE</code></td>
+        <td width="23%" height="68">&nbsp;</td>
+        <td width="56%" height="68">This attribute is used to disable recursive introspection of some
+            properties. Normally introspection is applied to all non-promitive
+            properties to find out whether they are itself Beans.</td>
+    </tr>
+    <tr>
+        <td width="21%" height="156"><code>NO_RECURSION_CHECK</code></td>
+        <td width="23%" height="156">&nbsp;</td>
+        <td width="56%" height="156">This flag is caused by classes like <code>java.awt.Dimension</code> which
+            contain property of the type <code>java.awt.Dimension</code> thus causing
+            endless loop while recursively introspecting beans. Normally we suppress
+            recursion but in some situations this screens out required properties. In
+            such situation the developer can use this flag to aviod recusrion suppresion,
+            but he may be required to write BeanInfo for the class in this case.</td>
+    </tr>
+    <tr>
+        <td width="21%" height="68"><code>SUBSTITUTE_BY_CHILD</code></td>
+        <td width="23%" height="68">&nbsp;</td>
+        <td width="56%" height="68">This attribute is used for composite properties when they contain the only
+            visible child property. If this attribute is specified parent peoprty wil be
+            replaced by child</td>
+    </tr>
+    <tr>
+        <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
+            <p align="left">Meta information used by property editor</p>
+        </td>
+    </tr>
+    <tr>
+        <td width="21%" height="24"><code>FORMAT_MASK</code></td>
+        <td width="23%" height="24">&nbsp;String</td>
+        <td width="56%" height="24">Property format string</td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>EDITOR_PREFERRED_SIZE</code></td>
+        <td width="23%" height="46">&nbsp;Dimension</td>
+        <td width="56%" height="46">Specifies preferred size of the
+            property control when it is displayed in some visual UI like PropertyInspector or
+            DialogPropertyInspector</td>
+    </tr>
+    <tr>
+        <td width="21%" height="24"><code>COMPOSITE_EDITOR_PROPERTY_LIST</code></td>
+        <td width="23%" height="24">&nbsp;String</td>
+        <td width="56%" height="24">
+            List of property names for composite editor.</td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>COMPOSITE_EDITOR_LAYOUT_MANAGER</code></td>
+        <td width="23%" height="46">&nbsp;LayoutManager</td>
+        <td width="56%" height="46">
+            Layout manager to arrange property renderers/editors inside the composite editor.</td>
+    </tr>
+    <tr>
+        <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
+            <p align="left">Meta information to control property value</p>
+        </td>
+    </tr>
+    <tr>
+        <td width="21%" height="46"><code>DEFAULT_VALUE</code></td>
+        <td width="23%" height="46">&nbsp;Object</td>
+        <td width="56%" height="46">Specifies an initial value for the property when its getter method returns null.
+        </td>
+    </tr>
+    <tr>
+        <td width="21%" height="24"><code>CAN_BE_NULL</code></td>
+        <td width="23%" height="24">&nbsp;</td>
+        <td width="56%" height="24">This attribute is used to specify the property can be null</td>
+    </tr>
+    <tr>
+        <td width="100%" colspan="3" bgcolor="#C0C0C0" height="24">
+            <p align="left">Reserved for internal usage constants</p>
+        </td>
+    </tr>
+    <tr>
+        <td width="21%" height="24"><code>RESOURCES</code></td>
+        <td width="23%" height="24">&nbsp;</td>
+        <td width="56%" height="24">Bean resources</td>
+    </tr>
+    <tr>
+        <td width="21%" height="24"><code>PARENT_RESOURCES</code></td>
+        <td width="23%" height="24">&nbsp;</td>
+        <td width="56%" height="24">Resources of beans parent</td>
+    </tr>
+</table>
 
 
 </div>
