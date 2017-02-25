@@ -53,6 +53,10 @@
                 }
             });
 
+            Path.map("#/api").to(function () {
+                load2("./menu-api.shtml", "api.shtml");
+            });
+
             Path.root("#/empty/home.shtml");
             $(document).ready(function () {
                 Path.listen();
@@ -79,7 +83,7 @@
                     <a href="#/empty/overview.shtml">Overview</a><br/>
                     <a href="#/empty/javabeans.shtml">JavaBeans</a><br/>
                     <a href="#/beaninfoex">BeanHelpers</a><br>
-                    <a href="#/details/api.shtml">Main API</a><br/>
+                    <a href="#/empty/api.shtml">Main API</a><br/>
                     <a href="#/details/../lessons/lessons.shtml">Tutorial</a><br/>
                     &nbsp<br/>
                     <a target="blank" href="./javadoc/index.html">Javadoc</a>
