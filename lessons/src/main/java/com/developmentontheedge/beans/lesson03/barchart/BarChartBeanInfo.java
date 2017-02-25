@@ -22,6 +22,7 @@ public class BarChartBeanInfo extends BeanInfoEx
 
         pde = new PropertyDescriptorEx("title", beanClass);
         add(pde, getResourceString("PN_TITLE"), getResourceString("PD_TITLE") );
+/*->*/  pde.setReadOnly(true); 
 
         pde = new PropertyDescriptorEx("orientation", beanClass);
         add(pde, getResourceString("PN_ORIENTATION"), getResourceString("PD_ORIENTATION") );
@@ -31,7 +32,7 @@ public class BarChartBeanInfo extends BeanInfoEx
 
         pde = new PropertyDescriptorEx("preferredSize", beanClass);
         add(pde, getResourceString("PN_PREFERRED_SIZE"), getResourceString("PD_PREFERRED_SIZE") );
-/*->*/  pde.setReadOnly(true); 
+        pde.setReadOnly(true); 
 
         pde = new PropertyDescriptorEx("barSpacing", beanClass);
         add(pde, getResourceString("PN_BAR_SPACING"), getResourceString("PD_BAR_SPACING") );

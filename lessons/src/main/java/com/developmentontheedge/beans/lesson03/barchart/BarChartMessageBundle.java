@@ -9,7 +9,7 @@ public class BarChartMessageBundle extends ListResourceBundle
     {
         { "CN_CLASS", "BarChart"},
         { "CD_CLASS", "BarChart"},
-        { "PN_TITLE", "title"},
+/*->*/  { "PN_TITLE", "*Title*"},
         { "PD_TITLE", "title"},
         { "PN_ORIENTATION", "orientation"},
         { "PD_ORIENTATION", "orientation"},

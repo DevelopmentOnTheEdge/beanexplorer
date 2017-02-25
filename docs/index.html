@@ -22,14 +22,35 @@
                         el.parentNode.replaceChild(a, el);
 
                         var z = document.getElementsByClassName('code-src');
-                        for (i = 0; i < z.length; i++)
+                        if (z != null)
                         {
-                            if (z[i].getAttribute("java"))
+                            for (i = 0; i<z.length; i++)
                             {
-                                var file = "https://raw.githubusercontent.com/DevelopmentOnTheEdge/beanexplorer/master/lessons/src/main/java/com/developmentontheedge/beans/"
-                                        + z[i].getAttribute("java");
-                                z[i].removeAttribute("java");
-                                loadFile(z[i], file, false);
+                                if (z[i].getAttribute("java"))
+                                {
+                                    var file = "https://raw.githubusercontent.com/DevelopmentOnTheEdge/beanexplorer/master/lessons/src/main/java/com/developmentontheedge/beans/"
+                                            + z[i].getAttribute("java");
+                                    z[i].removeAttribute("java");
+                                    loadFile(z[i], file, false);
+                                }
+                            }
+
+                            for (i = 0; i<z.length; i++)
+                            {
+                                var code = z[i].innerHTML;
+                                if( code != null && code.indexOf('/*-&gt;*/') !== -1)
+                                {
+                                    var lines = code.split('\n');
+                                    var out = '';
+                                    for (j = 0; j<lines.length; j++)
+                                    {
+                                        if( lines[j].indexOf('/*-&gt;*/') == -1 )
+                                            out += lines[j] + '\n'
+                                        else
+                                            out += '<font color="blue">      ' + lines[j].substr(9) + '</font>\n'
+                                    }
+                                    z[i].innerHTML = out;
+                                }
                             }
                         }
                     }
