@@ -1,0 +1,54 @@
+<h1>Lesson 1: Embedding PropertyInspector into your application</h1>
+
+<p>The lesson demonstrates how to embed PropertyInspector
+    into your application and use it to visualize and run the bean.</p>
+
+<p><b>Note.</b> All lessons assume that you already have a bean
+    (or beans) to be used with BeanExplorer. 
+    In this lesson we use <code>BarChart</code> bean developed for demonstration
+    purposes.</p>
+
+<p>The process of writing the bean and customizing it with BeanInfo 
+    will be explained in next lessons.</p>
+<hr>
+
+<h2>Step by step guide</h2>
+<p>Embedding BeanExplorer into any application is quite trivial and at minimum
+    requires three simple steps.</p>
+<ol>
+    <li>Create an instance of <code>PropertyInspector</code>.
+        <pre>PropertyInspector propertyInspector = new PropertyInspector();</pre></li>
+    <li>Add this instance into content pane or other JComponent in your application.
+        <pre>getContentPane().add(propertyInspector, BorderLayout.CENTER);</pre></li>
+    <li>Create an instance of the bean and use PropertyInspector's method explore
+        to visualize it.
+        <pre>BarChart bean = new BarChart(&quot;Quarter report&quot;);
+propertyInspector.explore(bean);</pre>
+    </li>
+</ol>
+
+<hr>
+
+<h2>Description</h2>
+
+<img border="0" src="./lessons/images/lesson01.png"/>
+
+<p>In this lesson BarChartApplication consists from two panes: 
+<ul>
+    <li>Left pane displays view of <code>BarChart</code> bean.</li> 
+    <li>Right pane contains <code>PropertyInspector</code>  which shows properties
+        of the bean and allows the user to edit the values. Left pane's view will
+        display changes immediately</li>
+</ul>
+
+<hr>
+
+<h2><a name="application-code">Application code</a></h2>
+
+<p>Here is a complete source code of <code>BarChartApplication</code>. You can also take a look at the source code of <a href="barchart"><code>BarChart</code></a> bean.</p>
+
+<iframe width="100" height="200" scrolling="yes"
+    src="../lessons/src/main/java/com/developmentontheedge/beans/lesson01/BarChartApplication.java">
+</iframe>
+
+<p>&nbsp;</p>

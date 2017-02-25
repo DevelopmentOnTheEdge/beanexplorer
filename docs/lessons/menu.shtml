@@ -1,0 +1,60 @@
+<h3>Tutorial (lessons)</h3>
+
+<p><a href="#/lesson">General notes</a></p>
+
+<a href="#/lessons/01">Lesson 1.</a>
+Embedding PropertyInspector into your application
+
+<br><a href="lesson02/lesson02.html">Lesson 2.</a>
+Writing simple bean.
+
+<br><a href="lesson03/lesson03.html">Lesson 3.</a>
+Customizing BeanInfo through BeanInfo Editor.
+
+<br><a href="lesson04/lesson04.html">Lesson 4.</a>
+Using dynamic property attributes.
+
+<br><a href="lesson05/lesson05.html">Lesson 5.</a>
+Writing custom renderer and editor.
+
+<br><a href="lesson06/lesson06.html">Lesson 6.</a>
+Using CompositeEditor.
+
+<br><a href="lesson07/lesson07.html">Lesson 7.</a>
+Array properties.
+
+<br><a href="lesson08/lesson08.html">Lesson 8.</a>
+Customizing PropertyInspector.
+
+<br><a href="lesson09/lesson09.html">Lesson 9.</a>
+Filtered PropertyInspector.
+
+<br><a href="lesson10/lesson10.html">Lesson 10.</a>
+Using DialogPropertyInspector.
+
+<!--not_in_limited_edition_begin-->
+
+<br><a href="lesson11/lesson11.html">Lesson 11.</a>
+Using TabularPropertyInspector.
+
+<br><a href="lesson12/lesson12.html">Lesson 12.</a>
+BeanExplorer and Session Beans.
+
+<br><a href="lesson13/lesson13.html">Lesson 13.</a>
+Dynamic properties.
+
+<!--not_in_limited_edition_end-->
+
+<!--in_limited_edition_begin
+
+<br><a href="lesson11/lesson11.html">Lesson 11.</a>
+BeanExplorer and Session Beans.
+
+<br><a href="lesson12/lesson12.html">Lesson 12.</a>
+Dynamic properties.
+
+in_limited_edition_end-->
+
+
+</body>
+</html>

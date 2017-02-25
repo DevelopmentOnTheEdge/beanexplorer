@@ -53,8 +53,13 @@
                 }
             });
 
-            Path.map("#/api").to(function () {
-                load2("./menu-api.shtml", "api.shtml");
+            Path.map("#/lessons").to(function () {
+                load2("./lessons/menu.shtml", "./lessons/general.shtml");
+            });
+
+            Path.map("#/lessons/:num").to(function () {
+                var num = "./lessons/lesson" + this.params['num'] + ".shtml";
+                load2("./lessons/menu.shtml", num);
             });
 
             Path.root("#/empty/home.shtml");
@@ -84,7 +89,7 @@
                     <a href="#/empty/javabeans.shtml">JavaBeans</a><br/>
                     <a href="#/beaninfoex">BeanHelpers</a><br>
                     <a href="#/empty/api.shtml">Main API</a><br/>
-                    <a href="#/details/../lessons/lessons.shtml">Tutorial</a><br/>
+                    <a href="#/lessons">Tutorial</a><br/>
                     &nbsp<br/>
                     <a target="blank" href="./javadoc/index.html">Javadoc</a>
                 </div>

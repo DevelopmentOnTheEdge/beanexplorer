@@ -1,0 +1,39 @@
+<div id="main-lessons">
+    <h1>BeanExplorer tutorial</h1>
+
+    <h2>General notes</h2>
+
+    <p>BeanExplorer tutorial is organized as a set of lessons, starting from simple tasks 
+        and adding more and more sophisticated features in subsequent lessons.</p>
+
+    <p>All lessons use the same bean, namely <code>BarChart</code>,
+        which allows us to demonstrate flexibility of BeanExplorer in implementing user
+        interface of application.</p>
+
+    <img src="./images/barchart.png"/>
+
+<p>The code of <code>BarChart</code> is discussed in detail in 
+<a href="lesson02/lesson02.html">lesson 2</a>. 
+The bean is practically the same in all lessons, only several methods are added
+in some lessons to demonstrate advanced features.</p>
+
+<p>Lessons are mutually independent so any lesson itself is a completed, fully functional demo application - 
+    <code>BarChartApplication</code>.</p>
+
+<h2>Running and compiling application</h2>
+
+<p>All lessons are organized as one maven module.</p> 
+
+<p>This module depends from <code>com.developmentontheedge.beans</code>. You need to install this module first:
+    <br/><code>../beans>mvn install</code>
+</p>
+
+<p>Compile application:
+    <br/><code>../lessons>mvn compile</code> 
+</p>
+
+<p>Start lesson (for example lesson 1):
+    <br/><code>../lessons>mvn exec:java -Dexec.mainClass=com.developmentontheedge.beans.lesson01.BarChartApplication</code>
+</p>
+
+</div>
