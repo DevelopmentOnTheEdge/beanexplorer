@@ -10,7 +10,7 @@
 
         <script type="text/javascript">
 
-            function loadFile(el, file)
+            function loadFile(el, file, loadSrc)
             {
                 var xhttp = new XMLHttpRequest();
                 var a = el.cloneNode(false);
@@ -28,7 +28,8 @@
                             {
                                 var file = "https://raw.githubusercontent.com/DevelopmentOnTheEdge/beanexplorer/master/lessons/src/main/java/com/developmentontheedge/beans/"
                                         + z[i].getAttribute("java");
-                                loadFile(z[i], file);
+                                z[i].removeAttribute("java");
+                                loadFile(z[i], file, false);
                             }
                         }
                     }

@@ -1,0 +1,116 @@
+<h1>Lesson 2: Writing a Bean</h1>
+
+<p>The lesson demonstrates how to write a
+    minimal bean which can be used with BeanExplorer or any other application. The
+    purpose of this lesson is to learn user how to present piece of application in a
+    JavaBean form so it can be easily controlled using BeanExplorer means.</p>
+
+<p><a href="#descr">Bean description</a>
+    <br><a href="#simple">Simple properties</a>
+    <br><a href="#array">Array properties</a>
+    <br><a href="#composite">Composite properties</a>
+    <br><a href="#column">Column.java</a>
+</p>
+
+<img src="./lessons/images/lesson01.png"/>
+
+<hr>
+
+<h2><a name="descr">Bean description</a></h2>
+<p>In this lesson we will implement a bean which has the properties of all types
+    supported by BeanExplorer: simple, array and composite properties.&nbsp;</p>
+<p>The will have the following properties:</p>
+<ul>
+    <li>Simple</li>
+    <ul>
+        <li><b>title</b> - The title of the chart to draw</li>
+        <li><b>orientation</b> - Whether the chart's bars will horizontal or vertical orientation</li>
+        <li><b>drawFont</b> - Font to use when drawing the chart</li>
+        <li><b>scale</b> - Scale of the bars relative to window</li>
+        <li><b>barSpacing</b> - The distance between bars</li>
+        <li><b>preferredSize</b> - Preferred size of the chart window</li>
+    </ul>
+    <li>Array</li>
+    <ul>
+        <li><b>columns</b> - the list of chart's bars to be edited</li>
+    </ul>
+    <li>Composite</li>
+    <ul>
+        <li><b>columns[N]</b> - The elements of <b>columns</b> array are composite properties i.e. properties that consist from the other properties</li>
+    </ul>
+</ul>
+
+<h2><a name="simple">Simple properties</a></h2>
+
+<p>Simple properties are defined exactly according to JavaBeans conventions.
+    Suppose we want to define <code>title</code> property. At minimum for this we must implement
+    two public methods inside BarChart class (i.e. bean) - getter to retrieve value
+    of the property and setter to store the value. Please remember that either
+    setter or getter (not both) can be omitted. The code below shows how it can be done.</p>
+
+<pre>
+    private String title;
+    public String getTitle()
+    {
+        return title;
+    }
+    public void setTitle(String title)
+    {
+        this.title = title;
+        update();
+    }
+</pre>
+
+<p>Other simple properties are defined similarly. Refer to the source code of <a href="barchart"><code>BarChart</code></a> for details.</p>
+
+<h2><a name="array">Array properties</a></h2>
+
+<p>According to JavaBeans specification array properties must be defined using
+    indexed getter and setter along with conventional getter and setter. Indexed
+    setter and getter are not necessary when using BeanExplorer. BeanExplorer
+    detects whether getter and setter return value of array type and this is enough
+    to have array properties. In fact the developers can define only indexed getter
+    and setter methods without conventional ones and this leads to the same
+    behavior. You see that BeanExplorer is flexible to defining array
+    properties.&nbsp;</p>
+<p>We define array property <code>columns</code> is most simplest way as shown below:</p>
+
+<pre>
+    private Column[] columns;
+    public Column [] getColumns()
+    {
+        return columns;
+    }
+    public void setColumns( Column []columns )
+    {
+        for(int i=0; i&lt;columns.length; i++)
+            columns[i].removePropertyChangeListener(this);
+
+        this.columns = columns;
+        for(int i=0; i&lt;columns.length; i++)
+            columns[i].addPropertyChangeListener(this);
+
+        update();
+    }
+
+
+</pre>
+
+<p>Please note the BarChart bean is listener for property change events fired by any columns. Therefore when assigning
+    new array we must remove the BarChart as listener from old columns and set it in new columns. </p>
+
+<h2><a name="composite">Composite properties</a></h2>
+
+<p>Elements of the columns property in our example are composite
+    properties. Composite properties are itself Java Beans which instances are used
+    as value of the property. In our example Column is a bean having
+    the following properties: <code>label, value, color, visible</code>. Here is the
+    complete source code of the Column.</p>
+
+<p>Please note that Column is a full-fledged Java Bean so it can have 
+    (and in fact has) associated BeanInfo and can have localized resource in associated MessageBundle. 
+</p>
+
+<h3><a name="column">Column.java</a></h3>
+<pre class="code-src" java="lesson02/barchart/Column.java">code</pre>
+

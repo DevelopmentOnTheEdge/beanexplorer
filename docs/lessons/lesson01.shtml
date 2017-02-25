@@ -45,7 +45,7 @@ propertyInspector.explore(bean);</pre>
 
 <h2><a name="application-code">Application code</a></h2>
 
-<h3>BarChartApplication</h3>
+<h3>BarChartApplication.java</h3>
 <pre class="code-src" java="lesson01/BarChartApplication.java">code</pre>
 
 <p>&nbsp;</p>
