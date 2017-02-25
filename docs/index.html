@@ -7,12 +7,11 @@
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script type="text/javascript" src="./js/path.js"></script>
-        
+
         <script type="text/javascript">
 
-            function load(selector, file)
+            function loadFile(el, file)
             {
-                var el = $(selector)[0];
                 var xhttp = new XMLHttpRequest();
                 var a = el.cloneNode(false);
 
@@ -21,11 +20,28 @@
                     {
                         a.innerHTML = xhttp.responseText;
                         el.parentNode.replaceChild(a, el);
+
+                        var z = document.getElementsByClassName('code-src');
+                        for (i = 0; i < z.length; i++)
+                        {
+                            if (z[i].getAttribute("java"))
+                            {
+                                var file = "https://raw.githubusercontent.com/DevelopmentOnTheEdge/beanexplorer/master/lessons/src/main/java/com/developmentontheedge/beans/"
+                                        + z[i].getAttribute("java");
+                                loadFile(z[i], file);
+                            }
+                        }
                     }
                 }
 
                 xhttp.open("GET", file, true);
                 xhttp.send();
+            }
+
+            function load(selector, file)
+            {
+                var el = $(selector)[0];
+                loadFile(el, file);
             }
 
             function load2(submenu, topic)
@@ -44,12 +60,12 @@
 
             Path.map("#/beaninfoex/:hash").to(function () {
                 load2("./menu-beaninfoex.shtml", "beaninfoex.shtml");
-                
-                if( this.params['hash'] != null )
+
+                if (this.params['hash'] != null)
                 {
                     document.getElementById(this.params['hash']).scrollIntoView();
-                    $('#menu').css('height', $(window).height()-40);
-                    $('#menu').css('padding-top', $(this).scrollTop()+10);
+                    $('#menu').css('height', $(window).height() - 40);
+                    $('#menu').css('padding-top', $(this).scrollTop() + 10);
                 }
             });
 
@@ -66,15 +82,14 @@
             $(document).ready(function () {
                 Path.listen();
 
-                $('#menu').css('height', $(window).height()-40);
-                $(window).resize(function(event) {
-                    $('#menu').css('height', $(window).height()-40);
+                $('#menu').css('height', $(window).height() - 40);
+                $(window).resize(function (event) {
+                    $('#menu').css('height', $(window).height() - 40);
                 });
-                $(window).scroll(function(event) {
-                    $('#menu').css('height', $(window).height()-40);
-                    $('#menu').css('padding-top', $(this).scrollTop()+10);
+                $(window).scroll(function (event) {
+                    $('#menu').css('height', $(window).height() - 40);
+                    $('#menu').css('padding-top', $(this).scrollTop() + 10);
                 });
-    
             });
         </script>
 
