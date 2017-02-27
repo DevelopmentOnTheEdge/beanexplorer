@@ -1,0 +1,207 @@
+<h1>Lesson 4: Using dynamic property attributes</h1>
+
+<p>BeanExplorer is based on BeanHelpers technology
+    which is an extension of JavaBeans allowing the developer to control some property attributes
+    dynamically.&nbsp;This lesson demonstrates this dynamic approach.</p>
+
+<p>Under normal circumstances property attributes are calculated once when
+    BeanInfo is first time used. But sometimes it is useful to have property attributes
+    depending on some conditions. BeanExplorer allows the developer to specify that
+    attribute value is not constant but must be calculated every time using some
+    method specified via PropertyDescriptor. Such method calculates corresponding value of the property
+    attribute using necessary meta-information and returns it.
+</p>
+
+<p><a href="#step-by-step">Step by step guide</a>
+    <br><a href="#explanation">Examples</a>
+    <br><a href="#Using BeanInfoEditor">Using BeanInfo Editor</a>
+</p>
+
+<hr>
+
+<h2><a name="step-by-step">Step by step guide</a></h2>
+<p>Using dynamic properties requires two mandatory and one optional steps.</p>
+<ol>
+    <li>In bean class declare special method responsible for calculating value of property
+        attribute&nbsp; (if there were no suitable method written before).<pre>public Object getAttributeValue() // can be any name
+{
+    ...
+}  </pre>
+    </li>
+    <li>Specify this method in BeanInfo. Note that setPropertyAttribute is an exemplary
+        name and must be replaced by the name of actual PropertyDescriptor's
+        method.&nbsp;<pre>pde = new PropertyDescriptorEx(&quot;barSpacing&quot;,beanClass);
+pde.set<i>PropertyAttribute</i>(beanClass.getMethod(&quot;getAttributeValue&quot;,null));</pre></li>
+    <li>If some other properties can change value of the dynamic property
+        (properties) attribute(s) then specify such dependencies in corresponding setters using
+        <code>firePropertyChange</code>.<pre>public void setSomeProperty(...)
+{
+    ...
+    firePropertyChange(&quot;someProperty&quot;, oldValue, newValue);
+}</pre>
+
+
+    </li>
+</ol>
+
+<hr>
+
+<h2><a name="explanation">Examples</a></h2>
+<p> Let's consider some examples: specifying display name, 'read only' and 'tool tip'
+    attributes dynamically.</p>
+<h3>Specifying display name dynamically</h3>
+<p>Typically the developer specifies property's display name in <code> BeanInfo</code>&nbsp;when
+    adding the
+    property.&nbsp;</p>
+<p>Let's see how can we calculate <code>title</code> property of <code>BarChart</code>  bean
+    dynamically. For now it is defined as follows:</p>
+<pre>public class BarChartBeanInfo extends BeanInfoEx
+{
+    ...
+    public void initProperties() throws Exception
+    {
+        PropertyDescriptorEx pde;
+  
+        pde = new PropertyDescriptorEx(&quot;title&quot;,beanClass);
+        add( pde,getResourceString(&quot;PN_TITLE&quot;), getResourceString( &quot;PD_TITLE&quot;) );
+        ...
+    }
+}</pre>
+<p>Suppose we want display name of the property to reflect actual orientation of
+    the chart i.e. to depend on the value of the other property (<code>orientation</code>). This
+    display name must be calculated by the following expression:</p>
+<pre>&quot;Title of &quot; + (getOrientation()==1 ? &quot;Horizontal&quot; : &quot;Vertical&quot;) + &quot; chart&quot;</pre>
+<p>In order to have display name dynamically calculated we perform the following
+    steps:</p>
+
+<p>1)&nbsp; In <code> BarChart </code>class declare a special method getDisplayNameForTitle responsible
+    for display name generation.</p>
+
+<pre>public class BarChart
+{
+    ...
+    <font color="#0000FF">public String getDisplayNameForTitle()
+    {
+        return &quot;Title of &quot;+(getOrientation()==1?&quot;Horizontal&quot;:&quot;Vertical&quot;)+&quot; chart&quot;;
+    }
+}</pre>
+
+<p>2) Specify this method in BeanInfo in PropertyDescriptor of the <code>title</code>
+    property.</p>
+<pre>public class BarChartBeanInfo extends BeanInfoEx
+{
+    ...
+    public void initProperties() throws Exception
+    {
+        PropertyDescriptorEx pde;
+
+        pde = new PropertyDescriptorEx(&quot;title&quot;,beanClass);
+        <font color="#0000FF">pde.setDisplayName(beanClass.getMethod(&quot;getDisplayNameForTitle&quot;,null));
+        
+        ...
+     }
+} </pre>
+
+<p>    
+    &nbsp;&nbsp;&nbsp;&nbsp;<br>
+    3) Specify dependency between <code>orientation</code> property and <code>title</code> property.</p>
+
+<pre>public void setOrientation(int orientation)
+{
+    ...
+    <font color="#0000FF">firePropertyChange(&quot;title&quot;, null, null);
+}</pre>
+
+<p>Pictures bellow demonstrate the result. When user changes orientation of the
+    BarChart then the display name of the <code>title</code> property changes accordingly.</p>
+
+<h3><img border="0" src="images/Horizontal.jpg" width="520" height="224"></h3>
+<h3><img border="0" src="images/Vertical.jpg" width="520" height="224"></h3>
+
+<h3>&nbsp;</h3>
+
+<h3>Specifying 'read only' dynamically</h3>
+
+<p>Suppose 'preferredSize','barSpacing' and 'scale' depends on 'autoLayout'.
+    When you set 'autoLayout' to ON, then size, spacing and scale sets automatically
+    and shouldn't be editable.</p>
+<p>1) Specify this dependency in BeanInfo.</p>
+<pre>public class BarChartBeanInfo extends BeanInfoEx
+{
+    ...
+    public void initProperties() throws Exception
+    {
+        PropertyDescriptorEx pde;
+         
+        pde = new PropertyDescriptorEx(&quot;preferredSize&quot;,beanClass);
+        <font color="#0000FF">pde.setReadOnly(beanClass.getMethod(&quot;getAutoLayout&quot;,null));
+        add( pde,getResourceString(&quot;PN_PREFERRED_SIZE&quot;),getResourceString( &quot;PD_PREFERRED_SIZE&quot;) );
+
+        pde = new PropertyDescriptorEx(&quot;barSpacing&quot;,beanClass);
+        <font color="#0000FF">pde.setReadOnly(beanClass.getMethod(&quot;getAutoLayout&quot;,null));
+        add( pde,getResourceString(&quot;PN_BAR_SPACING&quot;),getResourceString( &quot;PD_BAR_SPACING&quot;) );
+
+        pde = new PropertyDescriptorEx(&quot;scale&quot;,beanClass);
+        <font color="#0000FF">pde.setReadOnly(beanClass.getMethod(&quot;getAutoLayout&quot;,null));
+        add( pde,getResourceString(&quot;PN_SCALE&quot;),getResourceString( &quot;PD_SCALE&quot;) );
+        ...
+    }        
+}</pre>
+<p>2) Specify dependency between 'preferredSize', 'barSpacing' and 'scale'
+    properties and 'autoLayout' property.</p>
+
+<pre>public void setAutoLayout(boolean autoLayoutFlag)
+{
+   <font color="#0000FF"> booelan oldValue = autoLayout;
+    autoLayout = autoLayoutFlag;
+    <font color="#0000FF">firePropertyChange(&quot;autoLayout&quot;, oldValue, autoLayout);
+    firePropertyChange(&quot;preferredSize&quot; + EventConstants.EVT_READ_ONLY, null, null);
+    firePropertyChange(&quot;barSpacing&quot; + EventConstants.EVT_READ_ONLY, null, null);
+    firePropertyChange(&quot;scale&quot; + EventConstants.EVT_READ_ONLY, null, null);
+    
+}</pre>
+
+<p>Pictures bellow demonstrate the result. When user changes auto layout mode
+    then the
+    'size', 'barSpacing' and 'scale' properties become read-only (or vice versa)
+    accordingly.</p>
+
+<h3><img border="0" src="images/ReadOnly-false.jpg" width="520" height="230"></h3>
+<h3><img border="0" src="images/ReadOnly-true.jpg" width="520" height="230"></h3>
+
+<h3></h3>
+<h3>Specifying 'tool tip' dynamically</h3>
+<p>'toolTip' attribute of property can be also calculated dynamically.</p>
+
+1) In <code>BarChart</code> class declare special method <code>getOrientationToolTip</code> responsible
+for tooltip generation.
+
+<pre>public class BarChart
+{
+    ...
+    <font color="#0000FF">public String getOrientationToolTip()
+    {
+        return getOrientation()==1?&quot;Horizontal&quot;:&quot;Vertical&quot;;
+    }
+}</pre>
+<p>2) Specify this method in BeanInfo.</p>
+
+<pre>public class BarChartBeanInfo extends BeanInfoEx
+{
+    ...
+    public void initProperties() throws Exception
+    {
+        PropertyDescriptorEx pde;
+
+        pde = new PropertyDescriptorEx(&quot;orientation&quot;,beanClass);
+        <font color="#0000FF">pde.setToolTip(beanClass.getMethod(&quot;getOrientationToolTip&quot;,null));
+        
+        ...
+     }
+}</pre>
+
+<p>Pictures bellow demonstrate the result. When user changes orientation of the
+    BarChart then tool tip of the property changes accordingly.</p>
+
+<h3><img border="0" src="images/HorizontalTooltip.jpg" width="517" height="230"></h3>
+<h3><img border="0" src="images/VerticalTooltip.jpg" width="517" height="230"></h3>
