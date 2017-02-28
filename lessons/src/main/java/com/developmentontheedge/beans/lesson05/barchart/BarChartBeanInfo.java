@@ -24,21 +24,21 @@ public class BarChartBeanInfo extends BeanInfoEx
         PropertyDescriptorEx pde;
 
         pde = new PropertyDescriptorEx("orientation", beanClass);
-        add( pde, OrientationEditor.class,
+/*->*/  add( pde, OrientationEditor.class,
              getResourceString("PN_ORIENTATION"), getResourceString("PD_ORIENTATION") );
 
         pde = new PropertyDescriptorEx("drawFont", beanClass);
         add( pde, getResourceString("PN_FONT"), getResourceString("PD_FONT") );
 
         pde = new PropertyDescriptorEx("barSpacing", beanClass);
-        add( pde, BarSpacingEditor.class,
+/*->*/  add( pde, BarSpacingEditor.class,
              getResourceString("PN_BAR_SPACING"), getResourceString("PD_BAR_SPACING") );
  
         pde = new PropertyDescriptorEx("title", beanClass);
         add( pde, getResourceString("PN_TITLE"), getResourceString("PD_TITLE") );
  
         pde = new PropertyDescriptorEx("scale", beanClass);
-        add( pde, ScaleEditor.class,
+/*->*/  add( pde, ScaleEditor.class,
              getResourceString("PN_SCALE"), getResourceString("PD_SCALE") );
 
         pde = new PropertyDescriptorEx("columns", beanClass);
