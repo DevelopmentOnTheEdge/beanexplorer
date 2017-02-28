@@ -1,0 +1,173 @@
+<h1>Lesson 8: Customizing PropertyInspector</h1>
+The lesson demonstrates how to customize outlook and behavior of PropertyInspector.
+
+<p>
+    <a href="#description">Description</a><br>
+    <a href="#show-mode">'Show mode' concept</a><br>
+    <a href="#expand-collapse-nodes">Expanding/collapsing nodes</a><br>
+    <a href="#show-hide-grid">Showing/hiding the grid</a> <br>
+    <a href="#show-hide-tooltips">Showing/hiding the tooltips</a><br>
+    <a href="#show-hide-root-node">Showing/hiding the root node</a><br>
+    <a href="#application-code">Application code</a> <br>
+    <a href="#beanInfo-code">BeanInfo code</a>
+</p>
+
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>We provided sample application that allows the user to play
+    with PropertyInspector's settings.</p>
+
+<img src="./lessons/images/lesson08-application.jpg"/>
+
+<hr>
+<h2><a name="show-mode">'Show mode' concept</a></h2>
+<p>PropertyInspector has several view modes which allow the developer to
+    enable/disable visibility of various properties. The visibility of particular properties is controlled 
+    by <code><a target="blank" href="./javadoc/com/developmentontheedge/beans/swing/PropertyInspector.html#setPropertyShowMode-int-"></code>
+    setPropertyShowMode(int mode)</a> method. 
+Parameter <code>mode</code> can be one of the flags described below or their combination.</p>
+
+<table border="1" width="88%">
+    <tr>
+        <td width="25%" align="center"><b>Parameter flag</b></td>
+        <td width="35%" align="center"><b>Properties affected by this flag</b></td>
+        <td width="20%" align="center"><b>Description</b></td>
+        <td width="20%" align="center"><b>Sample property in BarChart</b></td>
+    </tr>
+    <tr>
+        <td width="25%">SHOW_USUAL</td>
+        <td width="35%">&nbsp;</td>
+        <td width="20%">shows only conventional properties</td>
+        <td width="20%"> All except those listed below</td>
+    </tr>
+    <tr>
+        <td width="25%">SHOW_EXPERT</td>
+        <td width="35%"><a target="blank" href="https://docs.oracle.com/javase/8/docs/api/java/beans/FeatureDescriptor.html#setExpert-boolean-">
+                public void setExpert(boolean expert)</a></td>
+        <td width="20%">shows conventional and expert properties</td>
+        <td width="20%"> &quot;scale&quot;</td>
+    </tr>
+    <tr>
+        <td width="25%">SHOW_HIDDEN</td>
+        <td width="35%"><a target="blank" href="https://docs.oracle.com/javase/8/docs/api/java/beans/FeatureDescriptor.html#setHidden-boolean-">
+                public void setHidden(boolean hidden)&nbsp;</a></td>
+        <td width="20%">shows conventional and hidden properties</td>
+        <td width="20%"> &quot;title&quot;</td>
+    </tr>
+    <tr>
+        <td width="25%">SHOW_PREFERRED</td>
+        <td width="35%"><a target="blank" href="https://docs.oracle.com/javase/8/docs/api/java/beans/FeatureDescriptor.html#setPreferred-boolean-">
+                public void setPreferred(boolean preferred)</a></td>
+        <td width="20%">shows conventional usual and preferred properties</td>
+        <td width="20%"> &quot;orientation&quot;</td>
+    </tr>
+</table>
+
+<p>For instance if you will invoke <code>setPropertyShowMode(PropertyInspector.SHOW_HIDDEN)
+    </code> method then PropertyInspector will switch to <i>hidden</i> 
+    mode where only <i>hidden</i> and usual properties will be visible.</p>
+
+<p>This method only sets internal variable of PropertyInspector, 
+    therefore it is necessary to invoke <code>explore</code> method 
+    after <code>setPropertyShowMode</code> is invoked. 
+    The call forces the PropertyInspector to show hidden properties.</p>
+
+<p><code>propertyInspector.setPropertyShowMode(PropertyInspector.SHOW_HIDDEN);<br>
+        propertyInspector.explore(bean);
+    </code></p>
+
+<p>The pictures below show how PropertyInspector inspector display properties with various attributes.</p>
+
+<p>SHOW_USUAL<br>
+    <img border="0" src="./lessons/images/lesson08-usualMode.jpg"/>
+</p>
+
+<p>
+    SHOW_EXPERT<br>
+    <img border="0" src="./lessons/images/lesson08-expertMode.jpg"/>
+</p>
+<p>SHOW_HIDDEN  <br>
+    <img border="0" src="./lessons/images/lesson08-hiddenMode.jpg"/>
+</p>
+<p>SHOW_PREFERRED  <br>
+    <img border="0" src="./lessons/images/lesson08-preferredMode.jpg"/>
+</p>
+
+<hr>
+<h2><a name="expand-collapse-nodes">Expanding/collapsing nodes</a></h2>
+<p>Since "classic" PropertyInspector will dispaly properties in the form of tree-table 
+    the developer must have some control over expanding or collapsing nodes in it.
+    This is normally achieved using these methods:</p>
+<ul>
+    <li><a target="blanck" href="./javadoc/com/developmentontheedge/beans/swing/PropertyInspector.html#expand-int-">expand(int
+            level)</a></li>
+    <li><a target="blanck" 
+           href="./javadoc/com/developmentontheedge/beans/swing/PropertyInspector.html#collapseAll--">collapseAll()</a></li> 
+</ul
+
+<p>
+    Parameter <code>level</code> specifies depth to which the tree will be expanded. Pictures below demonstrate how this 
+    parameter affects the tree of the properties.
+</p>
+<p> level =1<br>
+    <img border="0" src="./lessons/images/lesson08-Expand1.jpg"  >
+</p>
+<p> level =2<br>
+    <img border="0" src="./lessons/images/lesson08-Expand2.jpg"  >
+</p>
+<p> level=3<br>
+    <img border="0" src="./lessons/images/lesson08-Expand3.jpg" >
+</p>
+<p> The picture below demostrates result of invocation of 
+    <code><a target="blanck" href="./javadoc/com/developmentontheedge/beans/swing/PropertyInspector.html#collapseAll--">collapseAll()</a></code>
+    method which according to its name collapses the whole tree of properties.
+</p>
+
+<p>
+    <img border="0" src="./lessons/images/lesson08-Collapse.jpg"/>
+</p>
+
+<hr>
+<h2><a name="show-hide-grid">Showing/hiding the grid</a></h2>
+
+<p>Whether the grid is shown or hidden is controlled by 
+    <a target="blanck" href="./javadoc/com/developmentontheedge/beans/swing/PropertyInspector.html#setShowGrid-boolean-">setShowGrid(boolean)</a> method.</p>
+
+<p>Pictures below show PropertyInspector with grid and without it.</p>
+
+<p>
+    <img border="0" src="./lessons/images/lesson08-GridTrue.jpg" />
+    <img border="0" src="./lessons/images/lesson08-GridFalse.jpg"/>
+</p>
+
+<hr>
+<h2><a name="show-hide-tooltips">Showing/hiding the tooltips</a></h2>
+<p>Each property can have a tool tip which can be displayed in PropertyInspector. Whether the tool tip 
+    will be displayed is controlled by 
+    <a target="blanck" href="./javadoc/com/developmentontheedge/beans/swing/PropertyInspector.html#setShowToolTip-boolean-">setShowToolTip(boolean)</a>
+    method.</p>
+
+<hr>
+<h2><a name="show-hide-root-node">Showing/hiding the root node</a></h2>
+<p>PropertyInspector can control whether the root node (i.e. node representing bean itself) will be visible or not. 
+    It is performed by using 
+    <a target="blanck" href="./javadoc/com/developmentontheedge/beans/swing/PropertyInspector.html#setRootVisible-boolean-">setRootVisible(boolean
+        mode)</a> method. Result of using this method is shown below.</p>
+<p>
+    mode=true<br>
+    <img border="0" src="./lessons/images/lesson08-RootVisibleTrue.jpg"/>
+</p>
+
+<p>
+    mode=false<br>
+    <img border="0" src="./lessons/images/lesson08-RootVisibleFalse.jpg"/>
+</p>
+
+<hr>
+<h3><a name="application-code">Application code</a></h3>
+<pre class="code-src" java="lesson08/BarChartApplication.java">code</pre>
+
+<hr>
+<h3><a name="beanInfo-code">BeanInfo code</a></h3>
+<pre class="code-src" java="lesson07/barchart/BarChartBeanInfo.java">code</pre>
