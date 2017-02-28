@@ -34,7 +34,7 @@ public class BarChartApplication extends JFrame
         initializePropertyInspector( bean );
     }
 
-/*->*/
+/*!-*/
     public void initializePropertyInspector( BarChart bean )
     {
         final JTabbedPane inspectorPane = new JTabbedPane();
