@@ -30,11 +30,13 @@
     </li>
     <li>Specify this method in BeanInfo. Note that setPropertyAttribute is an exemplary
         name and must be replaced by the name of actual PropertyDescriptor's
-        method.&nbsp;<pre>pde = new PropertyDescriptorEx(&quot;barSpacing&quot;,beanClass);
+        method.
+        <pre>pde = new PropertyDescriptorEx(&quot;barSpacing&quot;,beanClass);
 pde.set<i>PropertyAttribute</i>(beanClass.getMethod(&quot;getAttributeValue&quot;,null));</pre></li>
     <li>If some other properties can change value of the dynamic property
         (properties) attribute(s) then specify such dependencies in corresponding setters using
-        <code>firePropertyChange</code>.<pre>public void setSomeProperty(...)
+        <code>firePropertyChange</code>.
+        <pre>public void setSomeProperty(...)
 {
     ...
     firePropertyChange(&quot;someProperty&quot;, oldValue, newValue);
@@ -84,7 +86,7 @@ pde.set<i>PropertyAttribute</i>(beanClass.getMethod(&quot;getAttributeValue&quot
     {
         return &quot;Title of &quot;+(getOrientation()==1?&quot;Horizontal&quot;:&quot;Vertical&quot;)+&quot; chart&quot;;
     }
-}</pre>
+}</font></pre>
 
 <p>2) Specify this method in BeanInfo in PropertyDescriptor of the <code>title</code>
     property.</p>
@@ -96,7 +98,7 @@ pde.set<i>PropertyAttribute</i>(beanClass.getMethod(&quot;getAttributeValue&quot
         PropertyDescriptorEx pde;
 
         pde = new PropertyDescriptorEx(&quot;title&quot;,beanClass);
-        <font color="#0000FF">pde.setDisplayName(beanClass.getMethod(&quot;getDisplayNameForTitle&quot;,null));
+        <font color="#0000FF">pde.setDisplayName(beanClass.getMethod(&quot;getDisplayNameForTitle&quot;,null));</font>
         
         ...
      }
@@ -109,14 +111,14 @@ pde.set<i>PropertyAttribute</i>(beanClass.getMethod(&quot;getAttributeValue&quot
 <pre>public void setOrientation(int orientation)
 {
     ...
-    <font color="#0000FF">firePropertyChange(&quot;title&quot;, null, null);
+    <font color="#0000FF">firePropertyChange(&quot;title&quot;, null, null);</font>
 }</pre>
 
 <p>Pictures bellow demonstrate the result. When user changes orientation of the
     BarChart then the display name of the <code>title</code> property changes accordingly.</p>
 
-<h3><img border="0" src="images/Horizontal.jpg" width="520" height="224"></h3>
-<h3><img border="0" src="images/Vertical.jpg" width="520" height="224"></h3>
+<h3><img border="0" src="./lessons/images/lesson04-horizontal.jpg" width="520" height="224"></h3>
+<h3><img border="0" src="./lessons/images/lesson04-vertical.jpg" width="520" height="224"></h3>
 
 <h3>&nbsp;</h3>
 
@@ -134,15 +136,15 @@ pde.set<i>PropertyAttribute</i>(beanClass.getMethod(&quot;getAttributeValue&quot
         PropertyDescriptorEx pde;
          
         pde = new PropertyDescriptorEx(&quot;preferredSize&quot;,beanClass);
-        <font color="#0000FF">pde.setReadOnly(beanClass.getMethod(&quot;getAutoLayout&quot;,null));
+        <font color="#0000FF">pde.setReadOnly(beanClass.getMethod(&quot;getAutoLayout&quot;,null));</font>
         add( pde,getResourceString(&quot;PN_PREFERRED_SIZE&quot;),getResourceString( &quot;PD_PREFERRED_SIZE&quot;) );
 
         pde = new PropertyDescriptorEx(&quot;barSpacing&quot;,beanClass);
         <font color="#0000FF">pde.setReadOnly(beanClass.getMethod(&quot;getAutoLayout&quot;,null));
-        add( pde,getResourceString(&quot;PN_BAR_SPACING&quot;),getResourceString( &quot;PD_BAR_SPACING&quot;) );
+        add( pde,getResourceString(&quot;PN_BAR_SPACING&quot;),getResourceString( &quot;PD_BAR_SPACING&quot;) );</font>
 
         pde = new PropertyDescriptorEx(&quot;scale&quot;,beanClass);
-        <font color="#0000FF">pde.setReadOnly(beanClass.getMethod(&quot;getAutoLayout&quot;,null));
+        <font color="#0000FF">pde.setReadOnly(beanClass.getMethod(&quot;getAutoLayout&quot;,null));</font>
         add( pde,getResourceString(&quot;PN_SCALE&quot;),getResourceString( &quot;PD_SCALE&quot;) );
         ...
     }        
@@ -152,13 +154,12 @@ pde.set<i>PropertyAttribute</i>(beanClass.getMethod(&quot;getAttributeValue&quot
 
 <pre>public void setAutoLayout(boolean autoLayoutFlag)
 {
-   <font color="#0000FF"> booelan oldValue = autoLayout;
+   <font color="#0000FF"> booelan oldValue = autoLayout;</font>
     autoLayout = autoLayoutFlag;
     <font color="#0000FF">firePropertyChange(&quot;autoLayout&quot;, oldValue, autoLayout);
     firePropertyChange(&quot;preferredSize&quot; + EventConstants.EVT_READ_ONLY, null, null);
     firePropertyChange(&quot;barSpacing&quot; + EventConstants.EVT_READ_ONLY, null, null);
-    firePropertyChange(&quot;scale&quot; + EventConstants.EVT_READ_ONLY, null, null);
-    
+    firePropertyChange(&quot;scale&quot; + EventConstants.EVT_READ_ONLY, null, null);</font>
 }</pre>
 
 <p>Pictures bellow demonstrate the result. When user changes auto layout mode
@@ -166,8 +167,8 @@ pde.set<i>PropertyAttribute</i>(beanClass.getMethod(&quot;getAttributeValue&quot
     'size', 'barSpacing' and 'scale' properties become read-only (or vice versa)
     accordingly.</p>
 
-<h3><img border="0" src="images/ReadOnly-false.jpg" width="520" height="230"></h3>
-<h3><img border="0" src="images/ReadOnly-true.jpg" width="520" height="230"></h3>
+<h3><img border="0" src="./lessons/images/lesson04-readOnly-false.jpg" width="520" height="230"></h3>
+<h3><img border="0" src="./lessons/images/lesson04-readOnly-true.jpg" width="520" height="230"></h3>
 
 <h3></h3>
 <h3>Specifying 'tool tip' dynamically</h3>
@@ -182,7 +183,7 @@ for tooltip generation.
     <font color="#0000FF">public String getOrientationToolTip()
     {
         return getOrientation()==1?&quot;Horizontal&quot;:&quot;Vertical&quot;;
-    }
+    }</font>
 }</pre>
 <p>2) Specify this method in BeanInfo.</p>
 
@@ -194,7 +195,7 @@ for tooltip generation.
         PropertyDescriptorEx pde;
 
         pde = new PropertyDescriptorEx(&quot;orientation&quot;,beanClass);
-        <font color="#0000FF">pde.setToolTip(beanClass.getMethod(&quot;getOrientationToolTip&quot;,null));
+        <font color="#0000FF">pde.setToolTip(beanClass.getMethod(&quot;getOrientationToolTip&quot;,null));</font>
         
         ...
      }
@@ -203,5 +204,5 @@ for tooltip generation.
 <p>Pictures bellow demonstrate the result. When user changes orientation of the
     BarChart then tool tip of the property changes accordingly.</p>
 
-<h3><img border="0" src="images/HorizontalTooltip.jpg" width="517" height="230"></h3>
-<h3><img border="0" src="images/VerticalTooltip.jpg" width="517" height="230"></h3>
+<h3><img border="0" src="./lessons/images/lesson04-horizontalTooltip.jpg" width="517" height="230"></h3>
+<h3><img border="0" src="./lessons/images/lesson04-verticalTooltip.jpg" width="517" height="230"></h3>
