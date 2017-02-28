@@ -1,0 +1,122 @@
+<h1>Lesson 7: Array properties</h1>
+
+<p>The lesson demonstrates different ways to
+    display array properties in BeanExplorer using &quot;classic&quot;
+    PropertyInspector.</p>
+
+<p>
+    <a href="#step-by-step">Step by step guide</a><br>
+    <a href="#description">Description</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#basic-view">Basic view</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#calculated-name">Calculated names</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#with-composite">Composite editor</a><br>
+    <a href="#bean-info-code">Source code</a><br>
+</p>
+
+<hr/>
+<h2><a name="step-by-step">Step by step guide</a></h2>
+
+<ol>
+    <li>Create property descriptor using <code>PropertyDescriptorEx</code> or
+        <code>IndexedPropertyDescriptorEx</code> (if indexed getter and setter are used).
+        <pre>PropertyDescriptorEx pde;
+pde = new PropertyDescriptorEx(&quot;columns&quot;, beanClass);
+add( pde, getResourceString(&quot;PN_COLUMNS1&quot;), getResourceString(&quot;PD_COLUMNS1&quot;) );</pre>
+    </li>
+    <li>If necessary specify the method for naming items of array property.
+        <pre>pde.setChildDisplayName(beanClass.getMethod(&quot;calcColumnName&quot;, new Class[] {Integer.class, Object.class}));
+        </pre>
+    </li>
+</ol>
+
+<hr/>
+<h2><a name="description">Description</a></h2>
+
+<p>
+    In this lesson we demonstrate three different ways to present the <code>columns</code> property in
+    PropertyInspector. Please note that there are even more possibilities and we only show most interested ones.</p>
+
+<h2><a name="basic-view">Basic view</a></h2>
+
+<p>Basic view is used by default to display an array property in <code>PropertyInspector</code>.
+    In this approach array items are enumerated from zero and item number is used as
+    a display name of the property. The code fragment below is an excerpt from <code>BarChartBeanInfo</code>
+    that illustrates how the basic view is created and how it will look like in
+    <code>PropertyInspector</code>.</p>
+
+<pre>public void initProperties() throws Exception
+{
+   ...
+
+   PropertyDescriptorEx pde;
+   pde = new PropertyDescriptorEx(&quot;columns&quot;, beanClass);
+   add(pde, getResourceString(&quot;PN_COLUMNS0&quot;), getResourceString(&quot;PD_COLUMNS0&quot;));
+}</pre>
+
+<img border="0" src="./lessons/images/lesson07-basicView.jpg"/>
+
+<h2><a name="calculated-names">Calculated names</a></h2>
+<p>The second approach demonstrates how to assign display names to array items.
+    In order to have such custom names in <code> BarChart</code>  class we must declare
+    special method (<code>calcColumnName</code>  in our example) to calculate display
+    names of array items.
+    This method has two parameters:
+<ol>
+    <li><code>Integer index</code> - array item number (starting from zero)</li>
+    <li><code>Object obj</code> - array item value.</li>
+</ol>
+
+<p>You can use any of the parameters to generate a display name of an array
+    item. The code below uses first parameter to locate a particular chart column
+    and fetch its label to be used as a display name for the item.;
+</p>
+<pre>public String calcColumnName( Integer index, Object obj )
+{
+   return columns[index.intValue()].getLabel();
+}</pre>Alternatively you can use second parameter:&nbsp;<pre>public String calcColumnName(Integer index, Object obj)
+{
+   return ((Column)obj).getLabel();
+}</pre>
+<p>The second step is to associate <code>calcColumnName</code> method with <code>columns</code>
+    property descriptor:</p>
+<pre>public void initProperties() throws Exception
+{
+   ...
+   PropertyDescriptorEx pde;
+   pde = new PropertyDescriptorEx(&quot;columns&quot;,beanClass);
+   <font color="#0000FF">pde.setChildDisplayName(beanClass.getMethod(&quot;calcColumnName&quot;, new Class[] {Integer.class, Object.class }));</font>
+   add(pde, getResourceString(&quot;PN_COLUMNS1&quot;), getResourceString(&quot;PD_COLUMNS1&quot;));
+}</pre>
+<p>
+    <img border="0" src="./lessons/images/lesson07-calculatedNames.jpg"/>
+</p>
+
+<h2><a name="with-composite">Composite editor</a></h2>
+<p>Composite Editor is rarely used to edit array items but it allows us to
+    demonstrate how flexible is mechanism used to deal with properties in
+    BeanExplorer. The code below demonstrates how to reference properties
+    corresponding to array items.</p>
+<pre>public void initProperties() throws Exception
+{
+   ...
+   PropertyDescriptorEx pde;
+   pde = new PropertyDescriptorEx(&quot;columns&quot;,beanClass);
+   pde.setCompositeEditor(&quot;<font color="#0000FF">[0]/label;[0]/visible;[1]/label;[1]/visible;[2]/label;[2]/visible;[3]/label;[3]/visible</font>&quot;,
+                           new java.awt.GridLayout( 1, 8 ) );
+   pde.setHideChildren(true);
+   pde.setBound(true);
+   add( pde,getResourceString(&quot;PN_COLUMNS2&quot;),getResourceString( &quot;PD_COLUMNS2&quot;) );
+}</pre>
+
+<img border="0" src="./lessons/images/lesson07-compositeEditor.jpg"/>
+
+<p>This example demonstrates also how to hide all array items while moving them into
+    flattened list to the left array property's name.</p>
+
+<hr/>
+<h2><a name="bean-info-code">BeanInfo code</a></h2>
+<p>This code shows <code>BeanInfo</code> for <code>BarChart</code> bean. Please note that you can display
+    the same property more the once especially when you want to have different views
+    for the the property in <code>PropertyInspector</code> as it is done in this lesson.</p>
+
+<pre class="code-src" java="lesson07/barchart/BarChartBeanInfo.java">code</pre>
