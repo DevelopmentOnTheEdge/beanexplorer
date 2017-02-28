@@ -1,0 +1,43 @@
+<h1>Lesson 11: Using TabularPropertyInspector</h1>
+
+<p>This lesson demonstrates using of TabularPropertyInspector to display property
+    values for several beans simultaneously. TabularPropertyInspector present beans
+    in the form of a table where rows are beans and columns are values of the properties.</p>
+
+<p><a href="#step-by-step">Step by step guide</a>
+    <br><a href="#explanation">Example</a>
+    <br><a href="#application-code">Application code</a>
+</p>
+
+<hr/>
+<h2><a name="step-by-step">Step by step guide</a></h2>
+<p>Embedding <code>TabularPropertyInspector</code> into any application requires following steps:</p>
+<ol>
+    <li>
+        <p>Create an instance of <code>TabularPropertyInspector</code> and add this instance into content pane or other
+            <code> JComponent</code> in your application.</p>
+        <pre>TabularPropertyInspector propertyInspector = new TabularPropertyInspector();
+getContentPane().add(propertyInspector, BorderLayout.CENTER);</pre>
+    </li>  
+
+    <li><p>Obtain list of beans to feed in one of the <code>TabularPropertyInspector.explore</code> 
+            methods. The simplest way is to use an array of beans (in our example array of columns via <code>bean.getColumns()</code>).</p>
+    </li>  
+
+    <li>Use <code><a trget="blanck" href="./javadoc/com/developmentontheedge/beans/swing/TabularPropertyInspector.html#explore-java.lang.Object[]-">explore(Object[])</a></code> method to browse
+        the list beans specified via model.
+        <pre> tabularPropertyInspector.explore( bean.getColumns() ); </pre>
+    </li>
+</ol>
+
+<hr/>
+<h2><a name="explanation">Example</a></h2>
+<p>The picture below shows how TabularPropertyInspector will look 
+    from the end-user's point of view (bottom-right part of the picture). 
+</p>
+
+<img src="./lessons/images/lesson11.jpg"/>
+
+<hr/>
+<h2><a name="application-code">Application code</a></h2>
+<pre class="code-src" java="lesson11/BarChartApplication.java">code</pre>
