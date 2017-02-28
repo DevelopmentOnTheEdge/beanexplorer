@@ -17,7 +17,7 @@ Using dynamic property attributes.
 <br><a href="#/lessons/05">Lesson 5.</a>
 Writing custom renderer and editor.
 
-<br><a href="lesson06/lesson06.html">Lesson 6.</a>
+<br><a href="#/lessons/06">Lesson 6.</a>
 Using CompositeEditor.
 
 <br><a href="lesson07/lesson07.html">Lesson 7.</a>
@@ -32,29 +32,14 @@ Filtered PropertyInspector.
 <br><a href="lesson10/lesson10.html">Lesson 10.</a>
 Using DialogPropertyInspector.
 
-<!--not_in_limited_edition_begin-->
-
 <br><a href="lesson11/lesson11.html">Lesson 11.</a>
 Using TabularPropertyInspector.
 
 <br><a href="lesson12/lesson12.html">Lesson 12.</a>
-BeanExplorer and Session Beans.
+Dynamic properties.
 
 <br><a href="lesson13/lesson13.html">Lesson 13.</a>
-Dynamic properties.
-
-<!--not_in_limited_edition_end-->
-
-<!--in_limited_edition_begin
-
-<br><a href="lesson11/lesson11.html">Lesson 11.</a>
-BeanExplorer and Session Beans.
-
-<br><a href="lesson12/lesson12.html">Lesson 12.</a>
-Dynamic properties.
-
-in_limited_edition_end-->
-
+Undo/redo.
 
 </body>
 </html>

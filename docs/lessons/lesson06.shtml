@@ -1,0 +1,71 @@
+<h1>Lesson 6: Using Composite Editor</h1>
+
+<p>The lesson demonstrates using of Composite Editor for editing bean or property values. </p>
+
+<p>Composite Editor is a container editor allowing the developer to group 
+    several property editors into one panel. Composite Editor 
+    can be specified both as bean editor and property editor.</p>
+
+<p>
+    <a href="#step-by-step">Step by step guide</a><br>
+    <a href="#description">Description</a><br>
+    <a href="#columnBeanInfo">Source code</a><br>
+</p>
+
+<hr/>
+<h2><a name="step-by-step">Step by step guide</a></h2>
+<ol>
+    <li>Specify property names to be edited through Composite Editor. 
+        Property names should be semicolon separated.
+        <pre>String properties = &quot;visible;value;color&quot;;</pre>
+    </li>  
+
+    <li>Specify <code>LayoutManager</code> to lay out property 
+        editors inside Composite Editor.
+        <pre>LayoutManager lm = new java.awt.GridLayout(1, 3);</pre>
+    </li>    
+
+    <li>Call <code>setCompositeEditor</code> method for <code>BeanInfoEx</code> 
+        or <code>PropertyEditorEx</code>  instance with the 
+        given property names string and <code>LayoutManager</code> instance.
+        <pre>setCompositeEditor(properties, lm);</pre>
+    </li>  
+
+    <li>If Composite Editor covers all properties of bean or composite property, you can hide
+        its child properties.
+        <pre>setHideChildren(true);</pre>
+    </li>
+</ol>
+
+<hr/>
+<h2><a name="description">Description</a></h2>
+Here we demonstrate how Composite Editor can be used for editing column settings
+in <code>BarChart</code> bean.<p>First we set up Composite Editor for <code>visible</code>,
+    <code>value</code> and <code>color</code> properties. <code>GridLayout</code> is
+    used to layout the property editors inside Composite Editor.</p>
+<pre>public ColumnBeanInfo()
+{
+   ...
+   setCompositeEditor(&quot;visible;value;color&quot;, new java.awt.GridLayout(1, 3));
+}</pre>
+
+The picture below shows the result of the code above.
+<p>
+    <img border="0" src="./lessons/images/lesson06-withChildren.jpg"/>
+</p>
+
+<p>By the same color we mark the same property values.</p>
+
+<p>Next, we may hide all child properties. The code fragment and resulting view are
+    shown below. </p>
+<pre>public ColumnBeanInfo()
+{
+   ...
+   setHideChildren(true);
+   setCompositeEditor(&quot;visible;value;color&quot;, new java.awt.GridLayout(1, 3));
+}</pre>
+<img border="0" src="./lessons/images/lesson06-withHiddenChildren.jpg"/>
+
+<hr/>
+<h2><a name="columnBeanInfo">ColumnBeanInfo source code</a></h2>
+<pre class="code-src" java="lesson06/barchart/ColumnBeanInfo.java">code</pre>
