@@ -1,0 +1,90 @@
+<h1>Lesson 9: Specifying properties to be displayed in PropertyInspector</h1>
+
+<p>By default PropertyInspector displays all
+    visible properties of the bean. However you can specify explicitly 
+    subset and order of properties to be displayed. Using complete property name the developer 
+    can display on the same level parent and child properties.</p>
+
+<p><a href="#step-by-step">Step by step guide</a>
+    <br><a href="#explanation">Example</a>
+    <br><a href="#application-code">Application code</a>
+</p>
+
+<h2><a name="step-by-step">Step by step guide</a></h2>
+<ol>
+    <li>
+        <p>Create an instance of <code>PropertyInspector</code> and 
+            add this instance into content pane or other <code>JComponent</code> 
+            in your application.</p>
+        <pre>PropertyInspector propertyInspector = new PropertyInspector();
+getContentPane().add(propertyInspector, BorderLayout.CENTER);</pre>
+    </li>  
+    <li>Create instance of the bean.<pre>BarChart bean = new BarChart();</pre>
+    </li>
+    <li>Specify string array with names of the properties to be displayed.
+        You can use complete property names inside the bean being explored.
+        For instance the complete name for the first item in the <code>columns</code> property 
+        will be <code>&quot;columns/[0]&quot;</code>, and
+        complete name for <code>label</code> property inside first item will be <code>&quot;columns/[0]/label&quot;</code>.
+        <pre>String[] properties = {&quot;title&quot;, &quot;orientation&quot;, &quot;preferredSize&quot;, 
+                       &quot;barSpacing&quot;, &quot;scale&quot;};</pre>
+    <li>
+        Use <code>explore(Object bean, String[] propertyNames)</code> method to display
+        the desired properties of the bean.<pre>propertyInspector.explore(bean, properties);</pre>
+    </li>  
+</ol>
+
+<hr/>
+<h2><a name="explanation">Example</a></h2>
+<p>We will create application that display every column <code> BarChart</code> in a separate property inspector
+    shown under different tabs as it shown on the following picture.</p>
+
+<p><img border="0" src="./lessons/images/lesson09-columnTab.jpg"/></p>
+
+<p>On first tab we will display all the properties of <code>BeanChart</code> itself except 
+    for array property <code>columns</code></p>
+<pre>final JTabbedPane inspectorPane = new JTabbedPane();
+
+// initialize property inspector
+PropertyInspector propertyInspector = new PropertyInspector();
+propertyInspector.explore(bean, new String[] {&quot;title&quot;, &quot;orientation&quot;, &quot;preferredSize&quot;, &quot;barSpacing&quot;, &quot;scale&quot; } );
+inspectorPane.add( &quot;View&quot;, propertyInspector );</pre>
+
+<p>On other tabs we will display each item of columns property.</p>
+
+<pre>final Column []columns = bean.getColumns();
+for( int i = 0; i &lt; columns.length; i++ )
+{
+    final int index = i;
+    PropertyInspector pi = new PropertyInspector();
+    String item = &quot;[&quot; + index + &quot;]&quot;;
+
+    pi.explore(bean, new String[] {&nbsp;
+               &quot;columns/&quot; + item + &quot;/label&quot;,&nbsp;
+               &quot;columns/&quot; + item + &quot;/value&quot;,&nbsp;
+               &quot;columns/&quot; + item + &quot;/color&quot;,&nbsp;
+               &quot;columns/&quot; + item + &quot;/visible&quot; } );&nbsp;
+
+    inspectorPane.add( columns[ index ].getLabel(), pi );
+}&nbsp;</pre>
+
+<p>In fact, the same thing can be done simpler by the following statement:
+<pre>    pi.explore(columns[index]);</pre>
+
+<p>Since we used column labels to title our tabs we want to
+    update titles when corresponding 'label' property changes. 
+    The following code will do the trick:
+<pre>    pi.addPropertyChangeListener(&quot;label&quot;, new PropertyChangeListener()
+    {
+       public void propertyChange( PropertyChangeEvent evt )
+       {
+           inspectorPane.setTitleAt( index + 1, columns[ index ].getLabel() );
+       }
+    } );</pre>
+
+And picture below demonstrates the code result.
+<p><img src="./lessons/images/lesson09-namesTab.jpg"/></p>
+
+<hr/>
+<h2><a name="application-code">Application Code</a></h2>
+<pre class="code-src" java="lesson09/BarChartApplication.java">code</pre>

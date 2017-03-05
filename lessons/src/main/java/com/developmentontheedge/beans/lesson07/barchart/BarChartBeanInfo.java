@@ -38,21 +38,19 @@ public class BarChartBeanInfo extends BeanInfoEx
         pde = new PropertyDescriptorEx("scale", beanClass);
         add(pde, getResourceString("PN_SCALE"), getResourceString("PD_SCALE") );
 
-/*->*/
-        pde = new PropertyDescriptorEx("columns", beanClass);
-        add(pde, getResourceString("PN_COLUMNS0"), getResourceString("PD_COLUMNS0") );
+/*->*/  pde = new PropertyDescriptorEx("columns", beanClass);
+/*->*/  add(pde, getResourceString("PN_COLUMNS0"), getResourceString("PD_COLUMNS0") );
 
-        pde = new PropertyDescriptorEx("columns", beanClass);
-        pde.setName( "columns1" ); // change programmatic name 
-        pde.setChildDisplayName(beanClass.getMethod("calcColumnName",
-               new Class[] { Integer.class, Object.class } ) );
-        add( pde,getResourceString("PN_COLUMNS1"), getResourceString("PD_COLUMNS1") );
+/*->*/  pde = new PropertyDescriptorEx("columns", beanClass);
+/*->*/  pde.setName( "columns1" ); // change programmatic name 
+/*->*/  pde.setChildDisplayName(beanClass.getMethod("calcColumnName",
+/*->*/       new Class[] { Integer.class, Object.class } ) );
+/*->*/  add( pde,getResourceString("PN_COLUMNS1"), getResourceString("PD_COLUMNS1") );
 
-        pde = new PropertyDescriptorEx("columns",beanClass);
-        pde.setName( "columns2" ); // change programmatic name 
-        pde.setCompositeEditor( "[0]/label;[0]/visible;[1]/label;[1]/visible;[2]/label;[2]/visible;[3]/label;[3]/visible", new java.awt.GridLayout( 1, 8 ) );
-        add( pde,getResourceString("PN_COLUMNS2"),getResourceString("PD_COLUMNS2") );
-/*--*/
+/*->*/  pde = new PropertyDescriptorEx("columns",beanClass);
+/*->*/  pde.setName( "columns2" ); // change programmatic name 
+/*->*/  pde.setCompositeEditor( "[0]/label;[0]/visible;[1]/label;[1]/visible;[2]/label;[2]/visible;[3]/label;[3]/visible", new java.awt.GridLayout( 1, 8 ) );
+/*->*/  add( pde,getResourceString("PN_COLUMNS2"),getResourceString("PD_COLUMNS2") );
 
     }
 }

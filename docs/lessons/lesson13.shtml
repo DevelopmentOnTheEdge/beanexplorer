@@ -1,0 +1,23 @@
+<h1>Lesson 11: Undo/redo</h1>
+
+<p>This lesson demonstrates how Property Inspector can be integtaed into undo/redo history.</p>
+
+<p><a href="#step-by-step">Step by step guide</a>
+    <br><a href="#explanation">Example</a>
+    <br><a href="#application-code">Application code</a>
+</p>
+
+<hr/>
+<h2><a name="step-by-step">Step by step guide</a></h2>
+<p>TO do</p>
+
+<hr/>
+<h2><a name="explanation">Example</a></h2>
+<p>To do. 
+</p>
+
+<img src="./lessons/images/lesson13.png"/>
+
+<hr/>
+<h2><a name="application-code">Application code</a></h2>
+<pre class="code-src" java="lesson13/BarChartApplication.java">code</pre>

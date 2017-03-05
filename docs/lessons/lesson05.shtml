@@ -1,0 +1,189 @@
+<h1>Lesson 5: Using Custom Property Editors</h1>
+<p>The lesson demonstrates how to create
+    property editors in BeanExplorer. These editors allow the developer
+    to provide an advanced mechanism to edit value of the property.</p>
+
+<p>
+    <a href="#step-by-step">Step by step guide</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#writing-string-editor">Writing String Editor</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#writing-tag-editor">Writing Tag Editor</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#writing-paintable-editor">Writing Visual Editor</a><br>
+    <a href="#description">Description</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#general-concept">General Concept</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#string-editor">String Editor</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tag-editor">Tag Editor</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#paintable-editor">Visual Editor</a><br>
+    <a href="#code">Sample code</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#string-editor-code">String Editor</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#tag-editor-code">Tag Editor</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#paintable-editor-code">Visual Editor</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#beanInfo-code">BeanInfo</a><br>
+</p>
+
+<hr/>
+<h2><a name="step-by-step">Step by step guide</a></h2>
+
+<h3><a name="writing-string-editor">Writing String Editor</a></h3>
+<ol>
+    <li>Define method <code>getAsText</code>
+        <pre>public String getAsText() 
+{
+    Integer value = (Integer)getValue();
+    return value.toString();
+}
+        </pre>
+    </li>
+    <li>Define method <code>setAsText</code>
+        <pre>public void setAsText( String text ) throws IllegalArgumentException
+{
+    try
+    {
+        int value = Integer.parseInt(text);
+        if (value &gt; 10)
+        {
+            value = 10;
+        }
+        else if (value &lt; 1)
+        {
+            value = 1;
+        }
+        setValue(new Integer(value));
+    }
+    catch(Exception ex)
+    {
+        throw new IllegalArgumentException();
+    }
+}
+        </pre>
+    </li>
+</ol>
+
+<h3><a name="writing-tag-editor">Writing Tag Editor</a></h3>
+<ol>
+    <li>Extend <code>com.developmentontheedge.beans.editors.TagEditorSupport</code>
+        <pre>import com.developmentontheedge.beans.editors.TagEditorSupport;
+
+public class OrientationEditor extends TagEditorSupport
+        </pre>
+    </li>
+    <li>Provide set of tags for editor
+        <pre>public OrientationEditor()
+{
+    super(new String[] { &quot;Vertical&quot;,&quot;Horizontal&quot; }  , 0);
+}
+        </pre>
+    </li>
+</ol>
+
+<h3><a name="writing-paintable-editor">Writing Visual Editor</a></h3>
+<ol>
+    <li>Extend <code>com.developmentontheedge.beans.editors.CustomEditorSupport</code>
+        <pre>public class ScaleEditor extends CustomEditorSupport
+        </pre>
+    </li>
+    <li>Specify custom renderer
+        <pre>public Component getCustomRenderer(Component parent, boolean isSelected, boolean hasFocus) 
+{
+    ...
+}
+        </pre>
+    </li>
+    <li>Specify custom editor
+        <pre>public Component getCustomEditor(Component parent, boolean isSelected) 
+{
+    ...
+}
+        </pre>
+    </li>
+</ol>
+
+<hr/>
+<h2><a name="description">Description</a></h2>
+
+<h3><a name="general-concept">General concept</a></h3>
+BeanExplorer uses standard approach for editing values of the properties
+provided by JavaBeans.
+Each class that is used to edit the properties should implement <code>java.beans.PropertyEditor</code> interface.
+In order to simplify the process of editing of the properties BeanExplorer
+provides property editors for many of the standard types including <code>Interger,
+    Boolean, Color, Font, Dimension</code> etc.
+
+<p>There are three types of property editors:</p>
+<ul>
+    <li>String-based editor</li>
+    <li>Tag-based editor</li>
+    <li>Visual editor</li>
+</ul>
+
+<h3><a name="string-editor">String Editor</a></h3>
+<p>In the following <a href="#string-editor-code">example</a> we will write the simplest String-based editor for <code>barSpacing</code> property. 
+    Suppose we want the value of the property to be not less than 1 and not more than 10. The <a href="#string-editor-code">code</a>
+    shows how such eduitor can be implemented.</p>
+This screenshot shows how string-based editor will look like:
+<p><img border="0" src="./lessons/images/lesson05-barSpacing.jpg"></p>
+
+<h3><a name="tag-editor">Tag Editor</a></h3>
+<p>It is often necessary to select one value from a set of possible values instead of typing it in property editor.
+    In the next <a href="#tag-editor-code">example</a> we will create the editor for <code>orientation</code> property.</p>
+
+<p>
+    This property has two possible values: 0 if orientation is Vertical and 1 if orientation is Horizontal.
+    Our purpose is to implement property editor which allows the user to select these two values
+    from drop down list. BeanExplorer via its BeanHelpers mechanism  provides <a target="blanck" href="./javadoc/com/developmentontheedge/beans/editors/TagEditorSupport.html">com.developmentontheedge.beans.editors.TagEditorSupport</a>
+    class which is intended to be as a superclass for defining such editors. The <a href="#tag-editor-code">code</a>
+    gives an example of tag-based editor implementation.
+</p>
+This screenshot shows how tag-based editor will look like:
+<p><img border="0" src="./lessons/images/lesson05-orientation.jpg"></p>
+
+<h3><a name="paintable-editor">Visual Editor</a></h3>
+<p>The simplest way to provide visual Property Editor is to extend
+    java.bean.PropertyEditorSupport and to override two main methods of <a target="blanck" href="https://docs.oracle.com/javase/8/docs/api/java/beans/PropertyEditorSupport.html">PropertyEditorSupport</a>:</p>
+<ul>
+    <li><a target="blanck" href="https://docs.oracle.com/javase/8/docs/api/java/beans/PropertyEditorSupport.html#supportsCustomEditor--">boolean
+            supportsCustomEditor()</a></li>
+    <li><a target="blanck" href="https://docs.oracle.com/javase/8/docs/api/java/beans/PropertyEditorSupport.html#getCustomEditor--">Component
+            getCustomEditor()</a></li>
+</ul>
+
+<p>In order to simplify creation of visual editors BeanExplorer provides  
+    <a target="blanck" href="./javadoc/com/developmentontheedge/beans/editors/CustomEditorSupport.html">com.beanexplorer.swing.editors.CustomEditorSupport</a>
+    class to be used as a superclass for defining such editors. The developer must
+    override two methods of <a target="blanck" href="./javadoc/com/developmentontheedge/beans/editors/CustomEditorSupport.html">com.beanexplorer.swing.editors.CustomEditorSupport</a>:
+</p>
+
+<ul>
+    <li> <a target="blanck" href="./javadoc/com/developmentontheedge/beans/editors/CustomEditorSupport.html#getCustomRenderer-java.awt.Component-boolean-boolean-">public Component getCustomRenderer(Component parent, boolean isSelected, boolean hasFocus)</a>
+    </li>
+    <li>
+        <a target="blanck" href="./javadoc/com/developmentontheedge/beans/editors/CustomEditorSupport.html#getCustomEditor-java.awt.Component-boolean-">
+            public Component getCustomEditor( Component parent, boolean isSelected )
+        </a>
+        <br>
+    </li>
+</ul>
+<p>Please note that we provide an alternative to getCustomEditor method from PropertyEditor interface.
+    This method has parameters so the developer can control how his editor
+    will look like in different situations. 
+</p>
+<p>
+    The <a href="#paintable-editor-code">code</a> gives an example of paintable editor implementation.</p>
+This screenshot shows how visual editor will look like:
+<p><img border="0" src="./lessons/images/lesson05-scale.jpg"></p>
+
+<hr/>
+<h2><a name="code">Sample code</a></h2>
+
+<h3><a name="string-editor-code">String editor sample code</a></h3>
+<pre class="code-src" java="lesson05/editors/BarSpacingEditor.java">code</pre>
+
+
+<h3><a name="tag-editor-code">Tag editor sample code</a></h3>
+<pre class="code-src" java="lesson05/editors/OrientationEditor.java">code</pre>
+
+
+<h3><a name="paintable-editor-code">Visual editor sample code</a></h3>
+<pre class="code-src" java="lesson05/editors/ScaleEditor.java">code</pre>
+
+<h3><a name="beanInfo-code">BeanInfo sample code</a></h3>
+<pre class="code-src" java="lesson05/barchart/BarChartBeanInfo.java">code</pre>

@@ -1,0 +1,58 @@
+<h1>Lesson 10: Using DialogPropertyInspector</h1>
+
+<p>The lesson demonstrates how to insert DialogPropertyInspector into you application
+    and explore bean with it.</p>
+
+<p>In fact using DialogPropertyInspector is quite similar to using
+    &quot;classic&quot; PropertyInspector. The only difference is that the developer
+    must instantiate <code>DialogPropertyInspector</code> class instead of <code>PropertyInspector</code>.</p>
+
+<p><a href="#step-by-step">Step by step guide</a>
+    <br><a href="#explanation">Description</a>
+    <br><a href="#application-code">Application code</a>
+</p>
+
+<hr>
+<h2><a name="step-by-step">Step by step guide</a></h2>
+<ol>
+    <li>Create a DialogPropertyInspector
+        <pre>DialogPropertyInspector propertyInspector = new DialogPropertyInspector();</pre></li>
+    <li>Add it into content pane or other JComponent in you application
+        <pre>getContentPane().add(propertyInspector, BorderLayout.CENTER);</pre></li>
+    <li>Explore bean with it
+        <pre>BarChart bean = new BarChart(&quot;Quarter report&quot;);
+propertyInspector.explore(bean);</pre>
+    </li>
+</ol>
+
+<hr>
+<h2><a name="explanation">Description</a></h2>
+<p>DialogPropertyInspector has the same functionality as the &quot;classic&quot;
+    PropertyInspector. The main difference between these inspectors - style of
+    properties visualization. While &quot;classic&quot; PropertyInspector uses
+    tree-table for displaying and editing properties, the
+    DialogPropertyInspector uses dialog-like representation of hierarchy of the
+    properties (see pictures below). Pairs 'property name - property value'
+    organized in
+    columns and laid out in unified manner. To represent hierarchy of the properties
+    (composite, indexed, array properties) group controls are used. Therefore child
+    properties are enclosed into its parent (which become 'group'
+    in such case) and laid out in it in the same manner.</p>
+<p>At present properties laid out into two columns. In the future versions of
+    BeanExplorer it will be customizable while allowing to represent composite
+    properties as tabs rather than group controls.</p>
+<p>In <code>lesson10</code>  we demonstrate simple application that explore and display
+    <code>BarChart</code> bean used in other lessons.&nbsp; This application consist
+    from two panes. Left pane displays the bean and
+    right pane explores bean with DialogPropertyInspector as described in step-by-step
+    instruction.</p>
+<p>Pictures below show <code>lesson10.BarChartApplication</code>   screenshot
+    and screenshot of the application using the same bean with &quot;classic&quot;
+    PropertyInspector for comparison.&nbsp;</p>
+
+<p><img src="./lessons/images/lesson10-dialogPropertyInspector.jpg"/>&nbsp;
+   <img src="./lessons/images/lesson10-classicPropertyInspector.jpg"/></p>
+
+<hr>
+<h2><a name="application-code">Application code</a></h2>
+<pre class="code-src" java="lesson10/BarChartApplication.java">code</pre>

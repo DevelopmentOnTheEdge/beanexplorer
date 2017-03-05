@@ -34,7 +34,7 @@ public class BarChartApplication extends JFrame
 
     public void initializePropertyInspector( BarChart bean )
     {
-/*->*/  
+/*!->*/  
         // initialize property inspector
         PropertyInspector propertyInspector = new PropertyInspector();
         propertyInspector.explore(bean, new String[] { "title", "orientation", "preferredSize", "barSpacing", "scale" });

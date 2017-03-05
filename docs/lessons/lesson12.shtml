@@ -1,0 +1,76 @@
+<h1>Lesson 12: Dynamic properties</h1>
+
+<p>lesson demonstrates using of dynamic properties.</p>
+
+<p>
+    Dynamic properties are ones that can be added or removed at run-time.
+    These properties are very flexible and allow the developer to change at runtime 
+    any attribute of the property including property type.
+</p>
+
+<p><a href="#step-by-step">Step by step guide</a>
+    <br><a href="#explanation">Example</a>
+    <br><a href="#application-code">Application code</a>
+</p>
+
+<hr/>
+<h2><a name="step-by-step">Step by step guide</a></h2>
+<ol>
+    <li>Extend the class 
+        <a target="blank" href="./javadoc/com/developmentontheedge/beans/DynamicPropertySetSupport.html">com.beanexplorer.beans.DynamicPropertySetSupport</a>.
+        This is the simplest way to start with dynamic properties. Alternatively you can implement 
+        <a target="blank" href="./javadoc/com/developmentontheedge/beans/DynamicPropertySet.html">com.beanexplorer.beans.DynamicPropertySet</a> 
+        interface from scratch. This interface will be recognized by Property Inspectors.
+        <pre>Preferences extends DynamicPropertySetSupport</pre>
+
+    <li>Add dynamic properties (instances of <a target="blank" href="./javadoc/com/developmentontheedge/beans/DynamicProperty.html">com.beanexplorer.beans.DynamicProperty</a>)
+        to this class 
+        <pre>
+DynamicProperty title = new DynamicProperty("title", String.class, "Quarter report");
+add(title);
+
+PropertyDescriptorEx orientationDesc = new PropertyDescriptorEx("orientation");
+orientationDesc.setPropertyEditorClass(OrientationEditor.class);
+DynamicProperty orientation = new DynamicProperty(orientationDesc, Integer.class, new Integer(BarChart.HORIZONTAL));
+add(orientation);
+
+DynamicProperty barSpacing = new DynamicProperty("barSpacing", "bar spacing", Integer.class, new Integer(10));
+add(barSpacing);
+
+DynamicProperty scale = new DynamicProperty("scale", Integer.class);
+scale.setValue(new Integer(10));
+add(scale);
+        </pre>
+
+    <li>Make a container of dynamic properties itself a property of BarChart bean.
+        <pre>
+private Preferences pref;
+
+public Preferences getPreferences()
+{
+   return pref;
+}
+
+public void setPreferences(Preferences pref)
+{
+    this.pref = pref;
+}
+        </pre>
+
+    <li>You can also have Property Inspector to explore dynamic bean alone:
+        <pre>propertyInspector.explore(pref);</pre>
+
+</ol>
+
+<hr/>
+<h2><a name="explanation">Example</a></h2>
+
+The picture below shows the bean with dynamic properties grouped under the property named <i>Preferences</i>.
+
+<p><img src="./lessons/images/lesson12.jpg"/> 
+</p>
+
+
+<hr>
+<h2><a name="application-code">Application code</a></h2>
+<pre class="code-src" java="lesson12/barchart/Preferences.java">code</pre>
