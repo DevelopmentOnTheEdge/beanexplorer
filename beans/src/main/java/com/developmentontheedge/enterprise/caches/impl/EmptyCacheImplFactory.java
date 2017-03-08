@@ -7,7 +7,7 @@ import com.developmentontheedge.enterprise.caches.CacheImplFactory;
 public class EmptyCacheImplFactory implements CacheImplFactory
 {
     /* (non-Javadoc)
-     * @see com.beanexplorer.enterprise.caches.CacheImplFactory#getCacheImpl(java.lang.String)
+     * @see com.developmentontheedge.enterprise.caches.CacheImplFactory#getCacheImpl(java.lang.String)
      */
     public AbstractCacheImpl getCacheImpl(String namespace)
     {

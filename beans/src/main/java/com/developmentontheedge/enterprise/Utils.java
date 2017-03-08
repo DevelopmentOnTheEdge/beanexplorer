@@ -5,8 +5,6 @@ import java.util.List;
 
 public class Utils {
 
-
-
     /**
      * Shows not very long stacktrace of exception without misleading "Exception" word in it.
      * @param exc

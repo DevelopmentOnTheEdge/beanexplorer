@@ -20,7 +20,7 @@ import java.util.*;
  */
 public class CacheFactory
 {
-    private static LoggingHandle cat = Logger.getHandle( "com.beanexplorer.enterprise.caches.CacheFactory" );
+    private static LoggingHandle cat = Logger.getHandle( "com.developmentontheedge.enterprise.caches.CacheFactory" );
 
     public static final String CACHE_IMPL_FACTORY_CLASS_NAME_PARAM = "cacheImplementationFactory";
 
