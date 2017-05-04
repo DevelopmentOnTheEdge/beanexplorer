@@ -308,7 +308,7 @@ public class JsonFactory
         return p;
     }
 
-    private static JsonArrayBuilder createDictionary(Object[] strings, boolean byPosition)
+    static JsonArrayBuilder createDictionary(Object[] strings, boolean byPosition)
     {
         if( strings == null )
             strings = new Object[] {};
