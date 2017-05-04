@@ -308,7 +308,7 @@ public class JsonFactory
         return p;
     }
 
-    private static JsonArray createDictionary(Object[] strings, boolean byPosition)
+    private static JsonArrayBuilder createDictionary(Object[] strings, boolean byPosition)
     {
         if( strings == null )
             strings = new Object[] {};
@@ -323,7 +323,7 @@ public class JsonFactory
                 values.add(jsonArrayBuilderFromList(Arrays.asList(tag, tag)));
             position++;
         }
-        return values.build();
+        return values;
     }
 
     private static void initEditor(Property property, PropertyEditorEx editor)
