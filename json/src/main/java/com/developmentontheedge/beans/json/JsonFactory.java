@@ -9,15 +9,19 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 /**
- * Provides API to serialize beans and dynamic property sets to JSON 
+ * Provides API to serialize beans and dynamic property sets to JSON. 
  */
 public class JsonFactory
 {
+    ///////////////////////////////////////////////////////////////////////////
+    // public API
+    //
+    
     public static JsonObject beanValues(Object bean, int showMode)
     {
         Objects.requireNonNull(bean, "Bean should be not null.");
         CompositeProperty model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
-        JSON
+
         return null;
     }
     
@@ -36,7 +40,7 @@ public class JsonFactory
         return null;
     }
     
-    public static JsonObject dictionaryValues(DynamicPropertySet dps)
+    public static JsonObject dictionaryValues(Object obj)
     {
         return null;
     }
