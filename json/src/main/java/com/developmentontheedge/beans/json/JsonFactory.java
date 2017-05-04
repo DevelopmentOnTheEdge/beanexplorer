@@ -13,6 +13,7 @@ import com.developmentontheedge.beans.model.Property;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -49,9 +50,22 @@ public class JsonFactory
     
     public static JsonObject dpsValues(DynamicPropertySet dps)
     {
-        return null;
+        return Json.createObjectBuilder().add("values", get(dps)).build();
     }
-    
+
+    private static JsonObjectBuilder get(DynamicPropertySet dps)
+    {
+        JsonObjectBuilder jb = Json.createObjectBuilder();
+        for (Map.Entry entry :dps.asMap().entrySet()){
+            if(entry.getValue() instanceof DynamicPropertySet){
+                jb.add((String) entry.getKey(), get((DynamicPropertySet)entry.getValue()));
+                continue;
+            }
+            jb.add((String) entry.getKey(), (String)entry.getValue());
+        }
+        return jb;
+    }
+
     public static JsonObject beanMeta(Object bean)
     {
         return null;
