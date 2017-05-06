@@ -1,8 +1,20 @@
 /docs/Beanexplorer/nbproject/private/
 /docs/nbproject/private/
 
-### IntelliJ IDEA ###
+# IntelliJ IDEA
 .idea
 *.iws
 *.iml
 *.ipr
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/

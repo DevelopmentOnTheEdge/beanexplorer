@@ -22,6 +22,8 @@ import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Provides API to serialize beans and dynamic property sets to JSON. 
  */
@@ -42,7 +44,7 @@ public class JsonFactory
     
     public static JsonObject beanValues(Object bean, int showMode)
     {
-        Objects.requireNonNull(bean, "Bean should be not null.");
+        requireNonNull(bean, "Bean should be not null.");
         CompositeProperty model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         return null;
