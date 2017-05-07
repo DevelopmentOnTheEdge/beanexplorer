@@ -1,5 +1,6 @@
 package com.developmentontheedge.beans.json;
 
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.editors.CustomEditorSupport;
 import com.developmentontheedge.beans.editors.PropertyEditorEx;
@@ -11,16 +12,19 @@ import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 
+import java.awt.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,43 +46,64 @@ public class JsonFactory
     // public API
     //
     
-    public static JsonObject beanValues(Object bean, int showMode)
+    public static JsonObjectBuilder beanValues(Object bean)
     {
         requireNonNull(bean, "Bean should be not null.");
         CompositeProperty model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
-        return null;
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+
+        return objectBuilder;
     }
     
-    public static JsonObject dpsValues(DynamicPropertySet dps)
+    public static JsonObjectBuilder dpsValues(List<DynamicPropertySet> dpSets)
     {
-        return Json.createObjectBuilder().add("values", get(dps)).build();
+        JsonArrayBuilder jsonDPSets = Json.createArrayBuilder();
+        dpSets.forEach(x -> jsonDPSets.add(get(x)));
+        return Json.createObjectBuilder().add("values", jsonDPSets);
     }
 
-    private static JsonObjectBuilder get(DynamicPropertySet dps)
+    public static JsonObjectBuilder get(DynamicPropertySet dps)
     {
         JsonObjectBuilder jb = Json.createObjectBuilder();
         for (Map.Entry entry :dps.asMap().entrySet()){
-            if(entry.getValue() instanceof DynamicPropertySet){
-                jb.add((String) entry.getKey(), get((DynamicPropertySet)entry.getValue()));
-                continue;
-            }
-            jb.add((String) entry.getKey(), (String)entry.getValue());
+            String key = (String) entry.getKey();
+
+            DynamicProperty property = dps.getProperty(key);
+            Object value = property.getValue();
+            Class<?> type = property.getType();
+
+            if( value == null )jb.addNull(key);
+
+            if( type == String.class ){    jb.add(key, (String) value); continue;}
+            if( type == Double.class ){    jb.add(key, (double)value ); continue;}
+            if( type == Long.class ){      jb.add(key, (long)value ); continue;}
+            if( type == Integer.class ){   jb.add(key, (int)value ); continue;}
+            if( type == Boolean.class ){   jb.add(key, (boolean)value ); continue;}
+            if( type == Float.class ){     jb.add(key, (float)value ); continue;}
+            if( type == BigInteger.class ){jb.add(key, (BigInteger) value ); continue;}
+            if( type == BigDecimal.class ){jb.add(key, (BigDecimal) value ); continue;}
+
+            if( type == JsonValue.class ){jb.add(key, (JsonValue)value); continue;}
+            if( type == JsonObjectBuilder.class ){jb.add(key, (JsonObjectBuilder)value ); continue;}
+            if( type == JsonArrayBuilder.class ){jb.add(key, (JsonArrayBuilder)value ); continue;}
+
+            if( value instanceof DynamicPropertySet){jb.add(key, get((DynamicPropertySet)value));}
         }
         return jb;
     }
 
-    public static JsonObject beanMeta(Object bean)
+    public static JsonObjectBuilder beanMeta(Object bean)
     {
         return null;
     }
 
-    public static JsonObject dpsMeta(DynamicPropertySet dps)
+    public static JsonObjectBuilder dpsMeta(DynamicPropertySet dps)
     {
         return null;
     }
     
-    public static JsonObject dictionaryValues(Object obj)
+    public static JsonObjectBuilder dictionaryValues(Object obj)
     {
         return null;
     }
@@ -89,14 +114,23 @@ public class JsonFactory
     {
 
     }
-    
+
+    /**
+     * Convert model to JSON
+     * @param properties model to convert
+     */
+    public static JsonArrayBuilder getModelAsJson(CompositeProperty properties) throws Exception
+    {
+        return getModelAsJson(properties, FieldMap.ALL, Property.SHOW_USUAL);
+    }
+
     /**
      * Convert model to JSON
      * @param properties model to convert
      * @param fieldMap fieldMap of properties to include. Cannot be null. Use {@link FieldMap#ALL} to include all fields
      * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
      */
-    public static JsonArray getModelAsJSON(CompositeProperty properties, FieldMap fieldMap, int showMode)
+    public static JsonArrayBuilder getModelAsJson(CompositeProperty properties, FieldMap fieldMap, int showMode)
             throws Exception
     {
         JsonArrayBuilder result = Json.createArrayBuilder();
@@ -115,7 +149,7 @@ public class JsonFactory
                         + ( property == null ? null : property.getName() ), e);
             }
         }
-        return result.build();
+        return result;
     }
 
     private static JsonObjectBuilder convertSingleProperty(FieldMap fieldMap, int showMode, Property property) throws Exception
@@ -262,7 +296,7 @@ public class JsonFactory
             Property element = array.getPropertyAt(j);
             if( element instanceof CompositeProperty )
             {
-                value.add(getModelAsJSON((CompositeProperty)element, fieldMap.get(property), showMode));
+                value.add(getModelAsJson((CompositeProperty)element, fieldMap.get(property), showMode));
             }
             else
             {
@@ -287,8 +321,8 @@ public class JsonFactory
     private static JsonObjectBuilder fillCompositeProperty(FieldMap fieldMap, int showMode, Property property, JsonObjectBuilder p)
             throws Exception
     {
-//TODO        Object value = property.getValue();
-//        Class<?> valueClass = property.getValueClass();
+        Object value = property.getValue();
+        Class<?> valueClass = property.getValueClass();
 //        if( GenericComboBoxItem.class.isAssignableFrom( valueClass ) )
 //        {
 //            p.add(TYPE_ATTR, "code-string");
@@ -309,18 +343,17 @@ public class JsonFactory
 //            p.add(TYPE_ATTR, "composite");
 //            p.add(VALUE_ATTR, getModelAsJSON(ComponentFactory.getModel( wrapper ), fieldMap.get(property), showMode));
 //        }
-//        else if( Color.class.isAssignableFrom( valueClass ) )
-//        {
-//            p.add(TYPE_ATTR, "color-selector");
-//            JsonArray valueEl = new JsonArray();
-//            valueEl.add(encodeColor((Color)value));
-//            p.add(VALUE_ATTR, valueEl);
-//        }
 //        else
-//        {
-//            p.add(TYPE_ATTR, "composite");
-//            p.add(VALUE_ATTR, getModelAsJSON((CompositeProperty)property, fieldMap.get(property), showMode));
-//        }
+        if( Color.class.isAssignableFrom( valueClass ) )
+        {
+            p.add(TYPE_ATTR, "color-selector");
+            p.add(VALUE_ATTR, encodeColor((Color)value));
+        }
+        else
+        {
+            p.add(TYPE_ATTR, "composite");
+            p.add(VALUE_ATTR, getModelAsJson((CompositeProperty)property, fieldMap.get(property), showMode));
+        }
         return p;
     }
 
@@ -358,5 +391,18 @@ public class JsonFactory
             arrayBuilder.add(s.toString());
         }
         return arrayBuilder;
+    }
+
+    /**
+     * Counterpart for parseColor
+     * @param color color to encode
+     * @return array of color components
+     */
+    public static JsonArrayBuilder encodeColor(Color color)
+    {
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        if(color == null || color.getAlpha() == 0) return arrayBuilder;
+
+        return arrayBuilder.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
     }
 }

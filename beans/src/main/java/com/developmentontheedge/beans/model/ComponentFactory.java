@@ -741,6 +741,10 @@ public class ComponentFactory implements InternalConstants
         return null;
     }
 
+    public static ComponentModel getModel(Object bean){
+        return getModel( bean, Policy.DEFAULT, false );
+    }
+
     public static ComponentModel getModel(Object bean, Policy policy) // throws NoSuchMethodException
     {
         return getModel( bean, policy, false );
