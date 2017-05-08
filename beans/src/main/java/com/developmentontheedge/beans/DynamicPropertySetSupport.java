@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Spliterator;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
@@ -453,6 +454,12 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
 	public Iterator<DynamicProperty> propertyIterator()
     {
         return properties.iterator();
+    }
+
+    @Override
+    public Spliterator<DynamicProperty> spliterator()
+    {
+        return properties.spliterator();
     }
 
     @Override

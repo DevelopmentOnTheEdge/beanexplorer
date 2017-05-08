@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Spliterator;
 import java.util.TreeMap;
 
 import com.developmentontheedge.beans.log.Logger;
@@ -107,14 +108,17 @@ public class DynamicPropertySetAsMap extends AbstractDynamicPropertySet
     }
 
     @Override
+    public Spliterator<DynamicProperty> spliterator() {
+        return propertiesMap.values().spliterator();
+    }
+
+    @Override
     public Map<String, Object> asMap()
     {
         HashMap<String, Object> viewMap = new HashMap<>( propertiesMap.size() );
-        for( Iterator<Map.Entry<String, DynamicProperty>> entries = propertiesMap.entrySet().iterator(); entries.hasNext(); )
-        {
-            Map.Entry<String, DynamicProperty> entry = entries.next();
+        for (Map.Entry<String, DynamicProperty> entry : propertiesMap.entrySet()) {
             DynamicProperty prop = entry.getValue();
-            viewMap.put( entry.getKey(), prop.getValue() );
+            viewMap.put(entry.getKey(), prop.getValue());
         }
 
         return Collections.unmodifiableMap( viewMap );
@@ -215,6 +219,7 @@ public class DynamicPropertySetAsMap extends AbstractDynamicPropertySet
         }
         catch( Exception e )
         {
+            throw new RuntimeException(e);
         }
     }
 }
