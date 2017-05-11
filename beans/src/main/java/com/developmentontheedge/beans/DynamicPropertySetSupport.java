@@ -171,12 +171,6 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         return builder; 
     }
 
-    public DynamicPropertyBuilder getAsBuilder( String name )
-    {
-        DynamicPropertyBuilder builder = new DynamicPropertyBuilder( findProperty( name ) );
-        return builder; 
-    }
-
     /**
      * Checks if property does exist in this set
      */

@@ -89,6 +89,12 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
         return prop.getValue().toString();
     }
 
+    public DynamicPropertyBuilder getAsBuilder( String name )
+    {
+        DynamicPropertyBuilder builder = new DynamicPropertyBuilder( findProperty( name ) );
+        return builder;
+    }
+
     @Override
 	public Object clone()
     {

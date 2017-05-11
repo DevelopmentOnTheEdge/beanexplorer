@@ -21,7 +21,8 @@ public class DynamicPropertySetSupportTest
     private static String propName = "test";
 
     @BeforeClass
-    public static void init(){
+    public static void init()
+    {
         DynamicProperty prop = new DynamicProperty( propName, "Дата выдачи", Date.class,  date);
         parameters.add( prop );
         assertEquals(1, parameters.size());
@@ -32,14 +33,16 @@ public class DynamicPropertySetSupportTest
     }
 
     @Test
-    public void testDpsGet(){
+    public void testDpsGet()
+    {
         assertEquals(Date.class, parameters.getType(propName));
         assertEquals(date, parameters.getValue(propName));
         assertEquals(date.toString(), parameters.getValueAsString(propName));
     }
 
     @Test
-    public void test(){
+    public void test() throws Exception
+    {
         parameters.addAfter(propName, new DynamicProperty( "nameAfter", "Name", String.class,  "value"));
         assertEquals("value", parameters.getProperty("nameAfter").getValue());
 
@@ -53,30 +56,27 @@ public class DynamicPropertySetSupportTest
         assertEquals(propName,list.get(1).getName());
         assertEquals("nameAfter",list.get(2).getName());
 
-        try
-        {
-            ((DynamicPropertySetSupport)parameters).setReadOnlyToAllChildren(true);
-            ((DynamicPropertySetSupport)parameters).setCanBeNullToAllChildren(true);
-            ((DynamicPropertySetSupport)parameters).setExpertToAllChildren(true);
-            ((DynamicPropertySetSupport)parameters).setAttributeToAllChildren(RELOAD_ON_CHANGE, true);
-            parameters.setPropertyAttribute(propName, GROUP_ID, 0);
 
-            for (Map.Entry<String, Object> p : parameters.asMap().entrySet()){
-                DynamicProperty property = (DynamicProperty)p.getValue();
-                assertEquals(true, property.isReadOnly());
-                assertEquals(true, property.isCanBeNull());
-                assertEquals(true, property.isExpert());
-                assertEquals(true, property.getAttribute(RELOAD_ON_CHANGE));
-            }
-            assertEquals(0, parameters.getProperty(propName).getAttribute(GROUP_ID));
-        } catch (Exception e)
-        {
-            e.printStackTrace();
+        ((DynamicPropertySetSupport)parameters).setReadOnlyToAllChildren(true);
+        ((DynamicPropertySetSupport)parameters).setCanBeNullToAllChildren(true);
+        ((DynamicPropertySetSupport)parameters).setExpertToAllChildren(true);
+        ((DynamicPropertySetSupport)parameters).setAttributeToAllChildren(RELOAD_ON_CHANGE, true);
+        parameters.setPropertyAttribute(propName, GROUP_ID, 0);
+
+        for (Map.Entry<String, Object> p : parameters.asMap().entrySet()){
+            DynamicProperty property = parameters.getProperty(p.getKey());
+            assertEquals(true, property.isReadOnly());
+            assertEquals(true, property.isCanBeNull());
+            assertEquals(true, property.isExpert());
+            assertEquals(true, property.getAttribute(RELOAD_ON_CHANGE));
         }
+        assertEquals(0, parameters.getProperty(propName).getAttribute(GROUP_ID));
+
     }
 
     @Test
-    public void testRenameProperty(){
+    public void testRenameProperty()
+    {
         parameters.add(new DynamicProperty( "nameR1", "Name", String.class,  "valueR1"));
         parameters.renameProperty("nameR1", "nameR2");
         assertEquals("valueR1", parameters.getProperty("nameR2").getValue());
@@ -92,19 +92,21 @@ public class DynamicPropertySetSupportTest
     }
 
     @Test
-    public void testClone(){
+    public void testClone() throws IntrospectionException
+    {
         DynamicProperty property = new DynamicProperty("nameR1", "Name", String.class, "value");
         DynamicProperty newProperty;
-        try
-        {
-            newProperty = DynamicPropertySetSupport.cloneProperty(property);
-            property.setValue("newValue");
-            assertEquals("value",newProperty.getValue());
-        }
-        catch (IntrospectionException e)
-        {
-            e.printStackTrace();
-        }
+
+        newProperty = DynamicPropertySetSupport.cloneProperty(property);
+        property.setValue("newValue");
+        assertEquals("value",newProperty.getValue());
+    }
+
+    @Test
+    public void getAsBuilder() throws Exception
+    {
+        ((DynamicPropertySetSupport)parameters).getAsBuilder(propName).expert();
+        assertTrue(parameters.getProperty(propName).isExpert());
     }
 
 }
