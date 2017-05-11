@@ -38,7 +38,6 @@ public class CompositeEditorTest extends BeanTest
             test.testCreateBeanInstance();
             test.testCreateModel();
             test.testModelProperties();
-            test.testViewModel();
         }
         catch(Exception e)
         {

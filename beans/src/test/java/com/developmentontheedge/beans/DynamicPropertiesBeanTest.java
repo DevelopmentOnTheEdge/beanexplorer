@@ -119,7 +119,6 @@ public class DynamicPropertiesBeanTest extends BeanTest
             BeanTest beanTest = new DynamicPropertiesBeanTest("XXX");
             beanTest.testCreateBeanInstance();
             beanTest.testCreateModel();
-            beanTest.testViewModel();
         }
         catch(Exception e)
         {

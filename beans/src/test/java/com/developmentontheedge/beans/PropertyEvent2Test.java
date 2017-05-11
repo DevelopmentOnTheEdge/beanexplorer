@@ -16,11 +16,6 @@ public class PropertyEvent2Test extends BeanTest implements PropertyChangeListen
     public void testModelProperties() throws Exception
     {}
 
-    public void testViewModel() throws Exception
-    {
-        super.testViewModel();
-        model.addPropertyChangeListener(this);
-    }
 
     public void testMessageFromValueEditor()                {}
     public void testMessagePropagationFromValueEditor()     {}

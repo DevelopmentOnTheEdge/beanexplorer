@@ -54,7 +54,7 @@ abstract public class BeanTest extends TestCase
      * Can be redefined in in subclass init method.
      */
     static protected String[] testNames  = {"testCreateBeanInstance", "testCreateModel",
-                                            "testModelProperties", "testViewModel"};
+                                            "testModelProperties"};
 
     /** The tested bean. */
     static protected Object bean;
@@ -105,18 +105,6 @@ abstract public class BeanTest extends TestCase
     }
 
     abstract public void testModelProperties() throws Exception;
-
-    @SuppressWarnings( "deprecation" )
-    public void testViewModel() throws Exception
-    {
-        inspector = new PropertyInspector();
-        JFrame frame = new JFrame( this.toString() + " test" );
-        frame.getContentPane().add( inspector );
-        frame.setSize( 400, 500 );
-        frame.setVisible( true );
-
-        inspector.setComponentModel( model );
-    }
 
     public static Test suite()
     {
