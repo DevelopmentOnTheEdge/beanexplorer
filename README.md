@@ -1,4 +1,5 @@
-# BeanExplorer [![Build Status](https://travis-ci.org/DevelopmentOnTheEdge/beanexplorer.svg?branch=master)](https://travis-ci.org/DevelopmentOnTheEdge/beanexplorer)
+# BeanExplorer 
+[![Build Status](https://travis-ci.org/DevelopmentOnTheEdge/beanexplorer.svg?branch=master)](https://travis-ci.org/DevelopmentOnTheEdge/beanexplorer) [![Coverage Status](https://coveralls.io/repos/github/DevelopmentOnTheEdge/beanexplorer/badge.svg?branch=master)](https://coveralls.io/github/DevelopmentOnTheEdge/beanexplorer?branch=master)
 
 BeanExplorer supplies to the developer powerful Property Inspectors that significantly reduce number of dialogs and other UI elements (or eliminate dialogs at all). 
 This makes your application interface modern and consistent.
