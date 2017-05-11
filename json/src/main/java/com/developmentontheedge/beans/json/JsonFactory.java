@@ -8,11 +8,12 @@ import com.developmentontheedge.beans.editors.StringTagEditorSupport;
 import com.developmentontheedge.beans.editors.TagEditorSupport;
 import com.developmentontheedge.beans.model.ArrayProperty;
 import com.developmentontheedge.beans.model.ComponentFactory;
+import com.developmentontheedge.beans.model.ComponentModel;
 import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 
-import java.awt.*;
+import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -46,24 +47,54 @@ public class JsonFactory
     // public API
     //
     
-    public static JsonObjectBuilder beanValues(Object bean)
+    public static JsonObject beanValues(Object bean)
     {
-        requireNonNull(bean, "Bean should be not null.");
-        CompositeProperty model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+        requireNonNull(bean);
 
+        CompositeProperty model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
         JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
-        return objectBuilder;
-    }
-    
-    public static JsonObjectBuilder dpsValues(List<DynamicPropertySet> dpSets)
-    {
-        JsonArrayBuilder jsonDPSets = Json.createArrayBuilder();
-        dpSets.forEach(x -> jsonDPSets.add(get(x)));
-        return Json.createObjectBuilder().add("values", jsonDPSets);
+        return objectBuilder.build();
     }
 
-    public static JsonObjectBuilder get(DynamicPropertySet dps)
+    public static JsonObject dps(DynamicPropertySet dps){
+        requireNonNull(dps);
+
+        JsonObjectBuilder result = Json.createObjectBuilder();
+        result.add("values", dpsValues(dps));
+        result.add("meta", dpsMeta(dps));
+        return result.build();
+    }
+
+    public static JsonObject dpsValues(DynamicPropertySet dps)
+    {
+        requireNonNull(dps);
+
+        return get(dps).build();
+    }
+
+    public static JsonObject dpsMeta(DynamicPropertySet dps)
+    {
+        requireNonNull(dps);
+
+        JsonObjectBuilder meta = Json.createObjectBuilder();
+        ComponentModel model = ComponentFactory.getModel(dps);
+
+        int mode = Property.SHOW_PREFERRED;
+        int nProperties = model.getVisibleCount(mode);
+
+        for (int iProperty = 0; iProperty < nProperties; iProperty++)
+        {
+            Property visibleProperty = model.getVisiblePropertyAt(iProperty, mode);
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            //TODO copy com.developmentontheedge.be5.components.impl.BeProperty ?
+            meta.add(visibleProperty.getName(), objectBuilder);
+        }
+
+        return meta.build();
+    }
+
+    private static JsonObjectBuilder get(DynamicPropertySet dps)
     {
         JsonObjectBuilder jb = Json.createObjectBuilder();
         for (Map.Entry entry :dps.asMap().entrySet()){
@@ -94,11 +125,6 @@ public class JsonFactory
     }
 
     public static JsonObjectBuilder beanMeta(Object bean)
-    {
-        return null;
-    }
-
-    public static JsonObjectBuilder dpsMeta(DynamicPropertySet dps)
     {
         return null;
     }

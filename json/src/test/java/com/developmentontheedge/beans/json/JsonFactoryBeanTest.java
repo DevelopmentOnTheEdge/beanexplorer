@@ -174,7 +174,7 @@ public class JsonFactoryBeanTest
         RowHeaderBean rowHeaderBean = new RowHeaderBean();
         rowHeaderBean.setNumber( 5 );
 
-        assertEquals("", JsonFactory.beanValues(rowHeaderBean).build().toString());
+        assertEquals("", JsonFactory.beanValues(rowHeaderBean).toString());
 //        ComponentModel rowHeaderModel = ComponentFactory.
 //                getModel( rowHeaderBean, ComponentFactory.Policy.DEFAULT);
 //
