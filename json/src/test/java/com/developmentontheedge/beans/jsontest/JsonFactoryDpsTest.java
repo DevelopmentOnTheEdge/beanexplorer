@@ -1,10 +1,10 @@
-package com.developmentontheedge.beans.json;
+package com.developmentontheedge.beans.jsontest;
 
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
+import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.*;
@@ -35,6 +35,13 @@ public class JsonFactoryDpsTest
     {
         assertEquals("{'name':{'displayName':'Name'},'number':{'displayName':'Number','type':'Long'}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString()));
+    }
+
+    @Test
+    public void testDpsOrder() throws Exception
+    {
+        assertEquals("['name','number']",
+                oneQuotes(JsonFactory.dpsOrder(dps).toString()));
     }
 
     @Test
@@ -90,7 +97,7 @@ public class JsonFactoryDpsTest
                 "}", oneQuotes(JsonFactory.dps(dps).toString()));
     }
 
-    public static String oneQuotes(String s)
+    static String oneQuotes(String s)
     {
         return s.replace("\"", "'");
     }

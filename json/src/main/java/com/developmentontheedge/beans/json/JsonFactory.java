@@ -52,27 +52,27 @@ public class JsonFactory implements JsonPropertyAttributes
     {
         requireNonNull(dps);
 
-        return get(dps).build();
+        return dpsValuesBuilder(dps).build();
     }
 
     public static JsonObject dpsMeta(DynamicPropertySet dps)
     {
         requireNonNull(dps);
 
-        JsonObjectBuilder metaBuilder = Json.createObjectBuilder();
-        dpsMeta(dps, metaBuilder, "");
+        JsonObjectBuilder json = Json.createObjectBuilder();
+        dpsMeta(dps, json, "");
 
-        return metaBuilder.build();
+        return json.build();
     }
 
     public static JsonArray dpsOrder(DynamicPropertySet dps)
     {
         requireNonNull(dps);
 
-        JsonArrayBuilder metaBuilder = Json.createArrayBuilder();
-        dpsOrder(dps, metaBuilder, "");
+        JsonArrayBuilder json = Json.createArrayBuilder();
+        dpsOrder(dps, json, "");
 
-        return metaBuilder.build();
+        return json.build();
     }
 
     public static JsonObject beanValues(Object bean)
@@ -80,14 +80,24 @@ public class JsonFactory implements JsonPropertyAttributes
         requireNonNull(bean);
 
         CompositeProperty model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        JsonObjectBuilder json = Json.createObjectBuilder();
 
-        return objectBuilder.build();
+        for( int i = 0; i < model.getPropertyCount(); i++ )
+        {
+            Property property = model.getPropertyAt(i);
+            addValueToJson(json, property.getName(), property.getValue(), null);
+        }
+
+        return json.build();
     }
 
-    public static JsonObjectBuilder beanMeta(Object bean)
+    public static JsonArray beanMeta(Object bean)
     {
-        return null;
+        requireNonNull(bean);
+
+        CompositeProperty model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+
+        return getModelAsJson(model).build();
     }
     
     public static JsonObjectBuilder dictionaryValues(Object obj)
@@ -97,57 +107,66 @@ public class JsonFactory implements JsonPropertyAttributes
 
     ///////////////////////////////////////////////////////////////////////////
 
-    private static void dpsOrder(DynamicPropertySet dps, JsonArrayBuilder metaBuilder, String path)
+    private static void dpsOrder(DynamicPropertySet dps, JsonArrayBuilder json, String path)
     {
         for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
         {
             String key = entry.getKey();
             Object value = entry.getValue();
 
-            metaBuilder.add((path.equals("") ? "" : path + "/") + key);
-            if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, metaBuilder, path + "/" + key);
+            json.add((path.equals("") ? "" : path + "/") + key);
+            if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, path + "/" + key);
         }
     }
 
-    private static void dpsMeta(DynamicPropertySet dps, JsonObjectBuilder metaBuilder, String path)
+    private static void dpsMeta(DynamicPropertySet dps, JsonObjectBuilder json, String path)
     {
-        for( DynamicProperty property : dps )
+        for( DynamicProperty dynamicProperty : dps )
         {
-            metaBuilder.add( (path.equals("") ? "" : path + "/") + property.getName(), toJson(property) );
+            json.add( (path.equals("") ? "" : path + "/") + dynamicProperty.getName(), getMeta(dynamicProperty) );
 
-            if(property.getValue() instanceof DynamicPropertySet)
+            if(dynamicProperty.getValue() instanceof DynamicPropertySet)
             {
-                dpsMeta((DynamicPropertySet)property.getValue(), metaBuilder, path + "/" + property.getName());
+                dpsMeta((DynamicPropertySet)dynamicProperty.getValue(), json, path + "/" + dynamicProperty.getName());
             }
         }
     }
 
-    private static JsonObjectBuilder get(DynamicPropertySet dps)
+    private static void addValueToJson(JsonObjectBuilder json, String name, Object value, Class<?> type)
+    {
+        if( value == null )
+        {
+            json.addNull(name);
+            return;
+        }
+
+        if(type == null)
+        {
+            type = value.getClass();
+        }
+
+        if( type == String.class ){    json.add(name, (String) value); return;}
+        if( type == Double.class ){    json.add(name, (double)value ); return;}
+        if( type == Long.class ){      json.add(name, (long)value ); return;}
+        if( type == Integer.class ){   json.add(name, (int)value ); return;}
+        if( type == Boolean.class ){   json.add(name, (boolean)value ); return;}
+        if( type == Float.class ){     json.add(name, (float)value ); return;}
+        if( type == BigInteger.class ){json.add(name, (BigInteger) value ); return;}
+        if( type == BigDecimal.class ){json.add(name, (BigDecimal) value ); return;}
+
+        if( type == JsonValue.class ){json.add(name, (JsonValue)value); return;}
+        if( type == JsonObjectBuilder.class ){json.add(name, (JsonObjectBuilder)value ); return;}
+        if( type == JsonArrayBuilder.class ){json.add(name, (JsonArrayBuilder)value ); return;}
+
+        if( value instanceof DynamicPropertySet){json.add(name, dpsValuesBuilder((DynamicPropertySet)value));}
+    }
+
+    private static JsonObjectBuilder dpsValuesBuilder(DynamicPropertySet dps)
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
         for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
         {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-
-            Class<?> type = dps.getProperty(key).getType();
-
-            if( value == null )json.addNull(key);
-
-            if( type == String.class ){    json.add(key, (String) value); continue;}
-            if( type == Double.class ){    json.add(key, (double)value ); continue;}
-            if( type == Long.class ){      json.add(key, (long)value ); continue;}
-            if( type == Integer.class ){   json.add(key, (int)value ); continue;}
-            if( type == Boolean.class ){   json.add(key, (boolean)value ); continue;}
-            if( type == Float.class ){     json.add(key, (float)value ); continue;}
-            if( type == BigInteger.class ){json.add(key, (BigInteger) value ); continue;}
-            if( type == BigDecimal.class ){json.add(key, (BigDecimal) value ); continue;}
-
-            if( type == JsonValue.class ){json.add(key, (JsonValue)value); continue;}
-            if( type == JsonObjectBuilder.class ){json.add(key, (JsonObjectBuilder)value ); continue;}
-            if( type == JsonArrayBuilder.class ){json.add(key, (JsonArrayBuilder)value ); continue;}
-
-            if( value instanceof DynamicPropertySet){json.add(key, get((DynamicPropertySet)value));}
+            addValueToJson(json, entry.getKey(), entry.getValue(), dps.getProperty(entry.getKey()).getType());
         }
         return json;
     }
@@ -157,7 +176,7 @@ public class JsonFactory implements JsonPropertyAttributes
      *
      * @param property Operation parameters
      */
-    public static JsonObject toJson(DynamicProperty property)
+    public static JsonObject getMeta(DynamicProperty property)
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
@@ -209,11 +228,6 @@ public class JsonFactory implements JsonPropertyAttributes
             json.add(RELOAD_ON_CHANGE_ATTR, true );
         }
 
-        if( property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CLICK ))
-        {
-            json.add( "reloadOnClick", true );
-        }
-
         if( property.getBooleanAttribute( BeanInfoConstants.RAW_VALUE ))
         {
             json.add(RAW_VALUE_ATTR, true );
@@ -231,7 +245,7 @@ public class JsonFactory implements JsonPropertyAttributes
      * Convert model to Json
      * @param properties model to convert
      */
-    public static JsonArrayBuilder getModelAsJson(CompositeProperty properties) throws Exception
+    public static JsonArrayBuilder getModelAsJson(CompositeProperty properties)
     {
         return getModelAsJson(properties, FieldMap.ALL, Property.SHOW_USUAL);
     }
@@ -243,7 +257,6 @@ public class JsonFactory implements JsonPropertyAttributes
      * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
      */
     public static JsonArrayBuilder getModelAsJson(CompositeProperty properties, FieldMap fieldMap, int showMode)
-            throws Exception
     {
         JsonArrayBuilder result = Json.createArrayBuilder();
         for( int i = 0; i < properties.getPropertyCount(); i++ )
@@ -269,24 +282,24 @@ public class JsonFactory implements JsonPropertyAttributes
         String name = property.getName();
         if( !property.isVisible(showMode) || !fieldMap.contains(name) )
             return null;
-        JsonObjectBuilder p = Json.createObjectBuilder();
-        p.add(NAME_ATTR, name);
-        p.add(DISPLAY_NAME_ATTR, property.getDisplayName());
-        p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
-        p.add(READONLY_ATTR, property.isReadOnly());
+        JsonObjectBuilder json = Json.createObjectBuilder();
+        json.add(NAME_ATTR, name);
+        json.add(DISPLAY_NAME_ATTR, property.getDisplayName());
+        json.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
+        json.add(READONLY_ATTR, property.isReadOnly());
 
         if( property instanceof CompositeProperty && (!property.isHideChildren() ) )
         {
-            return fillCompositeProperty( fieldMap, showMode, property, p );
+            return fillCompositeProperty( fieldMap, showMode, property, json );
         }
         if( property instanceof ArrayProperty && !property.isHideChildren() )
         {
-            return fillArrayProperty( fieldMap, showMode, property, p );
+            return fillArrayProperty( fieldMap, showMode, property, json );
         }
-        return fillSimpleProperty( property, p );
+        return fillSimpleProperty( property, json );
     }
 
-    private static JsonObjectBuilder fillSimpleProperty(Property property, JsonObjectBuilder p) throws InstantiationException, IllegalAccessException,
+    private static JsonObjectBuilder fillSimpleProperty(Property property, JsonObjectBuilder json) throws InstantiationException, IllegalAccessException,
             JsonException
     {
         Class<?> editorClass = property.getPropertyEditorClass();
@@ -312,15 +325,15 @@ public class JsonFactory implements JsonPropertyAttributes
                                     String[] elements = new String[array.size()];
                                     for( int index = 0; index < array.size(); index++ )
                                         elements[index] = array.getString(index);
-                                    p.add(DICTIONARY_ATTR, createDictionary(elements, false));
+                                    json.add(DICTIONARY_ATTR, createDictionary(elements, false));
                                 }
                             }
                             else
                             {
-                                p.add(key, p1.get(key));
+                                json.add(key, p1.get(key));
                             }
                         }
-                        return p;
+                        return json;
                     }
                 }
             }
@@ -330,7 +343,7 @@ public class JsonFactory implements JsonPropertyAttributes
                 String[] tags = editor.getTags();
                 if( tags != null )
                 {
-                    p.add(DICTIONARY_ATTR, createDictionary(tags, true));
+                    json.add(DICTIONARY_ATTR, createDictionary(tags, true));
                 }
             }
             else if( StringTagEditorSupport.class.isAssignableFrom(editorClass) )
@@ -339,7 +352,7 @@ public class JsonFactory implements JsonPropertyAttributes
                 String[] tags = editor.getTags();
                 if( tags != null )
                 {
-                    p.add(DICTIONARY_ATTR, createDictionary(tags, false));
+                    json.add(DICTIONARY_ATTR, createDictionary(tags, false));
                 }
             }
             else if( CustomEditorSupport.class.isAssignableFrom(editorClass) )
@@ -353,7 +366,7 @@ public class JsonFactory implements JsonPropertyAttributes
                 String[] tags = editor.getTags();
                 if( tags != null )
                 {
-                    p.add(DICTIONARY_ATTR, createDictionary(tags, false));
+                    json.add(DICTIONARY_ATTR, createDictionary(tags, false));
                 }
             }
         }
@@ -361,13 +374,13 @@ public class JsonFactory implements JsonPropertyAttributes
         Object value = property.getValue();
         if( value != null )
         {
-            p.add(TYPE_ATTR, (value instanceof Boolean) ? "bool" : "code-string");
-            p.add(VALUE_ATTR, value.toString());
+            json.add(TYPE_ATTR, (value instanceof Boolean) ? "bool" : "code-string");
+            json.add(VALUE_ATTR, value.toString());
         }
-        return p;
+        return json;
     }
 
-    private static JsonObjectBuilder fillArrayProperty(FieldMap fieldMap, int showMode, Property property, JsonObjectBuilder p)
+    private static JsonObjectBuilder fillArrayProperty(FieldMap fieldMap, int showMode, Property property, JsonObjectBuilder json)
             throws Exception
     {
         Class<?> c = property.getPropertyEditorClass();
@@ -380,8 +393,8 @@ public class JsonFactory implements JsonPropertyAttributes
                 String[] tags = editor.getTags();
                 if( tags != null )
                 {
-                    p.add(DICTIONARY_ATTR, createDictionary(tags, false));
-                    p.add(TYPE_ATTR, "multi-select");
+                    json.add(DICTIONARY_ATTR, createDictionary(tags, false));
+                    json.add(TYPE_ATTR, "multi-select");
                     Object[] vals = (Object[])property.getValue();
                     JsonArrayBuilder value = Json.createArrayBuilder();
                     if( vals != null )
@@ -391,8 +404,8 @@ public class JsonFactory implements JsonPropertyAttributes
                             value.add(val.toString());
                         }
                     }
-                    p.add(VALUE_ATTR, value);
-                    return p;
+                    json.add(VALUE_ATTR, value);
+                    return json;
                 }
 //TODO                if( editor instanceof JsonCompatibleEditor )
 //                {
@@ -425,12 +438,12 @@ public class JsonFactory implements JsonPropertyAttributes
                 }
             }
         }
-        p.add(TYPE_ATTR, "collection");
-        p.add(VALUE_ATTR, value);
-        return p;
+        json.add(TYPE_ATTR, "collection");
+        json.add(VALUE_ATTR, value);
+        return json;
     }
 
-    private static JsonObjectBuilder fillCompositeProperty(FieldMap fieldMap, int showMode, Property property, JsonObjectBuilder p)
+    private static JsonObjectBuilder fillCompositeProperty(FieldMap fieldMap, int showMode, Property property, JsonObjectBuilder json)
             throws Exception
     {
         Object value = property.getValue();
@@ -451,22 +464,22 @@ public class JsonFactory implements JsonPropertyAttributes
 //        }
 //        else if( value != null && customBeans.containsKey( valueClass ) )
 //        {
-//            Object wrapper = customBeans.get( valueClass ).getConstructor( valueClass ).newInstance( value );
+//            Object wrapper = customBeans.dpsValuesBuilder( valueClass ).getConstructor( valueClass ).newInstance( value );
 //            p.add(TYPE_ATTR, "composite");
-//            p.add(VALUE_ATTR, getModelAsJson(ComponentFactory.getModel( wrapper ), fieldMap.get(property), showMode));
+//            p.add(VALUE_ATTR, getModelAsJson(ComponentFactory.getModel( wrapper ), fieldMap.dpsValuesBuilder(property), showMode));
 //        }
 //        else
         if( Color.class.isAssignableFrom( valueClass ) )
         {
-            p.add(TYPE_ATTR, "color-selector");
-            p.add(VALUE_ATTR, encodeColor((Color)value));
+            json.add(TYPE_ATTR, "color-selector");
+            json.add(VALUE_ATTR, encodeColor((Color)value));
         }
         else
         {
-            p.add(TYPE_ATTR, "composite");
-            p.add(VALUE_ATTR, getModelAsJson((CompositeProperty)property, fieldMap.get(property), showMode));
+            json.add(TYPE_ATTR, "composite");
+            json.add(VALUE_ATTR, getModelAsJson((CompositeProperty)property, fieldMap.get(property), showMode));
         }
-        return p;
+        return json;
     }
 
     static JsonArrayBuilder createDictionary(Object[] strings, boolean byPosition)
@@ -498,11 +511,11 @@ public class JsonFactory implements JsonPropertyAttributes
     }
 
     private static JsonArrayBuilder jsonArrayBuilderFromList(List<Object> list) {
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        JsonArrayBuilder json = Json.createArrayBuilder();
         for(Object s: list) {
-            arrayBuilder.add(s.toString());
+            json.add(s.toString());
         }
-        return arrayBuilder;
+        return json;
     }
 
     /**
@@ -512,9 +525,9 @@ public class JsonFactory implements JsonPropertyAttributes
      */
     public static JsonArrayBuilder encodeColor(Color color)
     {
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-        if(color == null || color.getAlpha() == 0) return arrayBuilder;
+        JsonArrayBuilder json = Json.createArrayBuilder();
+        if(color == null || color.getAlpha() == 0) return json;
 
-        return arrayBuilder.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
+        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
     }
 }

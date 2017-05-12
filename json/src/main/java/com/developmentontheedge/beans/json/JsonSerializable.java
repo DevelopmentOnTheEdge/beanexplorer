@@ -13,7 +13,7 @@ public interface JsonSerializable
 
     /**
      * Extract value from JsonObject and set it to the edited property.
-     * Note that editor.fromJson(editor.toJson()) should not harm the object.
+     * Note that editor.fromJson(editor.getMeta()) should not harm the object.
      * If object contains unwanted fields, they should be ignored.
      * @param input - JsonObject to get value from
      */
