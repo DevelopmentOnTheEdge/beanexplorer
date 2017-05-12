@@ -11,23 +11,23 @@ public class JsonPropertyMetaFactory implements JsonPropertyAttributes
 {
     public static JsonObject getPropertyMeta(Property property)
     {
-        JsonObjectBuilder builder = Json.createObjectBuilder();
+        JsonObjectBuilder json = Json.createObjectBuilder();
 
-        builder.add(DISPLAY_NAME_ATTR, property.getDisplayName());
+        json.add(DISPLAY_NAME_ATTR, property.getDisplayName());
 
         if(property.isReadOnly())
         {
-            builder.add(READONLY_ATTR, true);
+            json.add(READONLY_ATTR, true);
         }
 
         if(property.getBooleanAttribute(BeanInfoConstants.CAN_BE_NULL))
         {
-            builder.add(CAN_BE_NULL_ATTR, true);
+            json.add(CAN_BE_NULL_ATTR, true);
         }
 
         if(property.getBooleanAttribute(BeanInfoConstants.RELOAD_ON_CHANGE))
         {
-            builder.add(RELOAD_ON_CHANGE_ATTR, true);
+            json.add(RELOAD_ON_CHANGE_ATTR, true);
         }
 
 //        property.getPlaceholder().ifPresent(tipsBuilder::placeholder);
@@ -36,8 +36,8 @@ public class JsonPropertyMetaFactory implements JsonPropertyAttributes
 
         if (isInGroup(property))
         {
-            builder.add("groupId", getGroupId(property));
-            builder.add("groupName", getGroupName(property));
+            json.add("groupId", getGroupId(property));
+            json.add("groupName", getGroupName(property));
         }
 
 //        if (property.autoRefresh())
@@ -86,7 +86,7 @@ public class JsonPropertyMetaFactory implements JsonPropertyAttributes
 //            return builder.passwordInput(property.getAsStr());
 //        }
 
-        return builder.build();
+        return json.build();
     }
 
     private static boolean isInGroup(Property property)

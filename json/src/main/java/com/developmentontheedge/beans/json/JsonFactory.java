@@ -19,7 +19,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -35,22 +34,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class JsonFactory implements JsonPropertyAttributes
 {
-    private final static Logger log = Logger.getLogger(JsonFactory.class.getName());
-
     ///////////////////////////////////////////////////////////////////////////
     // public API
     //
     
-    public static JsonObject beanValues(Object bean)
-    {
-        requireNonNull(bean);
-
-        CompositeProperty model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-
-        return objectBuilder.build();
-    }
-
     public static JsonObject dps(DynamicPropertySet dps){
         requireNonNull(dps);
 
@@ -88,6 +75,28 @@ public class JsonFactory implements JsonPropertyAttributes
         return metaBuilder.build();
     }
 
+    public static JsonObject beanValues(Object bean)
+    {
+        requireNonNull(bean);
+
+        CompositeProperty model = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+
+        return objectBuilder.build();
+    }
+
+    public static JsonObjectBuilder beanMeta(Object bean)
+    {
+        return null;
+    }
+    
+    public static JsonObjectBuilder dictionaryValues(Object obj)
+    {
+        return null;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
     private static void dpsOrder(DynamicPropertySet dps, JsonArrayBuilder metaBuilder, String path)
     {
         for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
@@ -115,7 +124,7 @@ public class JsonFactory implements JsonPropertyAttributes
 
     private static JsonObjectBuilder get(DynamicPropertySet dps)
     {
-        JsonObjectBuilder jb = Json.createObjectBuilder();
+        JsonObjectBuilder json = Json.createObjectBuilder();
         for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
         {
             String key = entry.getKey();
@@ -123,37 +132,25 @@ public class JsonFactory implements JsonPropertyAttributes
 
             Class<?> type = dps.getProperty(key).getType();
 
-            if( value == null )jb.addNull(key);
+            if( value == null )json.addNull(key);
 
-            if( type == String.class ){    jb.add(key, (String) value); continue;}
-            if( type == Double.class ){    jb.add(key, (double)value ); continue;}
-            if( type == Long.class ){      jb.add(key, (long)value ); continue;}
-            if( type == Integer.class ){   jb.add(key, (int)value ); continue;}
-            if( type == Boolean.class ){   jb.add(key, (boolean)value ); continue;}
-            if( type == Float.class ){     jb.add(key, (float)value ); continue;}
-            if( type == BigInteger.class ){jb.add(key, (BigInteger) value ); continue;}
-            if( type == BigDecimal.class ){jb.add(key, (BigDecimal) value ); continue;}
+            if( type == String.class ){    json.add(key, (String) value); continue;}
+            if( type == Double.class ){    json.add(key, (double)value ); continue;}
+            if( type == Long.class ){      json.add(key, (long)value ); continue;}
+            if( type == Integer.class ){   json.add(key, (int)value ); continue;}
+            if( type == Boolean.class ){   json.add(key, (boolean)value ); continue;}
+            if( type == Float.class ){     json.add(key, (float)value ); continue;}
+            if( type == BigInteger.class ){json.add(key, (BigInteger) value ); continue;}
+            if( type == BigDecimal.class ){json.add(key, (BigDecimal) value ); continue;}
 
-            if( type == JsonValue.class ){jb.add(key, (JsonValue)value); continue;}
-            if( type == JsonObjectBuilder.class ){jb.add(key, (JsonObjectBuilder)value ); continue;}
-            if( type == JsonArrayBuilder.class ){jb.add(key, (JsonArrayBuilder)value ); continue;}
+            if( type == JsonValue.class ){json.add(key, (JsonValue)value); continue;}
+            if( type == JsonObjectBuilder.class ){json.add(key, (JsonObjectBuilder)value ); continue;}
+            if( type == JsonArrayBuilder.class ){json.add(key, (JsonArrayBuilder)value ); continue;}
 
-            if( value instanceof DynamicPropertySet){jb.add(key, get((DynamicPropertySet)value));}
+            if( value instanceof DynamicPropertySet){json.add(key, get((DynamicPropertySet)value));}
         }
-        return jb;
+        return json;
     }
-
-    public static JsonObjectBuilder beanMeta(Object bean)
-    {
-        return null;
-    }
-    
-    public static JsonObjectBuilder dictionaryValues(Object obj)
-    {
-        return null;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * Converts DynamicProperty parameter to JsonObject.
