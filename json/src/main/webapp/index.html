@@ -20,12 +20,13 @@ var b2 = { values:{p1:'a',
                   },
            meta:{ p1:       {title:'p1', readOnly:true},
                   p2:       {title:'p2', readOnly:true},
-                  '/p2/c1': {title:'c1', readOnly:true}
+                  '/p2/c1': {title:'c1', readOnly:true},
+                  '/p2/c2': {title:'c2', readOnly:true}
                 },
-           order:['p1', 'p2', '/p2/c1', '/p2/c2'],
+           order: ['p1', 'p2', '/p2/c1', '/p2/c2'],
            dictionaries:{
-                p1: {'key1':'value1', 'key2':'value2' }
-                }
+                p1:{'key1':'value1', 'key2':'value2' }
+           }
          };
 
 //alert(b2.values['p2']['c1']);

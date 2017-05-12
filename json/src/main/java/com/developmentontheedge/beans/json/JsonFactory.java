@@ -64,6 +64,7 @@ public class JsonFactory
         JsonObjectBuilder result = Json.createObjectBuilder();
         result.add("values", dpsValues(dps));
         result.add("meta", dpsMeta(dps));
+        result.add("order", dpsOrder(dps));
         return result.build();
     }
 
@@ -78,7 +79,36 @@ public class JsonFactory
     {
         requireNonNull(dps);
 
-        JsonObjectBuilder meta = Json.createObjectBuilder();
+        JsonObjectBuilder metaBuilder = Json.createObjectBuilder();
+        dpsMeta(dps, metaBuilder, "");
+
+        return metaBuilder.build();
+    }
+
+    public static JsonArray dpsOrder(DynamicPropertySet dps)
+    {
+        requireNonNull(dps);
+
+        JsonArrayBuilder metaBuilder = Json.createArrayBuilder();
+        dpsOrder(dps, metaBuilder, "");
+
+        return metaBuilder.build();
+    }
+
+    private static void dpsOrder(DynamicPropertySet dps, JsonArrayBuilder metaBuilder, String path)
+    {
+        for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
+        {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            metaBuilder.add((path.equals("") ? "" : path + "/") + key);
+            if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, metaBuilder, path + "/" + key);
+        }
+    }
+
+    private static void dpsMeta(DynamicPropertySet dps, JsonObjectBuilder metaBuilder, String path)
+    {
         ComponentModel model = ComponentFactory.getModel(dps);
 
         int mode = Property.SHOW_PREFERRED;
@@ -87,21 +117,25 @@ public class JsonFactory
         for (int iProperty = 0; iProperty < nProperties; iProperty++)
         {
             Property visibleProperty = model.getVisiblePropertyAt(iProperty, mode);
-            meta.add(visibleProperty.getName(), getPropertyMeta(visibleProperty));
-        }
 
-        return meta.build();
+            metaBuilder.add((path.equals("") ? "" : path + "/") + visibleProperty.getName(), getPropertyMeta(visibleProperty));
+
+            if(visibleProperty.getValue() instanceof DynamicPropertySet)
+            {
+                dpsMeta((DynamicPropertySet)visibleProperty.getValue(), metaBuilder, path + "/" + visibleProperty.getName());
+            }
+        }
     }
 
     private static JsonObjectBuilder get(DynamicPropertySet dps)
     {
         JsonObjectBuilder jb = Json.createObjectBuilder();
-        for (Map.Entry entry :dps.asMap().entrySet()){
-            String key = (String) entry.getKey();
+        for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
+        {
+            String key = entry.getKey();
+            Object value = entry.getValue();
 
-            DynamicProperty property = dps.getProperty(key);
-            Object value = property.getValue();
-            Class<?> type = property.getType();
+            Class<?> type = dps.getProperty(key).getType();
 
             if( value == null )jb.addNull(key);
 

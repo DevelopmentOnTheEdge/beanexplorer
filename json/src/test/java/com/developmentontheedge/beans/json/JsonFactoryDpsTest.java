@@ -3,23 +3,29 @@ package com.developmentontheedge.beans.json;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.awt.Color;
+import java.awt.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class JsonFactoryTest
+public class JsonFactoryDpsTest
 {
+    private DynamicPropertySet dps;
+
+    @Before
+    public void init()
+    {
+        dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicProperty("name", "Name", String.class, "testName"));
+        dps.add(new DynamicProperty("number", "Number", Long.class, 1L));
+    }
 
     @Test
     public void testDpsValues() throws Exception
     {
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dps.add(new DynamicProperty("name", "Name", String.class, "testName"));
-        dps.add(new DynamicProperty("number", "Number", Long.class, 1L));
-
         assertEquals("{'name':'testName','number':1}",
                 oneQuotes(JsonFactory.dpsValues(dps).toString()));
     }
@@ -27,14 +33,20 @@ public class JsonFactoryTest
     @Test
     public void testDpsMeta() throws Exception
     {
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dps.add(new DynamicProperty("name", "Name", String.class, "Value"));
-        dps.add(new DynamicProperty("number", "Number", Long.class, 1L));
-
         assertEquals("{'name':{'title':'Name'},'number':{'title':'Number'}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString()));
     }
 
+    @Test
+    public void testDps() throws Exception
+    {
+        assertEquals("{" +
+                        "'values':{'name':'testName','number':1}," +
+                        "'meta':{'name':{'title':'Name'},'number':{'title':'Number'}}," +
+                        "'order':['name','number']" +
+                    "}",
+                oneQuotes(JsonFactory.dps(dps).toString()));
+    }
 
     @Test
     public void testDpsValues2() throws Exception
@@ -53,8 +65,8 @@ public class JsonFactoryTest
                 oneQuotes(JsonFactory.dpsValues(dps).toString()));
     }
 
-    @Ignore
-    public void testDps() throws Exception
+    @Test
+    public void testDpsNestedDps() throws Exception
     {
         DynamicPropertySet dpsP2 = new DynamicPropertySetSupport();
         dpsP2.add(new DynamicProperty("c1", "c1", String.class, "p21"));
@@ -64,16 +76,17 @@ public class JsonFactoryTest
         dps.add(new DynamicProperty("p1", "p1", String.class, "a"));
         dps.add(new DynamicProperty("p2", "p2", DynamicPropertySetSupport.class, dpsP2));
         dps.getProperty("p1").setReadOnly(true);
-        dps.getProperty("p2").setAttribute("","");
 
         assertEquals("{"+
                 "'values':{'p1':'a'," +
                           "'p2':{'c1':'p21','c2':'p22'}" +
                 "}," +
-                "'meta':[{'p1':{'title':'p1','readOnly':true}}," +
-                        "{'p2':{'title':'p2','readOnly':true}}," +
-                        "{'/p2/c1':{title:'c1','readOnly':true}}" +
-                "]," +
+                "'meta':{'p1':{'title':'p1','readOnly':true}," +
+                        "'p2':{'title':'p2'}," +
+                        "'/p2/c1':{'title':'c1'}," +
+                        "'/p2/c2':{'title':'c2'}" +
+                "}," +
+                "'order':['p1','p2','/p2/c1','/p2/c2']" +
                 "}", oneQuotes(JsonFactory.dps(dps).toString()));
     }
 

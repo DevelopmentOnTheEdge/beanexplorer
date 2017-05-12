@@ -4,16 +4,12 @@ import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
 import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.ComponentModel;
-import com.developmentontheedge.beans.model.FieldMap;
-import com.developmentontheedge.beans.model.Property;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.awt.*;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -97,7 +93,7 @@ public class JsonFactoryBeanTest
             "{'name':'class','displayName':'class','description':'class','readOnly':true,'type':'code-string','value':'class com.developmentontheedge.beans.json.JsonFactoryBeanTest$TestBean'}," +
             "{'name':'color','displayName':'color','description':'Color property','readOnly':false,'type':'code-string','value':'java.awt.Color[r=0,g=0,b=0]'}," +
             "{'name':'select','displayName':'select','description':'select','readOnly':false,'type':'code-string','value':'one'}," +
-            "{'name':'str','displayName':'str','description':'str','readOnly':false,'type':'code-string','value':'string value'}]", JsonFactoryTest.oneQuotes(json.toString()));
+            "{'name':'str','displayName':'str','description':'str','readOnly':false,'type':'code-string','value':'string value'}]", JsonFactoryPropertyAttributeTest.oneQuotes(json.toString()));
 
 //        json = JsonFactory.getModelAsJson(model, FieldMap.ALL, Property.SHOW_EXPERT);
 //        assertNotNull(json);
