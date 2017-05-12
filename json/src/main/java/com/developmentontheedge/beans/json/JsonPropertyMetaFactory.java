@@ -7,27 +7,27 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
-public class JsonPropertyMetaFactory
+public class JsonPropertyMetaFactory implements JsonPropertyAttributes
 {
     public static JsonObject getPropertyMeta(Property property)
     {
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        builder.add("title", property.getDisplayName());
+        builder.add(DISPLAY_NAME_ATTR, property.getDisplayName());
 
         if(property.isReadOnly())
         {
-            builder.add("readOnly", true);
+            builder.add(READONLY_ATTR, true);
         }
 
         if(property.getBooleanAttribute(BeanInfoConstants.CAN_BE_NULL))
         {
-            builder.add("canBeNull", true);
+            builder.add(CAN_BE_NULL_ATTR, true);
         }
 
         if(property.getBooleanAttribute(BeanInfoConstants.RELOAD_ON_CHANGE))
         {
-            builder.add("reloadOnChange", true);
+            builder.add(RELOAD_ON_CHANGE_ATTR, true);
         }
 
 //        property.getPlaceholder().ifPresent(tipsBuilder::placeholder);

@@ -1,5 +1,6 @@
 package com.developmentontheedge.beans.json;
 
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.editors.CustomEditorSupport;
@@ -8,7 +9,6 @@ import com.developmentontheedge.beans.editors.StringTagEditorSupport;
 import com.developmentontheedge.beans.editors.TagEditorSupport;
 import com.developmentontheedge.beans.model.ArrayProperty;
 import com.developmentontheedge.beans.model.ComponentFactory;
-import com.developmentontheedge.beans.model.ComponentModel;
 import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -27,22 +28,14 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import static com.developmentontheedge.beans.json.JsonPropertyMetaFactory.getPropertyMeta;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Provides API to serialize beans and dynamic property sets to JSON. 
+ * Provides API to serialize beans and dynamic property sets to Json. 
  */
-public class JsonFactory
+public class JsonFactory implements JsonPropertyAttributes
 {
-    public static final String NAME_ATTR = "name";
-    public static final String TYPE_ATTR = "type";
-    public static final String VALUE_ATTR = "value";
-    public static final String DISPLAYNAME_ATTR = "displayName";
-    public static final String DESCRIPTION_ATTR = "description";
-    public static final String READONLY_ATTR = "readOnly";
-    public static final String CHILDREN_ATTR = "children";
-    public static final String DICTIONARY_ATTR = "dictionary";
+    private final static Logger log = Logger.getLogger(JsonFactory.class.getName());
 
     ///////////////////////////////////////////////////////////////////////////
     // public API
@@ -109,20 +102,13 @@ public class JsonFactory
 
     private static void dpsMeta(DynamicPropertySet dps, JsonObjectBuilder metaBuilder, String path)
     {
-        ComponentModel model = ComponentFactory.getModel(dps);
-
-        int mode = Property.SHOW_PREFERRED;
-        int nProperties = model.getVisibleCount(mode);
-
-        for (int iProperty = 0; iProperty < nProperties; iProperty++)
+        for( DynamicProperty property : dps )
         {
-            Property visibleProperty = model.getVisiblePropertyAt(iProperty, mode);
+            metaBuilder.add( (path.equals("") ? "" : path + "/") + property.getName(), toJson(property) );
 
-            metaBuilder.add((path.equals("") ? "" : path + "/") + visibleProperty.getName(), getPropertyMeta(visibleProperty));
-
-            if(visibleProperty.getValue() instanceof DynamicPropertySet)
+            if(property.getValue() instanceof DynamicPropertySet)
             {
-                dpsMeta((DynamicPropertySet)visibleProperty.getValue(), metaBuilder, path + "/" + visibleProperty.getName());
+                dpsMeta((DynamicPropertySet)property.getValue(), metaBuilder, path + "/" + property.getName());
             }
         }
     }
@@ -168,6 +154,76 @@ public class JsonFactory
     }
 
     ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Converts DynamicProperty parameter to JsonObject.
+     *
+     * @param property Operation parameters
+     */
+    public static JsonObject toJson(DynamicProperty property)
+    {
+        JsonObjectBuilder json = Json.createObjectBuilder();
+
+        json.add(DISPLAY_NAME_ATTR, property.getDisplayName() );
+
+        if(property.getType() != String.class)
+        {
+            json.add(TYPE_ATTR, property.getType().getSimpleName() );
+        }
+
+        if(property.isHidden())
+        {
+            json.add(HIDDEN_ATTR, true );
+        }
+
+        if(property.isReadOnly())
+        {
+            json.add(READONLY_ATTR, true);
+        }
+
+        if(property.isCanBeNull())
+        {
+            json.add(CAN_BE_NULL_ATTR, true);
+        }
+
+        //json.add( "extraAttrs", property.getAttribute( BeanInfoConstants.EXTRA_ATTRS ) );
+
+        Object columnSizeAttr = property.getAttribute( BeanInfoConstants.COLUMN_SIZE_ATTR );
+        if( columnSizeAttr != null )
+        {
+            json.add( "columnSizeAttr", "" + columnSizeAttr );
+        }
+
+//        if( !Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ) )
+//        {
+//            Object tags = WebFormPropertyInspector.normalizeTags( property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR ) );
+////                if( tags != null )
+////                {
+////                    tags = OperationFragmentHelper.customizeTagsCommon( connector, ui, ( String[] )tags, property.getName(), messages, true );
+////                }
+//            if( tags != null )
+//            {
+//                json.add( "tagList", tags );
+//            }
+//        }
+
+        if( property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CHANGE ))
+        {
+            json.add(RELOAD_ON_CHANGE_ATTR, true );
+        }
+
+        if( property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CLICK ))
+        {
+            json.add( "reloadOnClick", true );
+        }
+
+        if( property.getBooleanAttribute( BeanInfoConstants.RAW_VALUE ))
+        {
+            json.add(RAW_VALUE_ATTR, true );
+        }
+
+        return json.build();
+    }
     
     protected static void addBeanValues(CompositeProperty properties, int showMode)
     {
@@ -175,7 +231,7 @@ public class JsonFactory
     }
 
     /**
-     * Convert model to JSON
+     * Convert model to Json
      * @param properties model to convert
      */
     public static JsonArrayBuilder getModelAsJson(CompositeProperty properties) throws Exception
@@ -184,7 +240,7 @@ public class JsonFactory
     }
 
     /**
-     * Convert model to JSON
+     * Convert model to Json
      * @param properties model to convert
      * @param fieldMap fieldMap of properties to include. Cannot be null. Use {@link FieldMap#ALL} to include all fields
      * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
@@ -218,7 +274,7 @@ public class JsonFactory
             return null;
         JsonObjectBuilder p = Json.createObjectBuilder();
         p.add(NAME_ATTR, name);
-        p.add(DISPLAYNAME_ATTR, property.getDisplayName());
+        p.add(DISPLAY_NAME_ATTR, property.getDisplayName());
         p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
         p.add(READONLY_ATTR, property.isReadOnly());
 
@@ -343,7 +399,7 @@ public class JsonFactory
                 }
 //TODO                if( editor instanceof JsonCompatibleEditor )
 //                {
-//                    ( (JSONCompatibleEditor)editor ).addAsJSON(property, p, fieldMap, showMode);
+//                    ( (JsonCompatibleEditor)editor ).addAsJson(property, p, fieldMap, showMode);
 //                    return p.build();
 //                }
             }
@@ -365,7 +421,7 @@ public class JsonFactory
                 {
                     pCh.add(TYPE_ATTR, (val instanceof Boolean) ? "bool" : "code-string");
                     pCh.add(NAME_ATTR, element.getName());
-                    pCh.add(DISPLAYNAME_ATTR, element.getName());
+                    pCh.add(DISPLAY_NAME_ATTR, element.getName());
                     pCh.add(VALUE_ATTR, val.toString());
                     pCh.add(READONLY_ATTR, element.isReadOnly());
                     value.add(pCh);
@@ -400,7 +456,7 @@ public class JsonFactory
 //        {
 //            Object wrapper = customBeans.get( valueClass ).getConstructor( valueClass ).newInstance( value );
 //            p.add(TYPE_ATTR, "composite");
-//            p.add(VALUE_ATTR, getModelAsJSON(ComponentFactory.getModel( wrapper ), fieldMap.get(property), showMode));
+//            p.add(VALUE_ATTR, getModelAsJson(ComponentFactory.getModel( wrapper ), fieldMap.get(property), showMode));
 //        }
 //        else
         if( Color.class.isAssignableFrom( valueClass ) )
