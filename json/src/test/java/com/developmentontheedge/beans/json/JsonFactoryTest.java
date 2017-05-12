@@ -25,14 +25,13 @@ public class JsonFactoryTest
     }
 
     @Test
-    @Ignore
     public void testDpsMeta() throws Exception
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         dps.add(new DynamicProperty("name", "Name", String.class, "Value"));
         dps.add(new DynamicProperty("number", "Number", Long.class, 1L));
 
-        assertEquals("",
+        assertEquals("{'name':{'title':'Name'},'number':{'title':'Number'}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString()));
     }
 
@@ -54,7 +53,6 @@ public class JsonFactoryTest
                 oneQuotes(JsonFactory.dpsValues(dps).toString()));
     }
 
-    @Test
     @Ignore
     public void testDps() throws Exception
     {

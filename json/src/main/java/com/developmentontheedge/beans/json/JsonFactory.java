@@ -27,6 +27,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import static com.developmentontheedge.beans.json.JsonPropertyMetaFactory.getPropertyMeta;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -86,9 +87,7 @@ public class JsonFactory
         for (int iProperty = 0; iProperty < nProperties; iProperty++)
         {
             Property visibleProperty = model.getVisiblePropertyAt(iProperty, mode);
-            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            //TODO copy com.developmentontheedge.be5.components.impl.BeProperty ?
-            meta.add(visibleProperty.getName(), objectBuilder);
+            meta.add(visibleProperty.getName(), getPropertyMeta(visibleProperty));
         }
 
         return meta.build();
@@ -212,7 +211,7 @@ public class JsonFactory
                 if( editor instanceof PropertyEditorEx)
                 {
                     initEditor( property, (PropertyEditorEx)editor );
-                    JsonObject p1 = editor.toJSON();
+                    JsonObject p1 = editor.toJson();
                     if( p1 != null )
                     {
                         for (String key : p1.keySet())
