@@ -159,11 +159,14 @@ public class JsonFactoryBeanTest
     }
 
     @Test
-    @Ignore
     public void simpleBeanMeta() throws Exception
     {
         SimpleBean rowHeaderBean = new SimpleBean("bean", 5);
-        assertEquals("TODO", oneQuotes(JsonFactory.beanMeta(rowHeaderBean).toString()));
+        assertEquals("{'class':{'readOnly':true,'type':'Class'," +
+                              "'value':'class com.developmentontheedge.beans.jsontest.JsonFactoryBeanTest$SimpleBean'}," +
+                        "'name':{'type':'String','value':'bean'}," +
+                        "'number':{'type':'Integer','value':'5'}}",
+                oneQuotes(JsonFactory.beanMeta(rowHeaderBean).toString()));
     }
 
     public class SimpleBean

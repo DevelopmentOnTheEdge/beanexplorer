@@ -91,7 +91,7 @@ public class JsonFactory implements JsonPropertyAttributes
         return json.build();
     }
 
-    public static JsonArray beanMeta(Object bean)
+    public static JsonObject beanMeta(Object bean)
     {
         requireNonNull(bean);
 
@@ -184,7 +184,7 @@ public class JsonFactory implements JsonPropertyAttributes
 
         if(property.getType() != String.class)
         {
-            json.add(TYPE_ATTR, property.getType().getSimpleName() );
+            json.add(TYPE_ATTR, getTypeName(property.getType()) );
         }
 
         if(property.isHidden())
@@ -245,7 +245,7 @@ public class JsonFactory implements JsonPropertyAttributes
      * Convert model to Json
      * @param properties model to convert
      */
-    public static JsonArrayBuilder getModelAsJson(CompositeProperty properties)
+    public static JsonObjectBuilder getModelAsJson(CompositeProperty properties)
     {
         return getModelAsJson(properties, FieldMap.ALL, Property.SHOW_USUAL);
     }
@@ -256,9 +256,9 @@ public class JsonFactory implements JsonPropertyAttributes
      * @param fieldMap fieldMap of properties to include. Cannot be null. Use {@link FieldMap#ALL} to include all fields
      * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
      */
-    public static JsonArrayBuilder getModelAsJson(CompositeProperty properties, FieldMap fieldMap, int showMode)
+    public static JsonObjectBuilder getModelAsJson(CompositeProperty properties, FieldMap fieldMap, int showMode)
     {
-        JsonArrayBuilder result = Json.createArrayBuilder();
+        JsonObjectBuilder json = Json.createObjectBuilder();
         for( int i = 0; i < properties.getPropertyCount(); i++ )
         {
             Property property = properties.getPropertyAt(i);
@@ -266,7 +266,7 @@ public class JsonFactory implements JsonPropertyAttributes
             {
                 JsonObjectBuilder object = convertSingleProperty( fieldMap, showMode, property );
                 if(object != null)
-                    result.add(object);
+                    json.add(property.getName(), object);
             }
             catch( Exception e )
             {
@@ -274,7 +274,7 @@ public class JsonFactory implements JsonPropertyAttributes
                         + ( property == null ? null : property.getName() ), e);
             }
         }
-        return result;
+        return json;
     }
 
     private static JsonObjectBuilder convertSingleProperty(FieldMap fieldMap, int showMode, Property property) throws Exception
@@ -283,10 +283,22 @@ public class JsonFactory implements JsonPropertyAttributes
         if( !property.isVisible(showMode) || !fieldMap.contains(name) )
             return null;
         JsonObjectBuilder json = Json.createObjectBuilder();
-        json.add(NAME_ATTR, name);
-        json.add(DISPLAY_NAME_ATTR, property.getDisplayName());
-        json.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
-        json.add(READONLY_ATTR, property.isReadOnly());
+
+        if(!property.getName().equals(property.getDisplayName()))
+        {
+            json.add(DISPLAY_NAME_ATTR, property.getDisplayName());
+        }
+
+        String shortDescription = property.getShortDescription().split("\n")[0];
+        if(!property.getName().equals(shortDescription))
+        {
+            json.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
+        }
+
+        if(property.isReadOnly())
+        {
+            json.add(READONLY_ATTR, true);
+        }
 
         if( property instanceof CompositeProperty && (!property.isHideChildren() ) )
         {
@@ -374,7 +386,7 @@ public class JsonFactory implements JsonPropertyAttributes
         Object value = property.getValue();
         if( value != null )
         {
-            json.add(TYPE_ATTR, (value instanceof Boolean) ? "bool" : "code-string");
+            json.add(TYPE_ATTR, getTypeName(value.getClass()));
             json.add(VALUE_ATTR, value.toString());
         }
         return json;
@@ -429,7 +441,7 @@ public class JsonFactory implements JsonPropertyAttributes
                 Object val = element.getValue();
                 if( val != null )
                 {
-                    pCh.add(TYPE_ATTR, (val instanceof Boolean) ? "bool" : "code-string");
+                    pCh.add(TYPE_ATTR, getTypeName(value.getClass()));
                     pCh.add(NAME_ATTR, element.getName());
                     pCh.add(DISPLAY_NAME_ATTR, element.getName());
                     pCh.add(VALUE_ATTR, val.toString());
@@ -529,5 +541,9 @@ public class JsonFactory implements JsonPropertyAttributes
         if(color == null || color.getAlpha() == 0) return json;
 
         return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
+    }
+
+    private static String getTypeName(Class<?> klass) {
+        return klass.getSimpleName();
     }
 }
