@@ -84,7 +84,7 @@ public class JsonBeanFactoryTest
 //        bean.setSelect("one");
 //
 //        ComponentModel model = ComponentFactory.getModel(bean);
-//        JsonArray json = JsonFactory.getModelAsJson(model).build();
+//        JsonArray json = JsonFactory.getJsonMeta(model).build();
 //        assertNotNull(json);
 //        assertEquals(model.getPropertyCount(), json.size());
 //        assertEquals("[" +
@@ -93,7 +93,7 @@ public class JsonBeanFactoryTest
 //            "{'name':'select','displayName':'select','description':'select','readOnly':false,'type':'code-string','value':'one'}," +
 //            "{'name':'str','displayName':'str','description':'str','readOnly':false,'type':'code-string','value':'string value'}]", oneQuotes(json.toString()));
 //
-////        json = JsonFactory.getModelAsJson(model, FieldMap.ALL, Property.SHOW_EXPERT);
+////        json = JsonFactory.getJsonMeta(model, FieldMap.ALL, Property.SHOW_EXPERT);
 ////        assertNotNull(json);
 ////        assertEquals("", json.build().toString());
 //
@@ -151,7 +151,10 @@ public class JsonBeanFactoryTest
     public void simpleBeanValues() throws Exception
     {
         SimpleBean rowHeaderBean = new SimpleBean("bean", 5, new long[]{1,2,3});
-        assertEquals("{'arr':[1,2,3],'name':'bean','number':5}",
+        assertEquals("{'arr':[1,2,3]," +
+                        "'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$SimpleBean'," +
+                        "'name':'bean'," +
+                        "'number':5}",
                 oneQuotes(JsonFactory.beanValues(rowHeaderBean).toString()));
     }
 
@@ -162,21 +165,24 @@ public class JsonBeanFactoryTest
                 new InnerBeanClass("foo"),
                 new InnerBeanClass[]{new InnerBeanClass("foo1"),new InnerBeanClass("foo2")}
         );
-        assertEquals("{'arr':[{'name':'foo1'},{'name':'foo2'}],'field1':{'name':'foo'}}",
-                oneQuotes(JsonFactory.beanValues(rowHeaderBean).toString()));
+        assertEquals("{'arr':[" +
+                        "{'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$InnerBeanClass','name':'foo1'}," +
+                        "{'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$InnerBeanClass','name':'foo2'}" +
+                "]," +
+                "'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$BeanWithInnerClass'," +
+                "'field1':{'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$InnerBeanClass','name':'foo'}}",
+            oneQuotes(JsonFactory.beanValues(rowHeaderBean).toString()));
     }
 
     @Test
-    @Ignore
     public void simpleBeanMeta()
     {
         SimpleBean rowHeaderBean = new SimpleBean("bean", 5, new long[]{1,2,3});
         assertEquals("{" +
-                        "'arr':{'type':'ArrayProperty','typeItem':'Long','value':[1,2,3]}," +
-                        "'class':{'readOnly':true,'type':'Class'," +
-                              "'value':'class com.developmentontheedge.beans.jsontest.JsonFactoryBeanTest$SimpleBean'}," +
-                        "'name':{'type':'String','value':'bean'}," +
-                        "'number':{'type':'Integer','value':'5'}}",
+                        "'arr':{'type':'long[]','readOnly':true}," +
+                        "'class':{'type':'Class','readOnly':true}," +
+                        "'name':{'type':'String','readOnly':true}," +
+                        "'number':{'type':'Integer','readOnly':true}}",
                 oneQuotes(JsonFactory.beanMeta(rowHeaderBean).toString()));
     }
 
@@ -206,7 +212,8 @@ public class JsonBeanFactoryTest
         }
     }
 
-    public class BeanWithInnerClass {
+    public class BeanWithInnerClass
+    {
         private InnerBeanClass field1;
         private InnerBeanClass arr[];
 
@@ -219,7 +226,8 @@ public class JsonBeanFactoryTest
         public InnerBeanClass[] getArr() {return arr;}
     }
 
-    public class InnerBeanClass {
+    public class InnerBeanClass
+    {
         String name;
         public InnerBeanClass(String name) {this.name = name;}
         public String getName() {return name;}

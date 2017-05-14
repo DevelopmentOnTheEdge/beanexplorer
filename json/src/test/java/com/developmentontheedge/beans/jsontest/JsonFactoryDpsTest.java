@@ -47,7 +47,10 @@ public class JsonFactoryDpsTest
     {
         assertEquals("{" +
                         "'values':{'name':'testName','number':1}," +
-                        "'meta':{'name':{'displayName':'Name'},'number':{'displayName':'Number','type':'Long'}}," +
+                        "'meta':{" +
+                            "'name':{'displayName':'Name'}," +
+                            "'number':{'displayName':'Number','type':'Long'}" +
+                        "}," +
                         "'order':['name','number']" +
                     "}",
                 oneQuotes(JsonFactory.dps(dps).toString()));
@@ -86,7 +89,8 @@ public class JsonFactoryDpsTest
                 "'values':{'p1':'a'," +
                           "'p2':{'c1':'p21','c2':'p22'}" +
                 "}," +
-                "'meta':{'p1':{'displayName':'p1','readOnly':true}," +
+                "'meta':{" +
+                        "'p1':{'displayName':'p1','readOnly':true}," +
                         "'p2':{'displayName':'p2','type':'DynamicPropertySetSupport'}," +
                         "'/p2/c1':{'displayName':'c1'}," +
                         "'/p2/c2':{'displayName':'c2'}" +

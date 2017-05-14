@@ -97,7 +97,7 @@ public class JsonFactory implements JsonPropertyAttributes
     {
         for( DynamicProperty dynamicProperty : dps )
         {
-            json.add( (path.equals("") ? "" : path + "/") + dynamicProperty.getName(), getMeta(dynamicProperty) );
+            json.add( (path.equals("") ? "" : path + "/") + dynamicProperty.getName(), getPropertyMeta(dynamicProperty) );
 
             if(dynamicProperty.getValue() instanceof DynamicPropertySet)
             {
@@ -168,7 +168,7 @@ public class JsonFactory implements JsonPropertyAttributes
      *
      * @param property Operation parameter
      */
-    public static JsonObject getMeta(DynamicProperty property)
+    public static JsonObject getPropertyMeta(DynamicProperty property)
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
