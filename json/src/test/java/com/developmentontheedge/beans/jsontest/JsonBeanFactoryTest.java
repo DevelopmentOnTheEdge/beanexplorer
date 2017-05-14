@@ -3,19 +3,15 @@ package com.developmentontheedge.beans.jsontest;
 import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.developmentontheedge.beans.model.ComponentFactory;
-import com.developmentontheedge.beans.model.ComponentModel;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import java.awt.*;
+import java.awt.Color;
 
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
-public class JsonFactoryBeanTest
+public class JsonBeanFactoryTest
 {
     public static class TestBean
     {
@@ -80,7 +76,7 @@ public class JsonFactoryBeanTest
     }
 
 //    @Test
-//    public void testGetModelAsJson() throws Exception
+//    public void testGetModelAsJson()
 //    {
 //        TestBean bean = new TestBean();
 //        bean.setStr("string value");
@@ -154,15 +150,30 @@ public class JsonFactoryBeanTest
     @Test
     public void simpleBeanValues() throws Exception
     {
-        SimpleBean rowHeaderBean = new SimpleBean("bean", 5);
-        assertEquals("{'name':'bean','number':5}", oneQuotes(JsonFactory.beanValues(rowHeaderBean).toString()));
+        SimpleBean rowHeaderBean = new SimpleBean("bean", 5, new long[]{1,2,3});
+        assertEquals("{'arr':[1,2,3],'name':'bean','number':5}",
+                oneQuotes(JsonFactory.beanValues(rowHeaderBean).toString()));
     }
 
     @Test
-    public void simpleBeanMeta() throws Exception
+    public void beanWithInnerClass() throws Exception
     {
-        SimpleBean rowHeaderBean = new SimpleBean("bean", 5);
-        assertEquals("{'class':{'readOnly':true,'type':'Class'," +
+        BeanWithInnerClass rowHeaderBean = new BeanWithInnerClass(
+                new InnerBeanClass("foo"),
+                new InnerBeanClass[]{new InnerBeanClass("foo1"),new InnerBeanClass("foo2")}
+        );
+        assertEquals("{'arr':[{'name':'foo1'},{'name':'foo2'}],'field1':{'name':'foo'}}",
+                oneQuotes(JsonFactory.beanValues(rowHeaderBean).toString()));
+    }
+
+    @Test
+    @Ignore
+    public void simpleBeanMeta()
+    {
+        SimpleBean rowHeaderBean = new SimpleBean("bean", 5, new long[]{1,2,3});
+        assertEquals("{" +
+                        "'arr':{'type':'ArrayProperty','typeItem':'Long','value':[1,2,3]}," +
+                        "'class':{'readOnly':true,'type':'Class'," +
                               "'value':'class com.developmentontheedge.beans.jsontest.JsonFactoryBeanTest$SimpleBean'}," +
                         "'name':{'type':'String','value':'bean'}," +
                         "'number':{'type':'Integer','value':'5'}}",
@@ -173,26 +184,45 @@ public class JsonFactoryBeanTest
     {
         private String name;
         private int number;
+        private long arr[];
 
-        public SimpleBean(String name, int number) {
+        public SimpleBean(String name, int number, long[] arr) {
+
             this.name = name;
             this.number = number;
+            this.arr = arr;
         }
 
         public String getName() {
             return name;
         }
 
-        public void setName(String name) {
-            this.name = name;
-        }
-
         public int getNumber() {
             return number;
         }
 
-        public void setNumber(int number) {
-            this.number = number;
+        public long[] getArr() {
+            return arr;
         }
     }
+
+    public class BeanWithInnerClass {
+        private InnerBeanClass field1;
+        private InnerBeanClass arr[];
+
+        public BeanWithInnerClass(InnerBeanClass field1, InnerBeanClass[] arr) {
+            this.field1 = field1;
+            this.arr = arr;
+        }
+
+        public InnerBeanClass getField1() {return field1;}
+        public InnerBeanClass[] getArr() {return arr;}
+    }
+
+    public class InnerBeanClass {
+        String name;
+        public InnerBeanClass(String name) {this.name = name;}
+        public String getName() {return name;}
+    }
+
 }

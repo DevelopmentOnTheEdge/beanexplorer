@@ -7,8 +7,6 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.*;
-
 import static org.junit.Assert.assertEquals;
 
 public class JsonFactoryDpsTest
@@ -101,23 +99,5 @@ public class JsonFactoryDpsTest
     {
         return s.replace("\"", "'");
     }
-
-    @Test
-    public void testEncodeColor() throws Exception
-    {
-        Color color = Color.CYAN;
-        assertEquals("["+color.getRed()+","+color.getGreen()+","+color.getBlue()+"]",
-                JsonFactory.encodeColor(color).build().toString());
-    }
-
-    @Test
-    public void testEncodeColorNull() throws Exception
-    {
-        Color color = new Color(128,128,128,0);
-        assertEquals("[]", JsonFactory.encodeColor(color).build().toString());
-
-        assertEquals("[]", JsonFactory.encodeColor(null).build().toString());
-    }
-
 
 }
