@@ -3,10 +3,12 @@ package com.developmentontheedge.beans.json;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import sun.rmi.runtime.Log;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -21,6 +23,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class JsonFactory implements JsonPropertyAttributes
 {
+    private static final Logger log = Logger.getLogger(JsonFactory.class.getName());
     ///////////////////////////////////////////////////////////////////////////
     // public API
     //
@@ -121,7 +124,9 @@ public class JsonFactory implements JsonPropertyAttributes
         if( type == JsonObjectBuilder.class ){json.add(name, (JsonObjectBuilder)value ); return;}
         if( type == JsonArrayBuilder.class ){json.add(name, (JsonArrayBuilder)value ); return;}
 
-        if( value instanceof DynamicPropertySet){json.add(name, dpsValuesBuilder((DynamicPropertySet)value));}
+        if( value instanceof DynamicPropertySet){json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return;}
+
+        log.warning("Skipped value: " + name+": "+value);
     }
 
     static void addToJsonArray(JsonArrayBuilder json, Object value)
@@ -147,7 +152,9 @@ public class JsonFactory implements JsonPropertyAttributes
         if( type == JsonObjectBuilder.class ){json.add((JsonObjectBuilder)value ); return;}
         if( type == JsonArrayBuilder.class ){json.add((JsonArrayBuilder)value ); return;}
 
-        if( value instanceof DynamicPropertySet){json.add(dpsValuesBuilder((DynamicPropertySet)value));}
+        if( value instanceof DynamicPropertySet){json.add(dpsValuesBuilder((DynamicPropertySet)value));return;}
+
+        log.warning("Skipped value: " + value);
     }
 
     private static JsonObjectBuilder dpsValuesBuilder(DynamicPropertySet dps)

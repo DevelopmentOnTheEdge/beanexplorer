@@ -99,7 +99,7 @@ public class JsonFactoryDpsTest
                 "}", oneQuotes(JsonFactory.dps(dps).toString()));
     }
 
-    static String oneQuotes(String s)
+    public static String oneQuotes(String s)
     {
         return s.replace("\"", "'");
     }

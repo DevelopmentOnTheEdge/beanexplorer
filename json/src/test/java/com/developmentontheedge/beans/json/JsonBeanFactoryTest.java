@@ -1,9 +1,15 @@
 package com.developmentontheedge.beans.json;
 
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import org.junit.Test;
 
-import java.awt.*;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import java.awt.Color;
 
+import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
 public class JsonBeanFactoryTest {

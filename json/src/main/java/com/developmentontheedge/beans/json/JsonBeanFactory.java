@@ -1,9 +1,5 @@
 package com.developmentontheedge.beans.json;
 
-import com.developmentontheedge.beans.editors.CustomEditorSupport;
-import com.developmentontheedge.beans.editors.PropertyEditorEx;
-import com.developmentontheedge.beans.editors.StringTagEditorSupport;
-import com.developmentontheedge.beans.editors.TagEditorSupport;
 import com.developmentontheedge.beans.model.ArrayProperty;
 import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.CompositeProperty;
@@ -11,14 +7,10 @@ import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.developmentontheedge.beans.json.JsonFactory.getTypeName;
 

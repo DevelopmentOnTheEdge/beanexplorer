@@ -21,6 +21,11 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
     public void init()
     {
         dynamicProperty = new DynamicProperty("name", "Name", String.class, "testName");
+    }
+
+    @Test
+    public void testNameValue()
+    {
         assertEquals("Name", JsonFactory.getPropertyMeta(dynamicProperty)
                 .getJsonString(DISPLAY_NAME_ATTR).getString());
     }
@@ -118,4 +123,20 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
         assertEquals(false, JsonFactory.getPropertyMeta(dynamicProperty).containsKey(GROUP_ID));
     }
 
+    @Test
+    public void testSeveralAttr()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.GROUP_NAME, "foo");
+        dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, 1);
+        dynamicProperty.setAttribute(BeanInfoConstants.RELOAD_ON_CHANGE, true);
+        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, ImmutableMap.of("foo","bar","foo2","bar2"));
+
+        assertEquals("{" +
+                        "'displayName':'Name'," +
+                        "'tagList':[{'key':'foo','value':'bar'},{'key':'foo2','value':'bar2'}]," +
+                        "'reloadOnChange':true," +
+                        "'groupName':'foo'," +
+                        "'groupId':1" +
+            "}",oneQuotes(JsonFactory.getPropertyMeta(dynamicProperty).toString()));
+    }
 }
