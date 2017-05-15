@@ -4,9 +4,13 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.json.JsonPropertyAttributes;
+
+import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
+
+import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
 public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAttributes
@@ -71,4 +75,24 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
         assertEquals(false, JsonFactory.getPropertyMeta(dynamicProperty).containsKey(RAW_VALUE_ATTR));
     }
 
+    @Test
+    public void testColumnSize()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, 30);
+        assertEquals("'30'", oneQuotes("" + JsonFactory.getPropertyMeta(dynamicProperty).get(COLUMN_SIZE_ATTR)));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, null);
+        assertEquals(false, JsonFactory.getPropertyMeta(dynamicProperty).containsKey(COLUMN_SIZE_ATTR));
+    }
+
+    @Test
+    public void testTagList()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, ImmutableMap.of("foo","bar","foo2","bar2"));
+        assertEquals("[{'key':'foo','value':'bar'},{'key':'foo2','value':'bar2'}]",
+                oneQuotes("" + JsonFactory.getPropertyMeta(dynamicProperty).get(TAG_LIST_ATTR)));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, null);
+        assertEquals(false, JsonFactory.getPropertyMeta(dynamicProperty).containsKey(TAG_LIST_ATTR));
+    }
 }

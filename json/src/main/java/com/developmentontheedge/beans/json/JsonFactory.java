@@ -199,21 +199,18 @@ public class JsonFactory implements JsonPropertyAttributes
         Object columnSizeAttr = property.getAttribute( BeanInfoConstants.COLUMN_SIZE_ATTR );
         if( columnSizeAttr != null )
         {
-            json.add( "columnSizeAttr", "" + columnSizeAttr );
+            json.add( COLUMN_SIZE_ATTR, "" + columnSizeAttr );
         }
 
-//        if( !Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ) )
-//        {
-//            Object tags = WebFormPropertyInspector.normalizeTags( property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR ) );
-////                if( tags != null )
-////                {
-////                    tags = OperationFragmentHelper.customizeTagsCommon( connector, ui, ( String[] )tags, property.getName(), messages, true );
-////                }
-//            if( tags != null )
-//            {
-//                json.add( "tagList", tags );
-//            }
-//        }
+        if( !Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ) )
+        {
+            Map<String, String> tags = (Map<String, String>)property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR );
+
+            if( tags != null )
+            {
+                json.add( "tagList", toJson(tags) );
+            }
+        }
 
         if( property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CHANGE ))
         {
@@ -223,6 +220,21 @@ public class JsonFactory implements JsonPropertyAttributes
         if( property.getBooleanAttribute( BeanInfoConstants.RAW_VALUE ))
         {
             json.add(RAW_VALUE_ATTR, true );
+        }
+
+        return json.build();
+    }
+
+    private static JsonArray toJson(Map<String, String> map)
+    {
+        JsonArrayBuilder json = Json.createArrayBuilder();
+
+        for (Map.Entry<String, String> item : map.entrySet())
+        {
+            json.add(Json.createObjectBuilder()
+                    .add("key",item.getKey())
+                    .add("value",item.getValue())
+                    .build());
         }
 
         return json.build();
