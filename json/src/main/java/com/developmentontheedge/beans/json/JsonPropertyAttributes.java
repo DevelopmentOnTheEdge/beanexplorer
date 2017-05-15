@@ -15,5 +15,7 @@ public interface JsonPropertyAttributes
     String RELOAD_ON_CHANGE_ATTR = "reloadOnChange";
     String COLUMN_SIZE_ATTR = "columnSize";
     String TAG_LIST_ATTR = "tagList";
+    String GROUP_NAME = "groupName";
+    String GROUP_ID = "groupId";
 
 }

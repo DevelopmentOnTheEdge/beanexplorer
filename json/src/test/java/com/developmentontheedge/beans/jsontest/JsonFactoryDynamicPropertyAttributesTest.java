@@ -95,4 +95,27 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
         dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, null);
         assertEquals(false, JsonFactory.getPropertyMeta(dynamicProperty).containsKey(TAG_LIST_ATTR));
     }
+
+    @Test
+    public void testGroupName()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.GROUP_NAME, "foo");
+        assertEquals("'foo'", oneQuotes(JsonFactory.getPropertyMeta(dynamicProperty).get(GROUP_NAME).toString()));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.GROUP_NAME, null);
+        assertEquals(false, JsonFactory.getPropertyMeta(dynamicProperty).containsKey(GROUP_NAME));
+    }
+
+    @Test
+    public void testGroupId()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, 1);
+
+        assertEquals(1L, Long.parseLong(JsonFactory.getPropertyMeta(dynamicProperty).get(GROUP_ID).toString()) );
+        assertEquals(1, Integer.parseInt(JsonFactory.getPropertyMeta(dynamicProperty).get(GROUP_ID).toString()) );
+
+        dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, null);
+        assertEquals(false, JsonFactory.getPropertyMeta(dynamicProperty).containsKey(GROUP_ID));
+    }
+
 }

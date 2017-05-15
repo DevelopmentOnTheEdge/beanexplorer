@@ -74,10 +74,7 @@ public class JsonFactory implements JsonPropertyAttributes
         return JsonBeanFactory.beanMeta(bean).build();
     }
     
-    public static JsonObject dictionaryValues(Object obj)
-    {
-        return null;
-    }
+    //public static JsonObject dictionaryValues(Object obj){return null;}
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -197,13 +194,14 @@ public class JsonFactory implements JsonPropertyAttributes
         //json.add( "extraAttrs", property.getAttribute( BeanInfoConstants.EXTRA_ATTRS ) );
 
         Object columnSizeAttr = property.getAttribute( BeanInfoConstants.COLUMN_SIZE_ATTR );
-        if( columnSizeAttr != null )
+        if(columnSizeAttr != null)
         {
             json.add( COLUMN_SIZE_ATTR, "" + columnSizeAttr );
         }
 
-        if( !Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ) )
+        if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
         {
+            @SuppressWarnings("unchecked")
             Map<String, String> tags = (Map<String, String>)property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR );
 
             if( tags != null )
@@ -212,14 +210,24 @@ public class JsonFactory implements JsonPropertyAttributes
             }
         }
 
-        if( property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CHANGE ))
+        if(property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CHANGE ))
         {
             json.add(RELOAD_ON_CHANGE_ATTR, true );
         }
 
-        if( property.getBooleanAttribute( BeanInfoConstants.RAW_VALUE ))
+        if(property.getBooleanAttribute( BeanInfoConstants.RAW_VALUE ))
         {
             json.add(RAW_VALUE_ATTR, true );
+        }
+
+        if(property.getStringAttribute(BeanInfoConstants.GROUP_NAME) != null)
+        {
+            json.add(GROUP_NAME, property.getStringAttribute(BeanInfoConstants.GROUP_NAME) );
+        }
+
+        if(property.getAttribute(BeanInfoConstants.GROUP_ID) != null)
+        {
+            json.add(GROUP_ID, Long.parseLong(property.getAttribute(BeanInfoConstants.GROUP_ID).toString()) );
         }
 
         return json.build();
