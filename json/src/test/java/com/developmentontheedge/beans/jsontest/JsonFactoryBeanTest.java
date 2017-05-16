@@ -15,7 +15,7 @@ import java.awt.Color;
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
-public class JsonBeanFactoryTest
+public class JsonFactoryBeanTest
 {
     public static class TestBean
     {
@@ -156,7 +156,7 @@ public class JsonBeanFactoryTest
     {
         SimpleBean rowHeaderBean = new SimpleBean("bean", 5, new long[]{1,2,3});
         assertEquals("{'arr':[1,2,3]," +
-                        "'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$SimpleBean'," +
+                        "'class':'class com.developmentontheedge.beans.jsontest.JsonFactoryBeanTest$SimpleBean'," +
                         "'name':'bean'," +
                         "'number':5}",
                 oneQuotes(JsonFactory.beanValues(rowHeaderBean).toString()));
@@ -170,11 +170,11 @@ public class JsonBeanFactoryTest
                 new InnerBeanClass[]{new InnerBeanClass("foo1"),new InnerBeanClass("foo2")}
         );
         assertEquals("{'arr':[" +
-                        "{'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$InnerBeanClass','name':'foo1'}," +
-                        "{'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$InnerBeanClass','name':'foo2'}" +
+                        "{'class':'class com.developmentontheedge.beans.jsontest.JsonFactoryBeanTest$InnerBeanClass','name':'foo1'}," +
+                        "{'class':'class com.developmentontheedge.beans.jsontest.JsonFactoryBeanTest$InnerBeanClass','name':'foo2'}" +
                 "]," +
-                "'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$BeanWithInnerClass'," +
-                "'field1':{'class':'class com.developmentontheedge.beans.jsontest.JsonBeanFactoryTest$InnerBeanClass','name':'foo'}}",
+                "'class':'class com.developmentontheedge.beans.jsontest.JsonFactoryBeanTest$BeanWithInnerClass'," +
+                "'field1':{'class':'class com.developmentontheedge.beans.jsontest.JsonFactoryBeanTest$InnerBeanClass','name':'foo'}}",
             oneQuotes(JsonFactory.beanValues(rowHeaderBean).toString()));
     }
 
