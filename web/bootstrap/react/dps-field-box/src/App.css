@@ -22,3 +22,30 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.bs-example{
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-width: 1px;
+  border-radius: 4px;
+  padding: 45px 15px 15px;
+  margin: 0 0px 15px;
+  position: relative;
+}
+
+.btn-primary-spacing{
+  margin-right: 5px;
+  margin-bottom: 5px !important;
+}
+
+.bs-example:after {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    content: "Example";
+}

@@ -7,37 +7,40 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    var testJson = require('./testJson.json');
+
     this.state = {fields: [
-      {
-        "name":"previousValue",
-        "title":"Предыдущие показания",
-        "isReadOnly":true,
-        "canBeNull":false,
-        "reloadOnChange":false,
-        "autoRefresh":false,
-        "type":"textInput",
-        "value":"52.000",
-        "options":[
-        ],
-        "tips":{
+        {
+          "name":"previousValue",
+          "title":"Предыдущие показания",
+          "isReadOnly":true,
+          "canBeNull":false,
+          "reloadOnChange":false,
+          "autoRefresh":false,
+          "type":"textInput",
+          "value":"52.000",
+          "options":[
+          ],
+          "tips":{
+          }
+        },
+        {
+          "name":"currentConsumption",
+          "title":"Текущий расход",
+          "isReadOnly":false,
+          "canBeNull":false,
+          "reloadOnChange":true,
+          "autoRefresh":false,
+          "type":"textInput",
+          "value":"0.000",
+          "options":[
+          ],
+          "tips":{
+          }
         }
-      },
-      {
-        "name":"currentConsumption",
-        "title":"Текущий расход",
-        "isReadOnly":false,
-        "canBeNull":false,
-        "reloadOnChange":true,
-        "autoRefresh":false,
-        "type":"textInput",
-        "value":"0.000",
-        "options":[
-        ],
-        "tips":{
-        }
-      }
-    ]};
+      ],
+      testJson: testJson
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -107,10 +110,20 @@ class App extends Component {
       </div>
       <div className="App-intro">
         <div className="container">
-          <form onSubmit={this.handleSubmit}>
-            {this._createFields()}
-            <input className="btn btn-default" type="submit" value="Submit" />
-          </form>
+          <div className="row">
+            <div className="col-md-7">
+              <form onSubmit={this.handleSubmit} className="bs-example">
+                {this._createFields()}
+                <div className="text-center">
+                  <button type="button" className="btn btn-primary btn-primary-spacing">Submit</button>
+                  <button type="button" className="btn btn-default btn-primary-spacing">Cancel</button>
+                </div>
+              </form>
+            </div>
+            <div className="col-md-5">
+              <textarea rows="20" name="inputJson" className="form-control" defaultValue={JSON.stringify(this.state.testJson, null, 4)}/>
+            </div>
+          </div>
         </div>
       </div>
     </div>

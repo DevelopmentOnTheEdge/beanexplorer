@@ -63,7 +63,7 @@ class DynamicProperty extends Component {
     const hasDanger = !json.error && value === '' ? 'error' : '';
 
     return (
-      <div className={this.props.className!=null?this.props.className:'form-group' + ' ' + hasDanger}>
+      <div className={(this.props.className!=null?this.props.className:'form-group') + ' ' + hasDanger}>
         {label}
         <div className="controls">
           {valueControl}

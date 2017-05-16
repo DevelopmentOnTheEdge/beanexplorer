@@ -1,0 +1,30 @@
+[
+  {
+    "name":"previousValue",
+    "title":"Предыдущие показания",
+    "isReadOnly":true,
+    "canBeNull":false,
+    "reloadOnChange":false,
+    "autoRefresh":false,
+    "type":"textInput",
+    "value":"52.000",
+    "options":[
+    ],
+    "tips":{
+    }
+  },
+  {
+    "name":"currentConsumption",
+    "title":"Текущий расход",
+    "isReadOnly":false,
+    "canBeNull":false,
+    "reloadOnChange":true,
+    "autoRefresh":false,
+    "type":"textInput",
+    "value":"0.000",
+    "options":[
+    ],
+    "tips":{
+    }
+  }
+]
