@@ -46,7 +46,7 @@ class DynamicProperty extends Component {
         readOnly: () => this.createStatic(value)
       },
       textInput: {
-        normal: <input type="text" placeholder={json.tips.placeholder} id={id} key={id} value={value} />,
+        normal: <input type="text" className="form-control" placeholder={json.tips.placeholder} id={id} key={id} value={value} />,
         readOnly: this.createStatic(value)
       },
       passwordInput: {
@@ -59,15 +59,17 @@ class DynamicProperty extends Component {
     const renderer = controls[json.type] || controls['textInput'];
     const valueControl = renderer[json.isReadOnly ? 'readOnly' : 'normal'];
     const label = <label htmlFor={id} className={this.props.labelClassName}>{json.title}</label>;
-    const helpTextElement = json.tips.helpText ? <small className="text-muted">{json.tips.helpText}</small> : undefined;
-    const hasDanger = !json.canBeNull && value === '' ? 'has-error' : '';
+    const helpTextElement = json.tips.helpText ? <span className={this.props.helpTextClassName!=null?this.props.helpTextClassName:"help-block"}>{json.tips.helpText}</span> : undefined;
+    const hasDanger = !json.error && value === '' ? 'error' : '';
 
     return (
-      <fieldset className={this.props.className + ' ' + hasDanger}>
+      <div className={this.props.className!=null?this.props.className:'form-group' + ' ' + hasDanger}>
         {label}
-        {valueControl}
-        {helpTextElement}
-      </fieldset>
+        <div className="controls">
+          {valueControl}
+          {helpTextElement}
+        </div>
+      </div>
     );
   }
 

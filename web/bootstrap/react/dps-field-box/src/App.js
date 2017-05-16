@@ -103,13 +103,15 @@ class App extends Component {
     <div className="App">
       <div className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <h2>Welcome to React</h2>
+        <h2>React component for DynamicPropertySet</h2>
       </div>
       <div className="App-intro">
-        <form onSubmit={this.handleSubmit}>
-          {this._createFields()}
-          <input type="submit" value="Submit" />
-        </form>
+        <div className="container">
+          <form onSubmit={this.handleSubmit}>
+            {this._createFields()}
+            <input className="btn btn-default" type="submit" value="Submit" />
+          </form>
+        </div>
       </div>
     </div>
     );
