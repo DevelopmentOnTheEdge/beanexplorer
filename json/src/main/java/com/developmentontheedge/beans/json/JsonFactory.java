@@ -8,7 +8,6 @@ import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
-import sun.rmi.runtime.Log;
 
 import java.awt.*;
 import java.math.BigDecimal;
@@ -30,6 +29,7 @@ import static java.util.Objects.requireNonNull;
 public class JsonFactory implements JsonPropertyAttributes
 {
     private static final Logger log = Logger.getLogger(JsonFactory.class.getName());
+
     ///////////////////////////////////////////////////////////////////////////
     // public API
     //
@@ -56,7 +56,7 @@ public class JsonFactory implements JsonPropertyAttributes
         requireNonNull(dps);
 
         JsonObjectBuilder json = Json.createObjectBuilder();
-        dpsMeta(dps, json, "");
+        dpsMeta(dps, json, new JsonPath());
 
         return json.build();
     }
@@ -66,7 +66,7 @@ public class JsonFactory implements JsonPropertyAttributes
         requireNonNull(dps);
 
         JsonArrayBuilder json = Json.createArrayBuilder();
-        dpsOrder(dps, json, "");
+        dpsOrder(dps, json, new JsonPath());
 
         return json.build();
     }
@@ -85,7 +85,7 @@ public class JsonFactory implements JsonPropertyAttributes
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         JsonObjectBuilder json = Json.createObjectBuilder();
-        getMeta(property, FieldMap.ALL, Property.SHOW_USUAL, json, "");
+        getMeta(property, FieldMap.ALL, Property.SHOW_USUAL, json, new JsonPath());
 
         return json.build();
     }
@@ -94,27 +94,29 @@ public class JsonFactory implements JsonPropertyAttributes
 
     ///////////////////////////////////////////////////////////////////////////
 
-    private static void dpsOrder(DynamicPropertySet dps, JsonArrayBuilder json, String path)
+    private static void dpsOrder(DynamicPropertySet dps, JsonArrayBuilder json, JsonPath path)
     {
         for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
         {
             String key = entry.getKey();
             Object value = entry.getValue();
 
-            json.add((path.equals("") ? "" : path + "/") + key);
-            if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, path + "/" + key);
+            JsonPath newPath = path.append(key);
+            json.add(newPath.get());
+            if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, newPath);
         }
     }
 
-    private static void dpsMeta(DynamicPropertySet dps, JsonObjectBuilder json, String path)
+    private static void dpsMeta(DynamicPropertySet dps, JsonObjectBuilder json, JsonPath path)
     {
         for( DynamicProperty dynamicProperty : dps )
         {
-            json.add( (path.equals("") ? "" : path + "/") + dynamicProperty.getName(), getPropertyMeta(dynamicProperty) );
+            JsonPath newPath = path.append(dynamicProperty.getName());
+            json.add( newPath.get(), getPropertyMeta(dynamicProperty) );
 
             if(dynamicProperty.getValue() instanceof DynamicPropertySet)
             {
-                dpsMeta((DynamicPropertySet)dynamicProperty.getValue(), json, path + "/" + dynamicProperty.getName());
+                dpsMeta((DynamicPropertySet)dynamicProperty.getValue(), json, newPath);
             }
         }
     }
@@ -334,7 +336,7 @@ public class JsonFactory implements JsonPropertyAttributes
      * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
      */
     private static void getMeta(CompositeProperty properties, FieldMap fieldMap, int showMode,
-                                JsonObjectBuilder json, String path)
+                                JsonObjectBuilder json, JsonPath path)
     {
 
         for( int i = 0; i < properties.getPropertyCount(); i++ )
@@ -343,23 +345,23 @@ public class JsonFactory implements JsonPropertyAttributes
             if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
                 continue;
             }
-
-            json.add(property.getName(), getPropertyMeta(property));
+            JsonPath newPath = path.append(property.getName());
+            json.add(newPath.get(), getPropertyMeta(property));
 
             if(property instanceof CompositeProperty) {
-                getMeta((CompositeProperty) property, fieldMap, showMode, json, path);
+                getMeta((CompositeProperty) property, fieldMap, showMode, json, newPath);
                 continue;
             }
 
             if(property instanceof ArrayProperty) {
-                getMeta((ArrayProperty) property, fieldMap, showMode, json, path);
+                getMeta((ArrayProperty) property, fieldMap, showMode, json, newPath);
                 continue;
             }
         }
     }
 
     private static void getMeta(ArrayProperty properties, FieldMap fieldMap, int showMode,
-                                JsonObjectBuilder json, String path)
+                                JsonObjectBuilder json, JsonPath path)
     {
         for( int i = 0; i < properties.getPropertyCount(); i++ )
         {

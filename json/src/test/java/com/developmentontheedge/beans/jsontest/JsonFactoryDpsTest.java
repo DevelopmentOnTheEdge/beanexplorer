@@ -31,14 +31,16 @@ public class JsonFactoryDpsTest
     @Test
     public void testDpsMeta() throws Exception
     {
-        assertEquals("{'name':{'displayName':'Name'},'number':{'displayName':'Number','type':'Long'}}",
-                oneQuotes(JsonFactory.dpsMeta(dps).toString()));
+        assertEquals("{" +
+                        "'/name':{'displayName':'Name'}," +
+                        "'/number':{'displayName':'Number','type':'Long'}" +
+            "}",oneQuotes(JsonFactory.dpsMeta(dps).toString()));
     }
 
     @Test
     public void testDpsOrder() throws Exception
     {
-        assertEquals("['name','number']",
+        assertEquals("['/name','/number']",
                 oneQuotes(JsonFactory.dpsOrder(dps).toString()));
     }
 
@@ -48,10 +50,10 @@ public class JsonFactoryDpsTest
         assertEquals("{" +
                         "'values':{'name':'testName','number':1}," +
                         "'meta':{" +
-                            "'name':{'displayName':'Name'}," +
-                            "'number':{'displayName':'Number','type':'Long'}" +
+                            "'/name':{'displayName':'Name'}," +
+                            "'/number':{'displayName':'Number','type':'Long'}" +
                         "}," +
-                        "'order':['name','number']" +
+                        "'order':['/name','/number']" +
                     "}",
                 oneQuotes(JsonFactory.dps(dps).toString()));
     }
@@ -90,18 +92,53 @@ public class JsonFactoryDpsTest
                           "'p2':{'c1':'p21','c2':'p22'}" +
                 "}," +
                 "'meta':{" +
-                        "'p1':{'displayName':'p1','readOnly':true}," +
-                        "'p2':{'displayName':'p2','type':'DynamicPropertySetSupport'}," +
+                        "'/p1':{'displayName':'p1','readOnly':true}," +
+                        "'/p2':{'displayName':'p2','type':'DynamicPropertySetSupport'}," +
                         "'/p2/c1':{'displayName':'c1'}," +
                         "'/p2/c2':{'displayName':'c2'}" +
                 "}," +
-                "'order':['p1','p2','/p2/c1','/p2/c2']" +
+                "'order':['/p1','/p2','/p2/c1','/p2/c2']" +
                 "}", oneQuotes(JsonFactory.dps(dps).toString()));
     }
 
     public static String oneQuotes(String s)
     {
         return s.replace("\"", "'");
+    }
+
+    @Test
+    public void beanWithDps()
+    {
+        BeanWithDps beanWithDps = new BeanWithDps("Title", dps);
+        assertEquals("{" +
+                        "'/class':{'type':'Class','readOnly':true}," +
+                        "'/dps':{'type':'DynamicPropertySetSupport'}," +
+                        "'/dps/name':{'type':'String','displayName':'Name','description':'Name'}," +
+                        "'/dps/number':{'type':'Long','displayName':'Number','description':'Number'}," +
+                        "'/title':{'type':'String','readOnly':true}" +
+            "}", oneQuotes(JsonFactory.beanMeta(beanWithDps).toString()));
+    }
+
+    public class BeanWithDps
+    {
+        private String title;
+        private DynamicPropertySet dps;
+
+        public BeanWithDps(String title, DynamicPropertySet dps)
+        {
+            this.title = title;
+            this.dps = dps;
+        }
+
+        public String getTitle()
+        {
+            return title;
+        }
+
+        public DynamicPropertySet getDps()
+        {
+            return dps;
+        }
     }
 
 }

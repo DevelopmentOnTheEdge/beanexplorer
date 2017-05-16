@@ -183,10 +183,10 @@ public class JsonFactoryBeanTest
     {
         SimpleBean rowHeaderBean = new SimpleBean("bean", 5, new long[]{1,2,3});
         assertEquals("{" +
-                        "'arr':{'type':'long[]','readOnly':true}," +
-                        "'class':{'type':'Class','readOnly':true}," +
-                        "'name':{'type':'String','readOnly':true}," +
-                        "'number':{'type':'Integer','readOnly':true}}",
+                        "'/arr':{'type':'long[]','readOnly':true}," +
+                        "'/class':{'type':'Class','readOnly':true}," +
+                        "'/name':{'type':'String','readOnly':true}," +
+                        "'/number':{'type':'Integer','readOnly':true}}",
                 oneQuotes(JsonFactory.beanMeta(rowHeaderBean).toString()));
     }
 
