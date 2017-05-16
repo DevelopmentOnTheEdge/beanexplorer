@@ -9,37 +9,8 @@ class App extends Component {
     super(props);
     var testJson = require('./testJson.json');
 
-    this.state = {fields: [
-        {
-          "name":"previousValue",
-          "title":"Предыдущие показания",
-          "isReadOnly":true,
-          "canBeNull":false,
-          "reloadOnChange":false,
-          "autoRefresh":false,
-          "type":"textInput",
-          "value":"52.000",
-          "options":[
-          ],
-          "tips":{
-          }
-        },
-        {
-          "name":"currentConsumption",
-          "title":"Текущий расход",
-          "isReadOnly":false,
-          "canBeNull":false,
-          "reloadOnChange":true,
-          "autoRefresh":false,
-          "type":"textInput",
-          "value":"0.000",
-          "options":[
-          ],
-          "tips":{
-          }
-        }
-      ],
-      testJson: testJson
+    this.state = {
+      fields: testJson
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -121,7 +92,7 @@ class App extends Component {
               </form>
             </div>
             <div className="col-md-5">
-              <textarea rows="20" name="inputJson" className="form-control" defaultValue={JSON.stringify(this.state.testJson, null, 4)}/>
+              <textarea rows="20" name="inputJson" className="form-control" defaultValue={JSON.stringify(this.state.fields, null, 4)}/>
             </div>
           </div>
         </div>
