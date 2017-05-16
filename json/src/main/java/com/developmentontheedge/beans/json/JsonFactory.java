@@ -21,12 +21,13 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Provides API to serialize beans and dynamic property sets to Json. 
  */
-public class JsonFactory implements JsonPropertyAttributes
+public class JsonFactory
 {
     private static final Logger log = Logger.getLogger(JsonFactory.class.getName());
 
