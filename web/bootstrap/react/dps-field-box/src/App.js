@@ -15,6 +15,7 @@ class App extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleJsonChange = this.handleJsonChange.bind(this);
   }
 
   handleChange(event) {
@@ -86,19 +87,24 @@ class App extends Component {
               <form onSubmit={this.handleSubmit} className="bs-example">
                 {this._createFields()}
                 <div className="text-center">
-                  <button type="button" className="btn btn-primary btn-primary-spacing">Submit</button>
+                  <button type="submit" className="btn btn-primary btn-primary-spacing">Submit</button>
                   <button type="button" className="btn btn-default btn-primary-spacing">Cancel</button>
                 </div>
               </form>
             </div>
             <div className="col-md-5">
-              <textarea rows="20" name="inputJson" className="form-control" defaultValue={JSON.stringify(this.state.fields, null, 4)}/>
+              <textarea rows="20" name="inputJson" className="form-control" defaultValue={JSON.stringify(this.state.fields, null, 4)}
+                        onChange={this.handleJsonChange} />
             </div>
           </div>
         </div>
       </div>
     </div>
     );
+  }
+
+  handleJsonChange(event){
+    this.setState({fields: JSON.parse(event.target.value)});
   }
 
 }
