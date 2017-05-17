@@ -10,7 +10,7 @@ class DynamicProperty extends Component {
   }
   
   handleChange(event) {
-    this.props.onChange(this.props.value.name, this._getValueFromEvent(event));
+    this.props.onChange(this.props.path, this._getValueFromEvent(event));
   }
 
   _getValueFromEvent(event) {
@@ -23,9 +23,9 @@ class DynamicProperty extends Component {
   }
 
   render() {
-    const json = this.props.value;
-    const value = this.props.value.value;
-    const id = json.name + "Field";
+    const meta  = this.props.meta;
+    const value = this.props.value;
+    const id    = this.props.name + "Field";
     const handleChange = this.handleChange;
     const _this = this;
 
@@ -40,11 +40,11 @@ class DynamicProperty extends Component {
       },
       comboBox: {
         normal: () => {
-          var options = json.options.map(function(option) {
+          var options = meta.options.map(function(option) {
             return ( React.DOM.option({key: option.value, value: option.value}, option.text) );
           });
-          if(json.canBeNull){
-            options.unshift(  ( React.DOM.option({key: "", value: ""}, "all") ) );
+          if(meta.canBeNull){
+            options.unshift(  ( React.DOM.option({key: "", value: ""}, "") ) );
           }
           return (
             React.DOM.select({id: id, ref: 'editableComboBox', key: id, defaultValue: value, onChange: handleChange, className: this.props.controlClassName},
@@ -53,34 +53,34 @@ class DynamicProperty extends Component {
           );
         },
         readOnly: () => {
-          const selectedOption = json.options.filter(option => option.value === json.value);
-          const text = selectedOption.length ? selectedOption[0].text : json.value;
+          const selectedOption = meta.options.filter(option => option.value === meta.value);
+          const text = selectedOption.length ? selectedOption[0].text : meta.value;
           return this.createStatic(text);
         }
       },
       textArea: {
         normal: () => (
-          <textarea placeholder={json.tips.placeholder} id={id} key={id} rows={json.rows} cols={json.columns} value={value} onChange={handleChange} className={this.props.controlClassName}/>
+          <textarea placeholder={meta.placeholder} id={id}  rows={meta.rows} cols={meta.columns} value={value} onChange={handleChange} className={this.props.controlClassName}/>
         ),
         readOnly: () => this.createStatic(value)
       },
       textInput: {
-        normal: <input type="text" className="form-control" placeholder={json.tips.placeholder} id={id} key={id} value={value}
+        normal: <input type="text" className="form-control" placeholder={meta.placeholder} id={id} key={id} value={value}
                        onChange={handleChange} />,
         readOnly: this.createStatic(value)
       },
       passwordInput: {
-        normal: <input type="password" placeholder={json.tips.placeholder} id={id} key={id} value={value}
+        normal: <input type="password" placeholder={meta.placeholder} id={id} key={id} value={value}
                        onChange={handleChange} className={this.props.controlClassName}/>,
         readOnly: this.createStatic('******')
       }
     };
 
-    const renderer = controls[json.type] || controls['textInput'];
-    const valueControl = renderer[json.isReadOnly ? 'readOnly' : 'normal'];
-    const label = <label htmlFor={id} className={this.props.labelClassName}>{json.title}</label>;
-    const helpTextElement = json.tips.helpText ? <span className={this.props.helpTextClassName!=null?this.props.helpTextClassName:"help-block"}>{json.tips.helpText}</span> : undefined;
-    const hasDanger = !json.error && value === '' ? 'error' : '';
+    const renderer = controls[meta.type] || controls['textInput'];
+    const valueControl = renderer[meta.readOnly ? 'readOnly' : 'normal'];
+    const label = <label htmlFor={id} className={this.props.labelClassName}>{meta.displayName}</label>;
+    const helpTextElement = meta.helpText ? <span className={this.props.helpTextClassName!=null?this.props.helpTextClassName:"help-block"}>{meta.helpText}</span> : undefined;
+    const hasDanger = !meta.error && value === '' ? 'error' : '';
 
     return (
       <div className={(this.props.className!=null?this.props.className:'form-group dynamic-property') + ' ' + hasDanger}>

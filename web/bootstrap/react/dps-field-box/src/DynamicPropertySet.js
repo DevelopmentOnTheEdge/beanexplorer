@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DynamicProperty from './DynamicProperty';
+import JsonPointer from 'json-pointer';
 
 class DynamicPropertySet extends Component {
 
@@ -19,8 +20,12 @@ class DynamicPropertySet extends Component {
       curGroup = [];
     };
 
-    for(const json of this.props.fields) {
-      const newGroup = json.group;
+    for(const item of this.props.fields.order) {
+      var itemName = item.substring(item.lastIndexOf("/")+1);
+      var itemMeta = JsonPointer.get(this.props.fields, "/meta" + item);
+      var itemValue = JsonPointer.get(this.props.fields, "/values" + item);
+
+      const newGroup = itemMeta.group;
       const newGroupName = newGroup ? newGroup.name : null;
       const newGroupId = newGroup ? newGroup.id : null;
       if(newGroupId !== curGroupId) {
@@ -28,7 +33,8 @@ class DynamicPropertySet extends Component {
         curGroupName = newGroupName;
         curGroupId = newGroupId;
       }
-      const field = (<DynamicProperty value={json} ref={json.name} key={json.name} onChange={this.props.onChange}/>);
+      const field = (<DynamicProperty meta={itemMeta} name={itemName} value={itemValue} path={item}
+                                      key={itemName} ref={itemName} onChange={this.props.onChange}/>);
       curGroup.push(field);
     }
     finishGroup();

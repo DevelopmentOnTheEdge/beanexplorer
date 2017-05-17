@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DynamicPropertySet from './DynamicPropertySet';
 import logo from './logo.svg';
 import './App.css';
+import JsonPointer from 'json-pointer';
 
 class App extends Component {
 
@@ -27,19 +28,9 @@ class App extends Component {
     this.setState({fields: JSON.parse(event.target.value)});
   }
 
-  handleFieldChange(name, value) {
-    const field = this.state.fields.find(field => field.name === name);
-    field.value = value;
-    //alert(value);
-
-//    implicit state change => forceUpdate
-//    this.forceUpdate(() => {
-//      //this.setState({ allFieldsFilled: this._allFieldsFilled() });
-//
-//      if (field.reloadOnChange || field.autoRefresh) {
-//        this._reloadOnChange(name);
-//      }
-//    });
+  handleFieldChange(path, value) {
+    JsonPointer.set(this.state.fields, "/values" + path, value);
+    this.forceUpdate();
   }
 
   render() {
