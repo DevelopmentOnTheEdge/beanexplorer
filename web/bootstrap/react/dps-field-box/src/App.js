@@ -13,18 +13,17 @@ class App extends Component {
       fields: testJson
     };
 
-    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleJsonChange = this.handleJsonChange.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({value: event.target.value});
   }
 
   handleSubmit(event) {
     alert('A name was submitted: ' + this.state.value);
     event.preventDefault();
+  }
+
+  handleJsonChange(event){
+    this.setState({fields: JSON.parse(event.target.value)});
   }
 
   _onFieldChange(name, value) {
@@ -101,10 +100,6 @@ class App extends Component {
       </div>
     </div>
     );
-  }
-
-  handleJsonChange(event){
-    this.setState({fields: JSON.parse(event.target.value)});
   }
 
 }
