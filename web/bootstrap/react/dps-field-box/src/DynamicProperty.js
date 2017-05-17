@@ -3,17 +3,36 @@ import React, { Component } from 'react';
 class DynamicProperty extends Component {
 
 
+  constructor(props) {
+    super(props);
+    
+    this.handleChange = this.handleChange.bind(this);    
+  }
+  
+  handleChange(event) {
+    this.props.onChange(this.props.value.name, this._getValueFromEvent(event));
+  }
+
+  _getValueFromEvent(event) {
+    if(!event)
+      return '';
+    if(!event.target)
+      return event.value;
+    const element = event.target;
+    return (element.type === 'checkbox') ? element.checked : element.value;
+  }
+
   render() {
     const json = this.props.value;
     const value = this.props.value.value;
     const id = json.name + "Field";
-    const changeHandler = this.changeHandler;
+    const handleChange = this.handleChange;
     const _this = this;
 
     const controls = {
       checkBox: {
         normal: function() {
-          return ( React.DOM.input({id: id, key: id, type: "checkbox", checked: value, onChange: changeHandler}));
+          return ( React.DOM.input({id: id, key: id, type: "checkbox", checked: value, onChange: handleChange}));
         },
         readOnly: function() {
           return ( React.DOM.input({id: id, key: id, type: "checkbox", disabled: true, checked: value}) );
@@ -28,7 +47,7 @@ class DynamicProperty extends Component {
             options.unshift(  ( React.DOM.option({key: "", value: ""}, "all") ) );
           }
           return (
-            React.DOM.select({id: id, ref: 'editableComboBox', key: id, defaultValue: value, onChange: changeHandler, className: this.props.controlClassName},
+            React.DOM.select({id: id, ref: 'editableComboBox', key: id, defaultValue: value, onChange: handleChange, className: this.props.controlClassName},
               options
             )
           );
@@ -41,17 +60,18 @@ class DynamicProperty extends Component {
       },
       textArea: {
         normal: () => (
-          <textarea placeholder={json.tips.placeholder} id={id} key={id} rows={json.rows} cols={json.columns} value={value} onChange={changeHandler} className={this.props.controlClassName}/>
+          <textarea placeholder={json.tips.placeholder} id={id} key={id} rows={json.rows} cols={json.columns} value={value} onChange={handleChange} className={this.props.controlClassName}/>
         ),
         readOnly: () => this.createStatic(value)
       },
       textInput: {
-        normal: <input type="text" className="form-control" placeholder={json.tips.placeholder} id={id} key={id} value={value} />,
+        normal: <input type="text" className="form-control" placeholder={json.tips.placeholder} id={id} key={id} value={value}
+                       onChange={handleChange} />,
         readOnly: this.createStatic(value)
       },
       passwordInput: {
         normal: <input type="password" placeholder={json.tips.placeholder} id={id} key={id} value={value}
-                       onChange={changeHandler} className={this.props.controlClassName}/>,
+                       onChange={handleChange} className={this.props.controlClassName}/>,
         readOnly: this.createStatic('******')
       }
     };

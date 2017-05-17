@@ -13,6 +13,7 @@ class App extends Component {
       fields: testJson
     };
 
+    this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleJsonChange = this.handleJsonChange.bind(this);
   }
@@ -26,13 +27,14 @@ class App extends Component {
     this.setState({fields: JSON.parse(event.target.value)});
   }
 
-  _onFieldChange(name, value) {
+  handleFieldChange(name, value) {
     const field = this.state.fields.find(field => field.name === name);
     field.value = value;
+    //alert(value);
 
-    // implicit state change => forceUpdate
+//    implicit state change => forceUpdate
 //    this.forceUpdate(() => {
-//      this.setState({ allFieldsFilled: this._allFieldsFilled() });
+//      //this.setState({ allFieldsFilled: this._allFieldsFilled() });
 //
 //      if (field.reloadOnChange || field.autoRefresh) {
 //        this._reloadOnChange(name);
@@ -52,7 +54,7 @@ class App extends Component {
             <div className="row">
               <div className="col-md-7">
                 <form onSubmit={this.handleSubmit} className="bs-example">
-                  <DynamicPropertySet fields={this.state.fields}/>
+                  <DynamicPropertySet fields={this.state.fields} onChange={this.handleFieldChange}/>
                   <div className="text-center">
                     <button type="submit" className="btn btn-primary btn-primary-spacing">Submit</button>
                     <button type="button" className="btn btn-default btn-primary-spacing">Cancel</button>
