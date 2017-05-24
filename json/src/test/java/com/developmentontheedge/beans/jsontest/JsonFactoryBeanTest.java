@@ -79,4 +79,18 @@ public class JsonFactoryBeanTest
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 
+    @Test
+    public void beanWithMap()
+    {
+        TestBeans.BeanWithMap bean = new TestBeans.BeanWithMap(ImmutableMap.of("key","value", "key2","value2"));
+        assertEquals("" +
+                        "{'values':{" +
+                            "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithMap'," +
+                            "'parameters':[{'key':'value'},{'key2':'value2'}]}," +
+                        "'meta':{" +
+                            "'/class':{'type':'Class','readOnly':true}," +
+                            "'/parameters':{'type':'Map','readOnly':true}}," +
+                        "'order':['/class','/parameters']" +
+            "}", oneQuotes(JsonFactory.bean(bean).toString()));
+    }
 }

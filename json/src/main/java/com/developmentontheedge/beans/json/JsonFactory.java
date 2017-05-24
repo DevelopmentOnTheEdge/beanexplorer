@@ -334,6 +334,10 @@ public class JsonFactory
             }
 
             if(property instanceof CompositeProperty) {
+                if(property.getValue() instanceof Map){
+                    json.add(property.getName(), mapValues((Map)property.getValue()) );
+                    continue;
+                }
                 json.add(property.getName(), propertyValue((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
@@ -366,6 +370,10 @@ public class JsonFactory
             }
 
             if(property instanceof CompositeProperty) {
+                if(property.getValue() instanceof Map){
+                    json.add(mapValues((Map)property.getValue()) );
+                    continue;
+                }
                 json.add(propertyValue((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
@@ -400,6 +408,9 @@ public class JsonFactory
             json.add(newPath.get(), propertyMeta(property));
 
             if(property instanceof CompositeProperty) {
+                if(property.getValue() instanceof Map){
+                    continue;
+                }
                 propertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
@@ -454,7 +465,11 @@ public class JsonFactory
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        json.add(TYPE_ATTR, getTypeName(property.getValueClass()));
+        if(property.getValue() instanceof Map){
+            json.add(TYPE_ATTR, "Map");
+        }else{
+            json.add(TYPE_ATTR, getTypeName(property.getValueClass()));
+        }
 
         if(!property.getName().equals(property.getDisplayName()))
         {
