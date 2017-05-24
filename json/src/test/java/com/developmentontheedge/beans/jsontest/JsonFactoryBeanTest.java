@@ -51,6 +51,14 @@ public class JsonFactoryBeanTest
     }
 
     @Test
+    public void simpleBeanOrder()
+    {
+        TestBeans.SimpleBean rowHeaderBean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
+        assertEquals("['/arr','/class','/name','/number']",
+                oneQuotes(JsonFactory.beanOrder(rowHeaderBean).toString()));
+    }
+
+    @Test
     public void beanWithDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();

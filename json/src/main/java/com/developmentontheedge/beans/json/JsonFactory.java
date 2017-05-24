@@ -35,7 +35,8 @@ public class JsonFactory
     // public API
     //
     
-    public static JsonObject dps(DynamicPropertySet dps){
+    public static JsonObject dps(DynamicPropertySet dps)
+    {
         requireNonNull(dps);
 
         JsonObjectBuilder result = Json.createObjectBuilder();
@@ -292,11 +293,13 @@ public class JsonFactory
         return json.build();
     }
 
-    static String getTypeName(Class<?> klass) {
+    private static String getTypeName(Class<?> klass)
+    {
         return klass.getSimpleName();
     }
 
-    private static JsonObjectBuilder getValues(CompositeProperty properties, FieldMap fieldMap, int showMode) {
+    private static JsonObjectBuilder getValues(CompositeProperty properties, FieldMap fieldMap, int showMode)
+    {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
         for( int i = 0; i < properties.getPropertyCount(); i++ )
@@ -326,7 +329,8 @@ public class JsonFactory
         return json;
     }
 
-    private static JsonArrayBuilder getValues(ArrayProperty properties, FieldMap fieldMap, int showMode) {
+    private static JsonArrayBuilder getValues(ArrayProperty properties, FieldMap fieldMap, int showMode)
+    {
         JsonArrayBuilder json = Json.createArrayBuilder();
 
         for (int i = 0; i < properties.getPropertyCount(); i++)
@@ -377,7 +381,6 @@ public class JsonFactory
 
             if(property instanceof ArrayProperty) {
                 getMeta((ArrayProperty) property, fieldMap, showMode, json, newPath);
-                continue;
             }
         }
     }
@@ -421,7 +424,8 @@ public class JsonFactory
         }
     }
 
-    private static JsonObject getPropertyMeta(Property property){
+    private static JsonObject getPropertyMeta(Property property)
+    {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
         json.add(TYPE_ATTR, getTypeName(property.getValueClass()));
