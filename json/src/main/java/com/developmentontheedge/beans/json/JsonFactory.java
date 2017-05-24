@@ -75,40 +75,65 @@ public class JsonFactory
 
     public static JsonObject bean(Object bean)
     {
+        return bean(bean, FieldMap.ALL);
+    }
+
+    public static JsonObject bean(Object bean, FieldMap fieldMap)
+    {
         requireNonNull(bean);
+        requireNonNull(fieldMap);
 
         JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add("values", beanValues(bean));
-        result.add("meta", beanMeta(bean));
-        result.add("order", beanOrder(bean));
+        result.add("values", beanValues(bean, fieldMap));
+        result.add("meta", beanMeta(bean, fieldMap));
+        result.add("order", beanOrder(bean, fieldMap));
         return result.build();
     }
 
     public static JsonObject beanValues(Object bean)
     {
+        return beanValues(bean, FieldMap.ALL);
+    }
+
+    public static JsonObject beanValues(Object bean, FieldMap fieldMap)
+    {
         requireNonNull(bean);
+        requireNonNull(fieldMap);
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
-        return getValues(property, FieldMap.ALL, Property.SHOW_USUAL).build();
+        return getValues(property, fieldMap, Property.SHOW_USUAL).build();
     }
 
     public static JsonObject beanMeta(Object bean)
     {
+        return beanMeta(bean, FieldMap.ALL);
+    }
+
+    public static JsonObject beanMeta(Object bean, FieldMap fieldMap)
+    {
         requireNonNull(bean);
+        requireNonNull(fieldMap);
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         JsonObjectBuilder json = Json.createObjectBuilder();
-        getMeta(property, FieldMap.ALL, Property.SHOW_USUAL, json, new JsonPath());
+        getMeta(property, fieldMap, Property.SHOW_USUAL, json, new JsonPath());
 
         return json.build();
     }
 
     public static JsonArray beanOrder(Object bean)
     {
+        return beanOrder(bean, FieldMap.ALL);
+    }
+
+    public static JsonArray beanOrder(Object bean, FieldMap fieldMap)
+    {
         requireNonNull(bean);
+        requireNonNull(fieldMap);
+        CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         JsonArrayBuilder json = Json.createArrayBuilder();
-        beanOrder(bean, json, new JsonPath());
+        beanOrder(property, fieldMap, Property.SHOW_USUAL, json, new JsonPath());
 
         return json.build();
     }
@@ -310,12 +335,12 @@ public class JsonFactory
             }
 
             if(property instanceof CompositeProperty) {
-                json.add(property.getName(), getValues((CompositeProperty)property, fieldMap, showMode) );
+                json.add(property.getName(), getValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
 
             if(property instanceof ArrayProperty) {
-                json.add(property.getName(), getValues((ArrayProperty) property, fieldMap, showMode));
+                json.add(property.getName(), getValues((ArrayProperty) property, fieldMap.get(property), showMode));
                 continue;
             }
 
@@ -341,12 +366,12 @@ public class JsonFactory
             }
 
             if(property instanceof CompositeProperty) {
-                json.add(getValues((CompositeProperty)property, fieldMap, showMode) );
+                json.add(getValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
 
             if(property instanceof ArrayProperty) {
-                json.add(getValues((ArrayProperty) property, fieldMap, showMode));
+                json.add(getValues((ArrayProperty) property, fieldMap.get(property), showMode));
                 continue;
             }
 
@@ -375,12 +400,12 @@ public class JsonFactory
             json.add(newPath.get(), getPropertyMeta(property));
 
             if(property instanceof CompositeProperty) {
-                getMeta((CompositeProperty) property, fieldMap, showMode, json, newPath);
+                getMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
 
             if(property instanceof ArrayProperty) {
-                getMeta((ArrayProperty) property, fieldMap, showMode, json, newPath);
+                getMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
             }
         }
     }
@@ -398,23 +423,24 @@ public class JsonFactory
             //json.add(property.getName(), getPropertyMeta(property));
 
             if(property instanceof CompositeProperty) {
-                getMeta((CompositeProperty) property, fieldMap, showMode, json, path);
+                getMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, path);
                 continue;
             }
 
             if(property instanceof ArrayProperty) {
-                getMeta((ArrayProperty) property, fieldMap, showMode, json, path);
+                getMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, path);
             }
         }
     }
 
-    private static void beanOrder(Object bean, JsonArrayBuilder json, JsonPath path)
+    private static void beanOrder(CompositeProperty properties, FieldMap fieldMap, int showMode, JsonArrayBuilder json, JsonPath path)
     {
-        CompositeProperty properties = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
-
         for (int i=0; i < properties.getPropertyCount(); i++)
         {
             Property property = properties.getPropertyAt(i);
+            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
+                continue;
+            }
             String key = property.getName();
             Object value = property.getValue();
 

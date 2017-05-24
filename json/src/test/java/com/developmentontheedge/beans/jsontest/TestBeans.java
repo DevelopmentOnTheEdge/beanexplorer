@@ -5,15 +5,31 @@ import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
 
 import java.awt.Color;
+import java.util.Map;
 
 class TestBeans
 {
+    public static class BeanWithMap
+    {
+        final Map<String, String> parameters;
+
+        BeanWithMap(Map<String, String> parameters)
+        {
+            this.parameters = parameters;
+        }
+
+        public Map<String, String> getParameters()
+        {
+            return parameters;
+        }
+    }
+
     public static class FormPresentation
     {
-        public final String title;
-        public final DynamicPropertySet dps;
+        final String title;
+        final DynamicPropertySet dps;
 
-        public FormPresentation(String title, DynamicPropertySet dps)
+        FormPresentation(String title, DynamicPropertySet dps)
         {
             this.title = title;
             this.dps = dps;
@@ -36,7 +52,7 @@ class TestBeans
         private int number;
         private long arr[];
 
-        public SimpleBean(String name, int number, long[] arr) {
+        SimpleBean(String name, int number, long[] arr) {
 
             this.name = name;
             this.number = number;
@@ -61,7 +77,7 @@ class TestBeans
         private InnerBeanClass field1;
         private InnerBeanClass arr[];
 
-        public BeanWithInnerClass(InnerBeanClass field1, InnerBeanClass[] arr) {
+        BeanWithInnerClass(InnerBeanClass field1, InnerBeanClass[] arr) {
             this.field1 = field1;
             this.arr = arr;
         }
@@ -73,7 +89,7 @@ class TestBeans
     public static class InnerBeanClass
     {
         String name;
-        public InnerBeanClass(String name) {this.name = name;}
+        InnerBeanClass(String name) {this.name = name;}
         public String getName() {return name;}
     }
 
