@@ -72,6 +72,17 @@ public class JsonFactory
         return json.build();
     }
 
+    public static JsonObject bean(Object bean)
+    {
+        requireNonNull(bean);
+
+        JsonObjectBuilder result = Json.createObjectBuilder();
+        result.add("values", beanValues(bean));
+        result.add("meta", beanMeta(bean));
+        result.add("order", beanOrder(bean));
+        return result.build();
+    }
+
     public static JsonObject beanValues(Object bean)
     {
         requireNonNull(bean);
@@ -90,7 +101,17 @@ public class JsonFactory
 
         return json.build();
     }
-    
+
+    public static JsonArray beanOrder(Object bean)
+    {
+        requireNonNull(bean);
+
+        JsonArrayBuilder json = Json.createArrayBuilder();
+        beanOrder(bean, json, new JsonPath());
+
+        return json.build();
+    }
+
     //public static JsonObject dictionaryValues(Object obj){return null;}
 
     ///////////////////////////////////////////////////////////////////////////
@@ -384,7 +405,23 @@ public class JsonFactory
         }
     }
 
-    public static JsonObject getPropertyMeta(Property property){
+    private static void beanOrder(Object bean, JsonArrayBuilder json, JsonPath path)
+    {
+        CompositeProperty properties = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+
+        for (int i=0; i < properties.getPropertyCount(); i++)
+        {
+            Property property = properties.getPropertyAt(i);
+            String key = property.getName();
+            Object value = property.getValue();
+
+            JsonPath newPath = path.append(key);
+            json.add(newPath.get());
+            if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, newPath);
+        }
+    }
+
+    private static JsonObject getPropertyMeta(Property property){
         JsonObjectBuilder json = Json.createObjectBuilder();
 
         json.add(TYPE_ATTR, getTypeName(property.getValueClass()));
