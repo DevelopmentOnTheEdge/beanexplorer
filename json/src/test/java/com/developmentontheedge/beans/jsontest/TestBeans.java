@@ -25,6 +25,21 @@ class TestBeans
         }
     }
 
+    public static class BeanWithMapLong
+    {
+        final Map<Long, Long> field;
+
+        BeanWithMapLong(Map<Long, Long> field)
+        {
+            this.field = field;
+        }
+
+        public Map<Long, Long> getField()
+        {
+            return field;
+        }
+    }
+
     public static class BeanWithList
     {
         private List<String> field;
@@ -35,6 +50,21 @@ class TestBeans
         }
 
         public List<String> getField()
+        {
+            return field;
+        }
+    }
+
+    public static class BeanWithListLong
+    {
+        private List<Long> field;
+
+        BeanWithListLong(List<Long> field)
+        {
+            this.field = field;
+        }
+
+        public List<Long> getField()
         {
             return field;
         }

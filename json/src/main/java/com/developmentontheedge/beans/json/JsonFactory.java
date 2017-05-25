@@ -310,9 +310,9 @@ public class JsonFactory
 
         for (Map.Entry<?, ?> item : map.entrySet())
         {
-            json.add(Json.createObjectBuilder()
-                    .add(item.getKey().toString(), item.getValue().toString())
-                    .build());
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            addToJsonObject(objectBuilder, item.getKey().toString(), item.getValue(), item.getValue().getClass());
+            json.add(objectBuilder.build());
         }
 
         return json.build();
@@ -324,7 +324,7 @@ public class JsonFactory
 
         for (Object o : list)
         {
-            json.add(o.toString());
+            addToJsonArray(json, o);
         }
 
         return json.build();
