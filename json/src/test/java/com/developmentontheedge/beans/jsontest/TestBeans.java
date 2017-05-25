@@ -70,6 +70,21 @@ class TestBeans
         }
     }
 
+    public static class BeanWithListObj
+    {
+        private List<InnerBeanClass> field;
+
+        BeanWithListObj(List<InnerBeanClass> field)
+        {
+            this.field = field;
+        }
+
+        public List<InnerBeanClass> getField()
+        {
+            return field;
+        }
+    }
+
     public static class FormPresentation
     {
         final String title;

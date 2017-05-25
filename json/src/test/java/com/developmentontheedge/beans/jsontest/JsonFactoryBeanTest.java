@@ -4,9 +4,6 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
@@ -80,63 +77,4 @@ public class JsonFactoryBeanTest
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 
-    @Test
-    public void beanWithMap()
-    {
-        TestBeans.BeanWithMap bean = new TestBeans.BeanWithMap(ImmutableMap.of("key","value", "key2","value2"));
-        assertEquals("{" +
-                        "'values':{" +
-                            "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithMap'," +
-                            "'field':[{'key':'value'},{'key2':'value2'}]}," +
-                        "'meta':{" +
-                            "'/class':{'type':'Class','readOnly':true}," +
-                            "'/field':{'type':'Map','readOnly':true}}," +
-                        "'order':['/class','/field']" +
-            "}", oneQuotes(JsonFactory.bean(bean).toString()));
-    }
-
-    @Test
-    public void beanWithMapLong()
-    {
-        TestBeans.BeanWithMapLong bean = new TestBeans.BeanWithMapLong(ImmutableMap.of(1L,2L,3L,4L));
-        assertEquals("{" +
-                "'values':{" +
-                "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithMapLong'," +
-                "'field':[{'1':2},{'3':4}]}," +
-                "'meta':{" +
-                "'/class':{'type':'Class','readOnly':true}," +
-                "'/field':{'type':'Map','readOnly':true}}," +
-                "'order':['/class','/field']" +
-                "}", oneQuotes(JsonFactory.bean(bean).toString()));
-    }
-
-    @Test
-    public void beanWithList()
-    {
-        TestBeans.BeanWithList bean = new TestBeans.BeanWithList(ImmutableList.of("item1", "item2"));
-        assertEquals("{" +
-                        "'values':{" +
-                            "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithList'," +
-                            "'field':['item1','item2']}," +
-                        "'meta':{" +
-                            "'/class':{'type':'Class','readOnly':true}," +
-                            "'/field':{'type':'List','readOnly':true}}," +
-                        "'order':['/class','/field']" +
-                "}", oneQuotes(JsonFactory.bean(bean).toString()));
-    }
-
-    @Test
-    public void beanWithListLong()
-    {
-        TestBeans.BeanWithListLong bean = new TestBeans.BeanWithListLong(ImmutableList.of(1L, 2L));
-        assertEquals("{" +
-                "'values':{" +
-                "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithListLong'," +
-                "'field':[1,2]}," +
-                "'meta':{" +
-                "'/class':{'type':'Class','readOnly':true}," +
-                "'/field':{'type':'List','readOnly':true}}," +
-                "'order':['/class','/field']" +
-                "}", oneQuotes(JsonFactory.bean(bean).toString()));
-    }
 }

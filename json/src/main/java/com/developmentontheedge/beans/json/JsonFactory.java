@@ -170,7 +170,7 @@ public class JsonFactory
         }
     }
 
-    static void addToJsonObject(JsonObjectBuilder json, String name, Object value, Class<?> type)
+    private static void addToJsonObject(JsonObjectBuilder json, String name, Object value, Class<?> type)
     {
         requireNonNull(type);
         if( value == null ){ json.addNull(name);return;}
@@ -190,7 +190,8 @@ public class JsonFactory
 
         if( value instanceof DynamicPropertySet){json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return;}
 
-        log.warning("Skipped value: " + name+": "+value);
+        CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
+        json.add(name, propertyValue(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
 
     static void addToJsonArray(JsonArrayBuilder json, Object value)
@@ -218,7 +219,8 @@ public class JsonFactory
 
         if( value instanceof DynamicPropertySet){json.add(dpsValuesBuilder((DynamicPropertySet)value));return;}
 
-        log.warning("Skipped value: " + value);
+        CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
+        json.add(propertyValue(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
 
     private static JsonObjectBuilder dpsValuesBuilder(DynamicPropertySet dps)
