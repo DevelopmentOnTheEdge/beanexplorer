@@ -348,6 +348,11 @@ public class JsonFactory
                 continue;
             }
 
+            if(property.getValue() == null){
+                json.addNull(property.getName());
+                continue;
+            }
+
             if(property instanceof CompositeProperty) {
                 if(property.getValue() instanceof List){
                     json.add(property.getName(), listValues((List)property.getValue()) );
@@ -385,6 +390,11 @@ public class JsonFactory
         {
             Property property = properties.getPropertyAt(i);
             if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
+                continue;
+            }
+
+            if(property.getValue() == null){
+                json.addNull();
                 continue;
             }
 

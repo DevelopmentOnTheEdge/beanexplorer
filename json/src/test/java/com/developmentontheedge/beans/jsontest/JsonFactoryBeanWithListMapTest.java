@@ -89,6 +89,17 @@ public class JsonFactoryBeanWithListMapTest
     }
 
     @Test
+    public void beanWithListObjValuesNull()
+    {
+        TestBeans.BeanWithListObj bean = new TestBeans.BeanWithListObj(null);
+        assertEquals(
+                "{" +
+                        "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithListObj'," +
+                        "'field':null" +
+                        "}", oneQuotes(JsonFactory.beanValues(bean).toString()));
+    }
+
+    @Test
     @Ignore
     public void beanWithListObjMeta()
     {
