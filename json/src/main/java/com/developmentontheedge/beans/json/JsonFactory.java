@@ -9,9 +9,10 @@ import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 
-import java.awt.*;
+import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -317,6 +318,18 @@ public class JsonFactory
         return json.build();
     }
 
+    private static JsonArray listValues(List<?> list)
+    {
+        JsonArrayBuilder json = Json.createArrayBuilder();
+
+        for (Object o : list)
+        {
+            json.add(o.toString());
+        }
+
+        return json.build();
+    }
+
     private static String getTypeName(Class<?> klass)
     {
         return klass.getSimpleName();
@@ -334,6 +347,10 @@ public class JsonFactory
             }
 
             if(property instanceof CompositeProperty) {
+                if(property.getValue() instanceof List){
+                    json.add(property.getName(), listValues((List)property.getValue()) );
+                    continue;
+                }
                 if(property.getValue() instanceof Map){
                     json.add(property.getName(), mapValues((Map)property.getValue()) );
                     continue;
@@ -370,6 +387,10 @@ public class JsonFactory
             }
 
             if(property instanceof CompositeProperty) {
+                if(property.getValue() instanceof List){
+                    json.add(listValues((List)property.getValue()) );
+                    continue;
+                }
                 if(property.getValue() instanceof Map){
                     json.add(mapValues((Map)property.getValue()) );
                     continue;
@@ -408,7 +429,7 @@ public class JsonFactory
             json.add(newPath.get(), propertyMeta(property));
 
             if(property instanceof CompositeProperty) {
-                if(property.getValue() instanceof Map){
+                if(property.getValue() instanceof Map || property.getValue() instanceof List){
                     continue;
                 }
                 propertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
@@ -434,6 +455,9 @@ public class JsonFactory
             //json.add(property.getName(), propertyMeta(property));
 
             if(property instanceof CompositeProperty) {
+                if(property.getValue() instanceof Map || property.getValue() instanceof List){
+                    continue;
+                }
                 propertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, path);
                 continue;
             }
@@ -467,7 +491,13 @@ public class JsonFactory
 
         if(property.getValue() instanceof Map){
             json.add(TYPE_ATTR, "Map");
-        }else{
+        }
+        else if(property.getValue() instanceof List)
+        {
+            json.add(TYPE_ATTR, "List");
+        }
+        else
+        {
             json.add(TYPE_ATTR, getTypeName(property.getValueClass()));
         }
 

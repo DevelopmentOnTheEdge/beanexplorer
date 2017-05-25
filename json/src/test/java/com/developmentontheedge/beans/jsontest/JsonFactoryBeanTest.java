@@ -4,6 +4,7 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -83,14 +84,29 @@ public class JsonFactoryBeanTest
     public void beanWithMap()
     {
         TestBeans.BeanWithMap bean = new TestBeans.BeanWithMap(ImmutableMap.of("key","value", "key2","value2"));
-        assertEquals("" +
-                        "{'values':{" +
+        assertEquals("{" +
+                        "'values':{" +
                             "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithMap'," +
-                            "'parameters':[{'key':'value'},{'key2':'value2'}]}," +
+                            "'field':[{'key':'value'},{'key2':'value2'}]}," +
                         "'meta':{" +
                             "'/class':{'type':'Class','readOnly':true}," +
-                            "'/parameters':{'type':'Map','readOnly':true}}," +
-                        "'order':['/class','/parameters']" +
+                            "'/field':{'type':'Map','readOnly':true}}," +
+                        "'order':['/class','/field']" +
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
+    }
+
+    @Test
+    public void beanWithList()
+    {
+        TestBeans.BeanWithList bean = new TestBeans.BeanWithList(ImmutableList.of("item1","item2"));
+        assertEquals("{" +
+                        "'values':{" +
+                            "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithList'," +
+                            "'field':['item1','item2']}," +
+                        "'meta':{" +
+                            "'/class':{'type':'Class','readOnly':true}," +
+                            "'/field':{'type':'List','readOnly':true}}," +
+                        "'order':['/class','/field']" +
+                "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 }

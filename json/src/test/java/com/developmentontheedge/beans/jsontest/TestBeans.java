@@ -5,22 +5,38 @@ import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.Map;
 
 class TestBeans
 {
     public static class BeanWithMap
     {
-        final Map<String, String> parameters;
+        final Map<String, String> field;
 
-        BeanWithMap(Map<String, String> parameters)
+        BeanWithMap(Map<String, String> field)
         {
-            this.parameters = parameters;
+            this.field = field;
         }
 
-        public Map<String, String> getParameters()
+        public Map<String, String> getField()
         {
-            return parameters;
+            return field;
+        }
+    }
+
+    public static class BeanWithList
+    {
+        private List<String> field;
+
+        BeanWithList(List<String> field)
+        {
+            this.field = field;
+        }
+
+        public List<String> getField()
+        {
+            return field;
         }
     }
 
