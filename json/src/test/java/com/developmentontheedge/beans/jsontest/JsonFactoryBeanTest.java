@@ -6,6 +6,8 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
 import org.junit.Test;
 
+import javax.json.JsonObject;
+
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
@@ -20,6 +22,28 @@ public class JsonFactoryBeanTest
                         "'name':'bean'," +
                         "'number':5}",
                 oneQuotes(JsonFactory.beanValues(bean).toString()));
+    }
+
+    @Test
+    public void simpleBeanValuesWithJsonValue()
+    {
+        TestBeans.InnerBeanClass bean = new TestBeans.InnerBeanClass("foo");
+        JsonObject jsonObject = JsonFactory.beanValues(bean);
+        TestBeans.TypedResponse typedResponse = new TestBeans.TypedResponse("form", jsonObject);
+
+        assertEquals("{" +
+                    "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$InnerBeanClass'," +
+                    "'name':'foo'" +
+                "}", oneQuotes(jsonObject.toString()));
+
+        assertEquals("{" +
+                    "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$TypedResponse'," +
+                    "'type':'form'," +
+                    "'value':{" +
+                        "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$InnerBeanClass'," +
+                        "'name':'foo'" +
+                    "}" +
+            "}" , oneQuotes(JsonFactory.beanValues(typedResponse).toString()));
     }
 
     @Test

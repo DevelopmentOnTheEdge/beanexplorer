@@ -106,39 +106,4 @@ public class JsonFactoryDpsTest
         return s.replace("\"", "'");
     }
 
-    @Test
-    public void beanWithDps()
-    {
-        BeanWithDps beanWithDps = new BeanWithDps("Title", dps);
-        assertEquals("{" +
-                        "'/class':{'type':'Class','readOnly':true}," +
-                        "'/dps':{'type':'DynamicPropertySetSupport'}," +
-                        "'/dps/name':{'type':'String','displayName':'Name','description':'Name'}," +
-                        "'/dps/number':{'type':'Long','displayName':'Number','description':'Number'}," +
-                        "'/title':{'type':'String','readOnly':true}" +
-            "}", oneQuotes(JsonFactory.beanMeta(beanWithDps).toString()));
-    }
-
-    public class BeanWithDps
-    {
-        private String title;
-        private DynamicPropertySet dps;
-
-        public BeanWithDps(String title, DynamicPropertySet dps)
-        {
-            this.title = title;
-            this.dps = dps;
-        }
-
-        public String getTitle()
-        {
-            return title;
-        }
-
-        public DynamicPropertySet getDps()
-        {
-            return dps;
-        }
-    }
-
 }
