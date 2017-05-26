@@ -366,7 +366,6 @@ public class JsonFactory
             }
 
             if("class".equals(property.getName())){
-                json.add(property.getName(), property.getValue().toString());
                 continue;
             }
 
@@ -432,7 +431,7 @@ public class JsonFactory
                 continue;
             }
             JsonPath newPath = path.append(property.getName());
-            json.add(newPath.get(), propertyMeta(property));
+            if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
 
             if(property instanceof CompositeProperty) {
                 if(property.getValue() instanceof Map || property.getValue() instanceof List){
@@ -457,19 +456,19 @@ public class JsonFactory
             if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
                 continue;
             }
-
-            //json.add(property.getName(), propertiesMeta(property));
+            JsonPath newPath = path.append(property.getName());
+            //if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
 
             if(property instanceof CompositeProperty) {
                 if(property.getValue() instanceof Map || property.getValue() instanceof List){
                     continue;
                 }
-                propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, path);
+                propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
 
             if(property instanceof ArrayProperty) {
-                propertiesMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, path);
+                propertiesMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
             }
         }
     }
@@ -486,7 +485,7 @@ public class JsonFactory
             Object value = property.getValue();
 
             JsonPath newPath = path.append(key);
-            json.add(newPath.get());
+            if(!key.equals("class"))json.add(newPath.get());
             if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, newPath);
         }
     }

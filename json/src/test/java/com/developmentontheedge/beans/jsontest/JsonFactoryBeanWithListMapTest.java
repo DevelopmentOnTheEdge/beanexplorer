@@ -17,12 +17,10 @@ public class JsonFactoryBeanWithListMapTest
         TestBeans.BeanWithMap bean = new TestBeans.BeanWithMap(ImmutableMap.of("key","value", "key2","value2"));
         assertEquals("{" +
                         "'values':{" +
-                            "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithMap'," +
                             "'field':[{'key':'value'},{'key2':'value2'}]}," +
                         "'meta':{" +
-                            "'/class':{'type':'Class','readOnly':true}," +
                             "'/field':{'type':'Map','readOnly':true}}," +
-                        "'order':['/class','/field']" +
+                        "'order':['/field']" +
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 
@@ -32,12 +30,10 @@ public class JsonFactoryBeanWithListMapTest
         TestBeans.BeanWithMapLong bean = new TestBeans.BeanWithMapLong(ImmutableMap.of(1L,2L,3L,4L));
         assertEquals("{" +
                 "'values':{" +
-                "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithMapLong'," +
-                "'field':[{'1':2},{'3':4}]}," +
+                    "'field':[{'1':2},{'3':4}]}," +
                 "'meta':{" +
-                "'/class':{'type':'Class','readOnly':true}," +
-                "'/field':{'type':'Map','readOnly':true}}," +
-                "'order':['/class','/field']" +
+                    "'/field':{'type':'Map','readOnly':true}}," +
+                "'order':['/field']" +
                 "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 
@@ -47,12 +43,10 @@ public class JsonFactoryBeanWithListMapTest
         TestBeans.BeanWithList bean = new TestBeans.BeanWithList(ImmutableList.of("item1", "item2"));
         assertEquals("{" +
                         "'values':{" +
-                            "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithList'," +
                             "'field':['item1','item2']}," +
                         "'meta':{" +
-                            "'/class':{'type':'Class','readOnly':true}," +
                             "'/field':{'type':'List','readOnly':true}}," +
-                        "'order':['/class','/field']" +
+                        "'order':['/field']" +
                 "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 
@@ -62,12 +56,10 @@ public class JsonFactoryBeanWithListMapTest
         TestBeans.BeanWithListLong bean = new TestBeans.BeanWithListLong(ImmutableList.of(1L, 2L));
         assertEquals("{" +
                 "'values':{" +
-                    "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithListLong'," +
                     "'field':[1,2]}," +
                 "'meta':{" +
-                    "'/class':{'type':'Class','readOnly':true}," +
                     "'/field':{'type':'List','readOnly':true}}," +
-                "'order':['/class','/field']" +
+                "'order':['/field']" +
                 "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 
@@ -80,10 +72,9 @@ public class JsonFactoryBeanWithListMapTest
         ));
         assertEquals(
                 "{" +
-                    "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithListObj'," +
                     "'field':[" +
-                        "{'class':'class com.developmentontheedge.beans.jsontest.TestBeans$InnerBeanClass','name':'test1'}," +
-                        "{'class':'class com.developmentontheedge.beans.jsontest.TestBeans$InnerBeanClass','name':'test2'}" +
+                        "{'name':'test1'}," +
+                        "{'name':'test2'}" +
                     "]" +
                 "}", oneQuotes(JsonFactory.beanValues(bean).toString()));
     }
@@ -94,7 +85,6 @@ public class JsonFactoryBeanWithListMapTest
         TestBeans.BeanWithListObj bean = new TestBeans.BeanWithListObj(null);
         assertEquals(
                 "{" +
-                        "'class':'class com.developmentontheedge.beans.jsontest.TestBeans$BeanWithListObj'," +
                         "'field':null" +
                         "}", oneQuotes(JsonFactory.beanValues(bean).toString()));
     }
@@ -108,7 +98,6 @@ public class JsonFactoryBeanWithListMapTest
                 new TestBeans.InnerBeanClass("test2")
         ));
         assertEquals("{" +
-                "'/class':{'type':'Class','readOnly':true}," +
                 "'/field':{'type':'List','readOnly':true}," +
                 "'/field/class':{'type':'Class','readOnly':true}," +
                 "'/field/name':{'type':'String','readOnly':true}" +
