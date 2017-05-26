@@ -7,8 +7,6 @@ import org.junit.Test;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 
 import java.awt.*;
 
@@ -24,9 +22,9 @@ public class JsonFactoryTest
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         dps.add(new DynamicProperty("name", String.class));
 
-        JsonFactory.addToJsonArray(json, dps);
+        JsonFactory.addValueToArray(json, dps);
 
-        //JsonFactory.addToJsonArray(json, new JsonFactoryTest());
+        //JsonFactory.addValueToArray(json, new JsonFactoryTest());
 
         JsonArray buildJson = json.build();
         assertEquals(1, buildJson.size());

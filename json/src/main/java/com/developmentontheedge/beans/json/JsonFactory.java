@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -100,7 +99,7 @@ public class JsonFactory
         requireNonNull(fieldMap);
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
-        return propertyValue(property, fieldMap, Property.SHOW_USUAL).build();
+        return propertiesValues(property, fieldMap, Property.SHOW_USUAL).build();
     }
 
     public static JsonObject beanMeta(Object bean)
@@ -168,7 +167,7 @@ public class JsonFactory
         }
     }
 
-    private static void addToJsonObject(JsonObjectBuilder json, String name, Object value, Class<?> type)
+    private static void addValueToObject(JsonObjectBuilder json, String name, Object value, Class<?> type)
     {
         requireNonNull(type);
 
@@ -187,15 +186,15 @@ public class JsonFactory
         }
 
         CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
-        json.add(name, propertyValue(property, FieldMap.ALL, Property.SHOW_USUAL).build());
+        json.add(name, propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
 
-    static void addToJsonArray(JsonArrayBuilder json, Object value)
+    static void addValueToArray(JsonArrayBuilder json, Object value)
     {
-        addToJsonArray(json, value, value.getClass());
+        addValueToArray(json, value, value.getClass());
     }
 
-    private static void addToJsonArray(JsonArrayBuilder json, Object value, Class<?> type)
+    private static void addValueToArray(JsonArrayBuilder json, Object value, Class<?> type)
     {
         requireNonNull(type);
 
@@ -214,7 +213,7 @@ public class JsonFactory
         }
 
         CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
-        json.add(propertyValue(property, FieldMap.ALL, Property.SHOW_USUAL).build());
+        json.add(propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
 
     private static JsonObjectBuilder dpsValuesBuilder(DynamicPropertySet dps)
@@ -222,7 +221,7 @@ public class JsonFactory
         JsonObjectBuilder json = Json.createObjectBuilder();
         for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
         {
-            addToJsonObject(json, entry.getKey(), entry.getValue(), dps.getProperty(entry.getKey()).getType());
+            addValueToObject(json, entry.getKey(), entry.getValue(), dps.getProperty(entry.getKey()).getType());
         }
         return json;
     }
@@ -307,7 +306,7 @@ public class JsonFactory
         for (Map.Entry<?, ?> item : map.entrySet())
         {
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            addToJsonObject(objectBuilder, item.getKey().toString(), item.getValue(), item.getValue().getClass());
+            addValueToObject(objectBuilder, item.getKey().toString(), item.getValue(), item.getValue().getClass());
             json.add(objectBuilder.build());
         }
 
@@ -320,7 +319,7 @@ public class JsonFactory
 
         for (Object o : list)
         {
-            addToJsonArray(json, o);
+            addValueToArray(json, o);
         }
 
         return json.build();
@@ -331,7 +330,7 @@ public class JsonFactory
         return klass.getSimpleName();
     }
 
-    private static JsonObjectBuilder propertyValue(CompositeProperty properties, FieldMap fieldMap, int showMode)
+    private static JsonObjectBuilder propertiesValues(CompositeProperty properties, FieldMap fieldMap, int showMode)
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
@@ -356,12 +355,12 @@ public class JsonFactory
                     json.add(property.getName(), mapValues((Map)property.getValue()) );
                     continue;
                 }
-                json.add(property.getName(), propertyValue((CompositeProperty)property, fieldMap.get(property), showMode) );
+                json.add(property.getName(), propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
 
             if(property instanceof ArrayProperty) {
-                json.add(property.getName(), propertyValue((ArrayProperty) property, fieldMap.get(property), showMode));
+                json.add(property.getName(), propertiesValues((ArrayProperty) property, fieldMap.get(property), showMode));
                 continue;
             }
 
@@ -369,13 +368,13 @@ public class JsonFactory
                 continue;
             }
 
-            addToJsonObject(json, property.getName(), property.getValue(), property.getValueClass());
+            addValueToObject(json, property.getName(), property.getValue(), property.getValueClass());
         }
 
         return json;
     }
 
-    private static JsonArrayBuilder propertyValue(ArrayProperty properties, FieldMap fieldMap, int showMode)
+    private static JsonArrayBuilder propertiesValues(ArrayProperty properties, FieldMap fieldMap, int showMode)
     {
         JsonArrayBuilder json = Json.createArrayBuilder();
 
@@ -400,16 +399,16 @@ public class JsonFactory
                     json.add(mapValues((Map)property.getValue()) );
                     continue;
                 }
-                json.add(propertyValue((CompositeProperty)property, fieldMap.get(property), showMode) );
+                json.add(propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
 
             if(property instanceof ArrayProperty) {
-                json.add(propertyValue((ArrayProperty) property, fieldMap.get(property), showMode));
+                json.add(propertiesValues((ArrayProperty) property, fieldMap.get(property), showMode));
                 continue;
             }
 
-            addToJsonArray(json, properties.getPropertyAt(i).getValue());
+            addValueToArray(json, properties.getPropertyAt(i).getValue());
         }
         return json;
     }
