@@ -9,7 +9,11 @@
  <name>BeanExplorer lessons</name>
  <description>Lessons on usage of BeanExplorer</description>
 
- <groupId>com.developmentontheedge</groupId>
+ <parent>
+  <groupId>com.developmentontheedge</groupId>
+  <artifactId>BeanExplorer</artifactId>
+  <version>0.0.1</version>
+ </parent>
 
  <dependencies>
   <dependency>

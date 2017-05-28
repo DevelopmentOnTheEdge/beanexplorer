@@ -44,6 +44,8 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.IconResource;
 import com.developmentontheedge.beans.log.Logger;
 
+import javax.json.JsonValue;
+
 public class ComponentFactory implements InternalConstants
 {
     public static final String DEFAULT_SWING_BEANINFO_PATH = "com.developmentontheedge.beans.swing.infos";
@@ -317,7 +319,9 @@ public class ComponentFactory implements InternalConstants
         descriptor = merge( beanDescriptor, descriptor, owner instanceof DynamicPropertySet );
 
         // define whether the property is simple or composite
-        boolean isSimple = ( type.isPrimitive() || typeName.indexOf( "java.lang" ) >= 0 )
+        boolean isSimple = (   type.isPrimitive()
+                            || typeName.indexOf( "java.lang" ) >= 0
+                            || JsonValue.class.isAssignableFrom(type))
                 && ( typeName.indexOf( "java.lang.Object" ) == -1 );
 
         if( !isSimple && descriptor.getValue( BeanInfoEx.SIMPLE ) != null )
@@ -739,6 +743,10 @@ public class ComponentFactory implements InternalConstants
             Logger.getLogger().error( "ComponentFactory cannot instantiate " + c, e );
         }
         return null;
+    }
+
+    public static ComponentModel getModel(Object bean){
+        return getModel( bean, Policy.DEFAULT, false );
     }
 
     public static ComponentModel getModel(Object bean, Policy policy) // throws NoSuchMethodException

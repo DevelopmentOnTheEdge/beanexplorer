@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <script src="json-patch-duplex.js"></script>
+
+</head>
+
+<body>
+  test
+
+  <script>
+
+var b2 = { values:{p1:'a',
+                   p2: {c1:'p21', c2:'p22'}
+                  },
+           meta:{ p1:       {title:'p1', readOnly:true},
+                  p2:       {title:'p2', readOnly:true},
+                  '/p2/c1': {title:'c1', readOnly:true},
+                  '/p2/c2': {title:'c2', readOnly:true}
+                },
+           order: ['p1', 'p2', '/p2/c1', '/p2/c2'],
+           dictionaries:{
+                p1:{'key1':'value1', 'key2':'value2' }
+           }
+         };
+
+//alert(b2.values['p2']['c1']);
+
+var myobj = { firstName:"Joachim", lastName:"Wester", contactDetails: { phoneNumbers: [ { number:"555-123" }] } };
+observer = jsonpatch.observe( myobj );
+myobj.firstName = "Albert";
+myobj.contactDetails.phoneNumbers[0].number = "123";
+myobj.contactDetails.phoneNumbers.push({number:"456"});
+var patches = jsonpatch.generate(observer);
+  
+  </script>
+</body>
+</html>

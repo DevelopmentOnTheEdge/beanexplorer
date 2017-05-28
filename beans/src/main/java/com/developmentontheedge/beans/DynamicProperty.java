@@ -309,6 +309,16 @@ public class DynamicProperty implements Serializable
         return false;
     }
 
+    public String getStringAttribute( String attrName )
+    {
+        Object val = getAttribute( attrName );
+        if( val instanceof String )
+        {
+            return ( String )val;
+        }
+        return null;
+    }
+
     public void setAttribute( String attrName, Object attrValue )
     {
         if( descriptor != null )

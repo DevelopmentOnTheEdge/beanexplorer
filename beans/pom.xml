@@ -6,10 +6,14 @@
  <version>3.0.1</version>
  <packaging>jar</packaging>
 
- <name>BeanExplorer</name>
+ <name>BeanExplorer beans</name>
  <description>BeanExplorer (Basic version)</description>
 
- <groupId>com.developmentontheedge</groupId>
+ <parent>
+  <groupId>com.developmentontheedge</groupId>
+  <artifactId>BeanExplorer</artifactId>
+  <version>0.0.1</version>
+ </parent>
 
  <properties>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,11 +21,16 @@
 
  <dependencies>
   <dependency>
-   <groupId>javax.servlet</groupId>
-   <artifactId>javax.servlet-api</artifactId>
-   <version>3.0.1</version>
+   <groupId>one.util</groupId>
+   <artifactId>streamex</artifactId>
+   <version>0.5.4</version>
   </dependency>
 
+  <dependency>
+   <groupId>javax.json</groupId>
+   <artifactId>javax.json-api</artifactId>
+   <version>1.0</version>
+  </dependency>
 
   <dependency>
    <groupId>junit</groupId>
