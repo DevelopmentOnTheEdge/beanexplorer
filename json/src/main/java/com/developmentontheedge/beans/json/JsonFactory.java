@@ -186,6 +186,8 @@ public class JsonFactory
             json.add(name, (JsonValue)value); return;
         }
 
+        if( value instanceof DynamicPropertySet){json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return;}
+
         CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
         json.add(name, propertyValue(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
@@ -212,6 +214,8 @@ public class JsonFactory
         if( value instanceof JsonValue ){
             json.add((JsonValue)value); return;
         }
+
+        if( value instanceof DynamicPropertySet){json.add(dpsValuesBuilder((DynamicPropertySet)value));return;}
 
         CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
         json.add(propertyValue(property, FieldMap.ALL, Property.SHOW_USUAL).build());
@@ -525,148 +529,6 @@ public class JsonFactory
         return json.build();
     }
 
-//    private static JsonObjectBuilder getJsonPropertyMeta(Property property, FieldMap fieldMap, int showMode) throws Exception
-//    {
-//        String name = property.getName();
-//        if( !property.isVisible(showMode) || !fieldMap.contains(name) )
-//            return null;
-//        JsonObjectBuilder json = Json.createObjectBuilder();
-//
-//        if(!property.getName().equals(property.getDisplayName()))
-//        {
-//            json.add(DISPLAY_NAME_ATTR, property.getDisplayName());
-//        }
-//
-//        String shortDescription = property.getShortDescription().split("\n")[0];
-//        if(!property.getName().equals(shortDescription))
-//        {
-//            json.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
-//        }
-//
-//        if(property.isReadOnly())
-//        {
-//            json.add(READONLY_ATTR, true);
-//        }
-//
-//        if( property instanceof CompositeProperty && (!property.isHideChildren() ) )
-//        {
-//            return propertiesMeta( (CompositeProperty)property, fieldMap, showMode);
-//        }
-//        if( property instanceof ArrayProperty && !property.isHideChildren() )
-//        {
-//            propertiesMeta( (ArrayProperty)property, fieldMap, showMode);
-//        }
-//        return fillSimpleProperty( property, json );
-//    }
-//
-//    private static JsonObjectBuilder fillSimpleProperty(Property property, JsonObjectBuilder json) throws InstantiationException, IllegalAccessException,
-//            JsonException
-//    {
-//        Class<?> editorClass = property.getPropertyEditorClass();
-//        if( editorClass != null )
-//        {
-//            if( JsonSerializable.class.isAssignableFrom(editorClass) )
-//            {
-//                JsonSerializable editor = (JsonSerializable)editorClass.newInstance();
-//                if( editor instanceof PropertyEditorEx)
-//                {
-//                    initEditor( property, (PropertyEditorEx)editor );
-//                    JsonObject p1 = editor.mapValues();
-//                    if( p1 != null )
-//                    {
-//                        for (String key : p1.keySet())
-//                        {
-//
-//                            if( key.equals("dictionary") )
-//                            {
-//                                JsonArray array = p1.getJsonArray("dictionary");
-//                                if( array != null )
-//                                {
-//                                    String[] elements = new String[array.size()];
-//                                    for( int index = 0; index < array.size(); index++ )
-//                                        elements[index] = array.getString(index);
-//                                    json.add(DICTIONARY_ATTR, createDictionary(elements, false));
-//                                }
-//                            }
-//                            else
-//                            {
-//                                json.add(key, p1.get(key));
-//                            }
-//                        }
-//                        return json;
-//                    }
-//                }
-//            }
-//            else if( TagEditorSupport.class.isAssignableFrom(editorClass) )
-//            {
-//                TagEditorSupport editor = (TagEditorSupport)editorClass.newInstance();
-//                String[] tags = editor.getTags();
-//                if( tags != null )
-//                {
-//                    json.add(DICTIONARY_ATTR, createDictionary(tags, true));
-//                }
-//            }
-//            else if( StringTagEditorSupport.class.isAssignableFrom(editorClass) )
-//            {
-//                StringTagEditorSupport editor = (StringTagEditorSupport)editorClass.newInstance();
-//                String[] tags = editor.getTags();
-//                if( tags != null )
-//                {
-//                    json.add(DICTIONARY_ATTR, createDictionary(tags, false));
-//                }
-//            }
-//            else if( CustomEditorSupport.class.isAssignableFrom(editorClass) )
-//            {
-//                CustomEditorSupport editor;
-//                //TODO: support or correctly process some editors
-//                //Some editors like biouml.model.util.ReactionEditor, biouml.model.util.FormulaEditor
-//                //use Application.getApplicationFrame(), so we got a NullPointerException here
-//                editor = (CustomEditorSupport)editorClass.newInstance();
-//                initEditor( property, editor );
-//                String[] tags = editor.getTags();
-//                if( tags != null )
-//                {
-//                    json.add(DICTIONARY_ATTR, createDictionary(tags, false));
-//                }
-//            }
-//        }
-//
-//        Object value = property.getValue();
-//        if( value != null )
-//        {
-//            json.add(TYPE_ATTR, getTypeName(value.getClass()));
-//            json.add(VALUE_ATTR, value.toString());
-//        }
-//        return json;
-//    }
-//
-//
-//    static JsonArrayBuilder createDictionary(Object[] strings, boolean byPosition)
-//    {
-//        if( strings == null )
-//            strings = new Object[] {};
-//        int position = 0;
-//        JsonArrayBuilder values = Json.createArrayBuilder();
-//        for( Object tagObj : strings )
-//        {
-//            String tag = tagObj.toString();
-//            if( byPosition )
-//                values.add(jsonArrayBuilderFromList(Arrays.asList(String.valueOf(position), tag)));
-//            else
-//                values.add(jsonArrayBuilderFromList(Arrays.asList(tag, tag)));
-//            position++;
-//        }
-//        return values;
-//    }
-//
-//    private static JsonArrayBuilder jsonArrayBuilderFromList(List<Object> list) {
-//        JsonArrayBuilder json = Json.createArrayBuilder();
-//        for(Object s: list) {
-//            json.add(s.toString());
-//        }
-//        return json;
-//    }
-
     /**
      * Counterpart for parseColor
      * @param color color to encode
@@ -679,14 +541,5 @@ public class JsonFactory
 
         return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
     }
-//
-//    private static void initEditor(Property property, PropertyEditorEx editor)
-//    {
-//        Object owner = property.getOwner();
-//        if( owner instanceof Property.PropWrapper )
-//            owner = ( (Property.PropWrapper)owner ).getOwner();
-//        editor.setValue(property.getValue());
-//        editor.setBean(owner);
-//        editor.setDescriptor(property.getDescriptor());
-//    }
+
 }
