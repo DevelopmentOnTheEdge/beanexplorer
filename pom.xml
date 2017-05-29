@@ -13,6 +13,7 @@
   <module>beans</module>
   <module>json</module>
   <module>lessons</module>
+  <module>jmh</module>
  </modules>
 
  <properties>
