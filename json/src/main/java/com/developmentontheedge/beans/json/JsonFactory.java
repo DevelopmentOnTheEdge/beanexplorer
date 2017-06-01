@@ -80,6 +80,7 @@ public class JsonFactory
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
+        if (bean instanceof DynamicPropertySet)return dps((DynamicPropertySet) bean);
 
         JsonObjectBuilder result = Json.createObjectBuilder();
         result.add("values", beanValues(bean, fieldMap));
@@ -97,6 +98,7 @@ public class JsonFactory
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
+        if (bean instanceof DynamicPropertySet)return dpsValues((DynamicPropertySet) bean);
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         return propertiesValues(property, fieldMap, Property.SHOW_USUAL).build();
@@ -111,6 +113,7 @@ public class JsonFactory
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
+        if (bean instanceof DynamicPropertySet)return dpsMeta((DynamicPropertySet) bean);
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         JsonObjectBuilder json = Json.createObjectBuilder();
@@ -128,6 +131,7 @@ public class JsonFactory
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
+        if (bean instanceof DynamicPropertySet)return dpsOrder((DynamicPropertySet) bean);
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         JsonArrayBuilder json = Json.createArrayBuilder();
