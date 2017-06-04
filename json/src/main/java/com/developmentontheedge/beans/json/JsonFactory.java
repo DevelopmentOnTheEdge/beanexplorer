@@ -189,8 +189,9 @@ public class JsonFactory
             json.add(name, (JsonValue)value); return;
         }
 
-        if( value instanceof DynamicPropertySet){json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return;}
-
+        if( value instanceof DynamicPropertySet){
+            json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return;
+        }
         CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
         json.add(name, propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
@@ -218,8 +219,9 @@ public class JsonFactory
             json.add((JsonValue)value); return;
         }
 
-        if( value instanceof DynamicPropertySet){json.add(dpsValuesBuilder((DynamicPropertySet)value));return;}
-
+        if( value instanceof DynamicPropertySet){
+            json.add(dpsValuesBuilder((DynamicPropertySet)value));return;
+        }
         CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
         json.add(propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
@@ -363,6 +365,10 @@ public class JsonFactory
                     json.add(property.getName(), mapValues((Map)property.getValue()) );
                     continue;
                 }
+                if(property.getValue() instanceof Enum){
+                    json.add(property.getName(), ((Enum) property.getValue()).name());
+                    continue;
+                }
                 json.add(property.getName(), propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
@@ -407,6 +413,10 @@ public class JsonFactory
                     json.add(mapValues((Map)property.getValue()) );
                     continue;
                 }
+                if(property.getValue() instanceof Enum){
+                    json.add(((Enum) property.getValue()).name() );
+                    continue;
+                }
                 json.add(propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
@@ -441,7 +451,7 @@ public class JsonFactory
             if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
 
             if(property instanceof CompositeProperty) {
-                if(property.getValue() instanceof Map || property.getValue() instanceof List){
+                if(property.getValue() instanceof Map || property.getValue() instanceof List || property.getValue() instanceof Enum){
                     continue;
                 }
                 propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
@@ -467,7 +477,7 @@ public class JsonFactory
             //if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
 
             if(property instanceof CompositeProperty) {
-                if(property.getValue() instanceof Map || property.getValue() instanceof List){
+                if(property.getValue() instanceof Map || property.getValue() instanceof List || property.getValue() instanceof Enum){
                     continue;
                 }
                 propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);

@@ -237,6 +237,23 @@ class TestBeans
 //        }
     }
 
+    enum EnumClass{
+        test,test2
+    }
+
+    public static class ClassWithEnum{
+        EnumClass status;
+
+        ClassWithEnum(EnumClass enumClass) {
+            this.status = enumClass;
+        }
+
+        public EnumClass getStatus() {
+            return status;
+        }
+    }
+
+
 //    @Test
 //    public void testGetModelAsJson()
 //    {
