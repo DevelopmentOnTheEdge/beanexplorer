@@ -109,9 +109,9 @@ class TestBeans
 
     public static class SimpleBean
     {
+        private long arr[];
         private String name;
         private int number;
-        private long arr[];
 
         SimpleBean(String name, int number, long[] arr) {
 
@@ -135,8 +135,8 @@ class TestBeans
 
     public static class BeanWithInnerClass
     {
-        private InnerBeanClass field1;
         private InnerBeanClass arr[];
+        private InnerBeanClass field1;
 
         BeanWithInnerClass(InnerBeanClass field1, InnerBeanClass[] arr) {
             this.field1 = field1;
