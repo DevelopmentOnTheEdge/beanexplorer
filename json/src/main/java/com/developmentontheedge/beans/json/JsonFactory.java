@@ -301,6 +301,16 @@ public class JsonFactory
             json.add(GROUP_ID, Long.parseLong(property.getAttribute(BeanInfoConstants.GROUP_ID).toString()) );
         }
 
+        if(property.getStringAttribute(BeanInfoConstants.STATUS) != null)
+        {
+            json.add(STATUS, property.getStringAttribute(BeanInfoConstants.STATUS) );
+        }
+
+        if(property.getStringAttribute(BeanInfoConstants.MESSAGE) != null)
+        {
+            json.add(MESSAGE, property.getStringAttribute(BeanInfoConstants.MESSAGE) );
+        }
+
         return json.build();
     }
 

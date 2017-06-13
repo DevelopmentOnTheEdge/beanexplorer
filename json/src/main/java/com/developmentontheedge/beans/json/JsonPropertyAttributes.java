@@ -18,4 +18,7 @@ public interface JsonPropertyAttributes
     String GROUP_NAME = "groupName";
     String GROUP_ID = "groupId";
 
+    String STATUS = "status";
+    String MESSAGE = "message";
+
 }

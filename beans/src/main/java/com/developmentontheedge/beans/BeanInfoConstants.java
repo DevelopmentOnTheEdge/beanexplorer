@@ -163,6 +163,10 @@ public interface BeanInfoConstants
      */
     String HIDE_CHILDREN = "hide-children";
 
+    String STATUS = "status";
+
+    String MESSAGE = "message";
+
     ////////////////////////////////////////
     //
     //
