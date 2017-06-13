@@ -171,19 +171,19 @@ public class JsonFactory
         }
     }
 
-    private static void addValueToObject(JsonObjectBuilder json, String name, Object value, Class<?> type)
+    private static void addValueToObject(JsonObjectBuilder json, String name, Object value)
     {
-        requireNonNull(type);
-
         if( value == null ){ json.addNull(name);return;}
-        if( type == String.class ){    json.add(name, (String) value); return;}
-        if( type == Double.class ){    json.add(name, (double)value ); return;}
-        if( type == Long.class ){      json.add(name, (long)value ); return;}
-        if( type == Integer.class ){   json.add(name, (int)value ); return;}
-        if( type == Boolean.class ){   json.add(name, (boolean)value ); return;}
-        if( type == Float.class ){     json.add(name, (float)value ); return;}
-        if( type == BigInteger.class ){json.add(name, (BigInteger) value ); return;}
-        if( type == BigDecimal.class ){json.add(name, (BigDecimal) value ); return;}
+
+        Class<?> klass = value.getClass();
+        if( klass == String.class ){    json.add(name, (String) value); return;}
+        if( klass == Double.class ){    json.add(name, (double)value ); return;}
+        if( klass == Long.class ){      json.add(name, (long)value ); return;}
+        if( klass == Integer.class ){   json.add(name, (int)value ); return;}
+        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return;}
+        if( klass == Float.class ){     json.add(name, (float)value ); return;}
+        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return;}
+        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return;}
 
         if( value instanceof JsonValue ){
             json.add(name, (JsonValue)value); return;
@@ -196,24 +196,19 @@ public class JsonFactory
         json.add(name, propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
 
-    static void addValueToArray(JsonArrayBuilder json, Object value)
+    public static void addValueToArray(JsonArrayBuilder json, Object value)
     {
-        addValueToArray(json, value, value.getClass());
-    }
-
-    private static void addValueToArray(JsonArrayBuilder json, Object value, Class<?> type)
-    {
-        requireNonNull(type);
-
         if( value == null ){ json.addNull(); return; }
-        if( type == String.class ){    json.add((String) value); return;}
-        if( type == Double.class ){    json.add((double)value ); return;}
-        if( type == Long.class ){      json.add((long)value ); return;}
-        if( type == Integer.class ){   json.add((int)value ); return;}
-        if( type == Boolean.class ){   json.add((boolean)value ); return;}
-        if( type == Float.class ){     json.add((float)value ); return;}
-        if( type == BigInteger.class ){json.add((BigInteger) value ); return;}
-        if( type == BigDecimal.class ){json.add((BigDecimal) value ); return;}
+
+        Class<?> klass = value.getClass();
+        if( klass == String.class ){    json.add((String) value); return;}
+        if( klass == Double.class ){    json.add((double)value ); return;}
+        if( klass == Long.class ){      json.add((long)value ); return;}
+        if( klass == Integer.class ){   json.add((int)value ); return;}
+        if( klass == Boolean.class ){   json.add((boolean)value ); return;}
+        if( klass == Float.class ){     json.add((float)value ); return;}
+        if( klass == BigInteger.class ){json.add((BigInteger) value ); return;}
+        if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return;}
 
         if( value instanceof JsonValue ){
             json.add((JsonValue)value); return;
@@ -231,7 +226,7 @@ public class JsonFactory
         JsonObjectBuilder json = Json.createObjectBuilder();
         for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
         {
-            addValueToObject(json, entry.getKey(), entry.getValue(), dps.getProperty(entry.getKey()).getType());
+            addValueToObject(json, entry.getKey(), entry.getValue());
         }
         return json;
     }
@@ -316,7 +311,7 @@ public class JsonFactory
         for (Map.Entry<?, ?> item : map.entrySet())
         {
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            addValueToObject(objectBuilder, item.getKey().toString(), item.getValue(), item.getValue().getClass());
+            addValueToObject(objectBuilder, item.getKey().toString(), item.getValue());
             json.add(objectBuilder.build());
         }
 
@@ -382,7 +377,7 @@ public class JsonFactory
                 continue;
             }
 
-            addValueToObject(json, property.getName(), property.getValue(), property.getValueClass());
+            addValueToObject(json, property.getName(), property.getValue());
         }
 
         return json;
