@@ -40,6 +40,27 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         this(true);
     }
 
+    public DynamicPropertySetSupport( DynamicPropertySet dps, boolean useAddIndexes )
+    {
+        this( useAddIndexes );
+        dps.forEach( dp ->
+        {
+            try
+            {
+                add( cloneProperty( dp ) );
+            }
+            catch( Exception wierd )
+            {
+                Logger.getLogger().error( "Unable to clone property " + dp.getName() + ", message = " + wierd.getMessage() );
+            }
+        } );
+    }
+
+    public DynamicPropertySetSupport( DynamicPropertySet dps )
+    {
+        this( dps, dps instanceof DynamicPropertySetSupport && ( ( DynamicPropertySetSupport )dps ).isUseAddIndexes() );
+    }
+
     public DynamicPropertySetSupport( Map<String,?> map )
     {
         this( true );

@@ -48,6 +48,15 @@ public interface DynamicPropertySet extends Serializable, Cloneable, Iterable<Dy
     DynamicProperty getProperty( String name );
 
     /**
+     * Returns true if contains property with specified name.
+     * @param name Name of the property
+     */
+    default boolean hasProperty( String name )
+    {
+        return getProperty( name ) != null;
+    }
+
+    /**
      * Renames property
      * @param from Name of the property
      * @param to Name of the property
