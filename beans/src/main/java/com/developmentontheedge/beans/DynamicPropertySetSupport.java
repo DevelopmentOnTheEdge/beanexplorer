@@ -3,12 +3,15 @@ package com.developmentontheedge.beans;
 import java.beans.PropertyDescriptor;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.StringTokenizer;
@@ -760,5 +763,112 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         }
 
         return label.toString();
+    }
+
+    @Override
+    public DynamicPropertySet plus( DynamicPropertySet dps )
+    {
+        DynamicPropertySet clonedDps = new DynamicPropertySetSupport( this );
+        for (DynamicProperty dp : dps)
+        {
+            try
+            {
+                clonedDps.add(DynamicPropertySetSupport.cloneProperty(dp));
+            } catch (Exception e)
+            {
+                throw new RuntimeException( e );
+            }
+        }
+        return clonedDps;
+    }
+
+    @Override
+    public DynamicPropertySet leftShift( DynamicProperty property )
+    {
+        this.add( property );
+        return this;
+    }
+
+    @Override
+    public DynamicPropertySet leftShift( Map<String, Object> properties )
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.putAll( properties );
+        String name = asString( removeFromMap( map, "name" ) );
+        if( name == null )
+        {
+            name = "null";
+        }
+        Object value = removeFromMap( map, "value" );
+        String displayName = asString( removeFromMap( map, "DISPLAY_NAME" ) );
+        Boolean isHidden = ( Boolean )removeFromMap( map, "HIDDEN" );
+        Class type = ( Class )removeFromMap( map, "TYPE" );
+
+//        if( type == java.sql.Date.class && value != null )
+//        {
+//            value = Utils.changeType( value, java.sql.Date.class );
+//        }
+        DynamicProperty dp = this.getProperty( name );
+        if( dp == null )
+        {
+            dp = new DynamicProperty( name, type != null ? type : value != null ? value.getClass() : String.class );
+            this.add( dp );
+        }
+
+        if( isHidden == Boolean.TRUE )
+        {
+            dp.setHidden( true );
+        }
+
+        dp.setValue( value );
+        if( displayName != null )
+        {
+            dp.setDisplayName( displayName );
+        }
+        for( String key : map.keySet() )
+        {
+            List<String> attributes = beanInfoConstants;
+            if( attributes.contains( key ) )
+            {
+                try
+                {
+                    //TODO init ones: list -> map
+                    dp.setAttribute( ( String )BeanInfoConstants.class.getDeclaredField( key ).get( null ), map.get( key ) );
+                }
+                catch( Exception exc )
+                {
+                    throw new RuntimeException( exc );
+                }
+            }
+        }
+        return this;
+    }
+
+    private Object removeFromMap( Map map, Object element )
+    {
+        if( map.containsKey( element ) )
+        {
+            return map.remove( element );
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private String asString( Object o )
+    {
+        return o != null ? o.toString() : null;
+    }
+
+    static final List<String> beanInfoConstants = new ArrayList<>();
+    static {
+        Field[] fields = BeanInfoConstants.class.getDeclaredFields();
+        for (Field f : fields)
+        {
+            if (Modifier.isStatic(f.getModifiers())) {
+                beanInfoConstants.add(f.getName());//f.get(null).toString()
+            }
+        }
     }
 }
