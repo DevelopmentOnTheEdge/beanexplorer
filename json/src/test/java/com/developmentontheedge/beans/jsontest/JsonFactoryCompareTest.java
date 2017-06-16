@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -54,26 +55,20 @@ public class JsonFactoryCompareTest
     }
 
     @Test
-    @Ignore
     public void testMap() throws Exception
     {
-        //TODO fix it
         test(new TestBeans.BeanWithMap(ImmutableMap.of("key","value", "key2","value2")));
     }
 
 
     @Test
-    @Ignore
     public void testInnerJson() throws Exception
     {
-        //TODO
         TestBeans.InnerBeanClass bean = new TestBeans.InnerBeanClass("foo");
         JsonObject jsonObject = JsonFactory.beanValues(bean);
-        String gsonInner = new GsonBuilder().serializeNulls().create().toJson(bean);
+        JsonElement jsonElement = new GsonBuilder().serializeNulls().create().toJsonTree(bean);
 
-        //test(new TestBeans.TypedResponse("form", jsonObject));
-
-        assertEquals(new Gson().toJson(new TestBeans.TypedResponse("form", gsonInner)),
+        assertEquals(new Gson().toJson(new TestBeans.TypedResponse("form", jsonElement)),
                 JsonFactory.beanValues(new TestBeans.TypedResponse("form", jsonObject)).toString());
     }
 

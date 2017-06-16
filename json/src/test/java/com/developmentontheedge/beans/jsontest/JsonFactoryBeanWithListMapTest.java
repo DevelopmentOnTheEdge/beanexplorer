@@ -17,7 +17,7 @@ public class JsonFactoryBeanWithListMapTest
         TestBeans.BeanWithMap bean = new TestBeans.BeanWithMap(ImmutableMap.of("key","value", "key2","value2"));
         assertEquals("{" +
                         "'values':{" +
-                            "'field':[{'key':'value'},{'key2':'value2'}]}," +
+                            "'field':{'key':'value','key2':'value2'}}," +
                         "'meta':{" +
                             "'/field':{'type':'Map','readOnly':true}}," +
                         "'order':['/field']" +
@@ -30,7 +30,7 @@ public class JsonFactoryBeanWithListMapTest
         TestBeans.BeanWithMapLong bean = new TestBeans.BeanWithMapLong(ImmutableMap.of(1L,2L,3L,4L));
         assertEquals("{" +
                 "'values':{" +
-                    "'field':[{'1':2},{'3':4}]}," +
+                    "'field':{'1':2,'3':4}}," +
                 "'meta':{" +
                     "'/field':{'type':'Map','readOnly':true}}," +
                 "'order':['/field']" +

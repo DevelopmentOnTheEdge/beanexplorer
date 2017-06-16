@@ -94,7 +94,7 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
     public void testTagList()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, ImmutableMap.of("foo","bar","foo2","bar2"));
-        assertEquals("[{'foo':'bar'},{'foo2':'bar2'}]",
+        assertEquals("{'foo':'bar','foo2':'bar2'}",
                 oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(TAG_LIST_ATTR)));
 
         dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, null);
@@ -133,7 +133,7 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
 
         assertEquals("{" +
                         "'displayName':'Name'," +
-                        "'tagList':[{'foo':'bar'},{'foo2':'bar2'}]," +
+                        "'tagList':{'foo':'bar','foo2':'bar2'}," +
                         "'reloadOnChange':true," +
                         "'groupName':'foo'," +
                         "'groupId':1" +

@@ -314,15 +314,13 @@ public class JsonFactory
         return json.build();
     }
 
-    private static JsonArray mapValues(Map<?, ?> map)
+    private static JsonObject mapValues(Map<?, ?> map)
     {
-        JsonArrayBuilder json = Json.createArrayBuilder();
+        JsonObjectBuilder json = Json.createObjectBuilder();
 
         for (Map.Entry<?, ?> item : map.entrySet())
         {
-            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            addValueToObject(objectBuilder, item.getKey().toString(), item.getValue());
-            json.add(objectBuilder.build());
+            addValueToObject(json, item.getKey().toString(), item.getValue());
         }
 
         return json.build();
