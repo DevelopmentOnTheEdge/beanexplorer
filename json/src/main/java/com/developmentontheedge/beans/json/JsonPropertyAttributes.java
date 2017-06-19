@@ -1,5 +1,10 @@
 package com.developmentontheedge.beans.json;
 
+import com.developmentontheedge.beans.BeanInfoConstants;
+
+/**
+ * @see BeanInfoConstants
+ */
 public interface JsonPropertyAttributes
 {
     String TYPE_ATTR = "type";

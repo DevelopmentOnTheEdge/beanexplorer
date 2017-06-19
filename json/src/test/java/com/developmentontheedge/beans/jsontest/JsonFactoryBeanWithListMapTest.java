@@ -119,4 +119,12 @@ public class JsonFactoryBeanWithListMapTest
                 "}" , oneQuotes(JsonFactory.beanValues(bean).toString()));
     }
 
+    @Test
+    @Ignore
+    public void beanCellModelMapStart()
+    {
+        assertEquals("{'name':'testName','number':'1'}" ,
+                oneQuotes(JsonFactory.beanValues(ImmutableMap.of("name", "testName", "number", "1")).toString()));
+    }
+
 }
