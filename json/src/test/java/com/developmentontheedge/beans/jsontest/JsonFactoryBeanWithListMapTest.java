@@ -103,4 +103,20 @@ public class JsonFactoryBeanWithListMapTest
                 "'/field/name':{'type':'String','readOnly':true}" +
                 "}", oneQuotes(JsonFactory.beanMeta(bean).toString()));
     }
+
+    @Test
+    @Ignore//TODO Преобразовывать Map как CompositeProperty, List(и Set) как ArrayProperty в ComponentFactory.getModel?
+    public void beanCellModelMapInMap()
+    {
+        TestBeans.CellModelMapInMap bean = new TestBeans.CellModelMapInMap("test", ImmutableMap.
+                of("css", ImmutableMap.of("key","value", "key2","value2"),
+                   "quick",ImmutableMap.of("key","a")));
+        assertEquals("{" +
+                    "'content':'test'," +
+                    "'options':{" +
+                        "'css':{'key':'value', 'key2':'value2'}," +
+                        "'quick':{'key':'a'}}" +
+                "}" , oneQuotes(JsonFactory.beanValues(bean).toString()));
+    }
+
 }

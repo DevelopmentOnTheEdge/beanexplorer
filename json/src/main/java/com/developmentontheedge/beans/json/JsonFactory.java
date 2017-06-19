@@ -314,6 +314,7 @@ public class JsonFactory
         return json.build();
     }
 
+    @Deprecated
     private static JsonObject mapValues(Map<?, ?> map)
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
@@ -326,6 +327,7 @@ public class JsonFactory
         return json.build();
     }
 
+    @Deprecated
     private static JsonArray listValues(List<?> list)
     {
         JsonArrayBuilder json = Json.createArrayBuilder();

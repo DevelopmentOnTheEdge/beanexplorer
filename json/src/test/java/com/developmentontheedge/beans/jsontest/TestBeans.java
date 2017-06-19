@@ -25,6 +25,28 @@ class TestBeans
         }
     }
 
+    public static class CellModelMapInMap
+    {
+        public final Object content;
+        public final Map<String, Map<String, String>> options;
+
+        CellModelMapInMap(Object content, Map<String, Map<String, String>> options)
+        {
+            this.content = content;
+            this.options = options;
+        }
+
+        public Object getContent()
+        {
+            return content;
+        }
+
+        public Map<String, Map<String, String>> getOptions()
+        {
+            return options;
+        }
+    }
+
     public static class BeanWithMapLong
     {
         final Map<Long, Long> field;
