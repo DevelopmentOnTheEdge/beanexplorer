@@ -105,10 +105,10 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
     public void testGroupName()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_NAME, "foo");
-        assertEquals("'foo'", oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(GROUP_NAME).toString()));
+        assertEquals("'foo'", oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(GROUP_NAME_ATTR).toString()));
 
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_NAME, null);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(GROUP_NAME));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(GROUP_NAME_ATTR));
     }
 
     @Test
@@ -116,11 +116,11 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
     {
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, 1);
 
-        assertEquals(1L, Long.parseLong(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(GROUP_ID).toString()) );
-        assertEquals(1, Integer.parseInt(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(GROUP_ID).toString()) );
+        assertEquals(1L, Long.parseLong(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(GROUP_ID_ATTR).toString()) );
+        assertEquals(1, Integer.parseInt(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(GROUP_ID_ATTR).toString()) );
 
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, null);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(GROUP_ID));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(GROUP_ID_ATTR));
     }
 
     @Test

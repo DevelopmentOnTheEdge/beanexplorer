@@ -293,22 +293,22 @@ public class JsonFactory
 
         if(property.getStringAttribute(BeanInfoConstants.GROUP_NAME) != null)
         {
-            json.add(GROUP_NAME, property.getStringAttribute(BeanInfoConstants.GROUP_NAME) );
+            json.add(GROUP_NAME_ATTR, property.getStringAttribute(BeanInfoConstants.GROUP_NAME) );
         }
 
         if(property.getAttribute(BeanInfoConstants.GROUP_ID) != null)
         {
-            json.add(GROUP_ID, Long.parseLong(property.getAttribute(BeanInfoConstants.GROUP_ID).toString()) );
+            json.add(GROUP_ID_ATTR, Long.parseLong(property.getAttribute(BeanInfoConstants.GROUP_ID).toString()) );
         }
 
         if(property.getStringAttribute(BeanInfoConstants.STATUS) != null)
         {
-            json.add(STATUS, property.getStringAttribute(BeanInfoConstants.STATUS) );
+            json.add(STATUS_ATTR, property.getStringAttribute(BeanInfoConstants.STATUS) );
         }
 
         if(property.getStringAttribute(BeanInfoConstants.MESSAGE) != null)
         {
-            json.add(MESSAGE, property.getStringAttribute(BeanInfoConstants.MESSAGE) );
+            json.add(MESSAGE_ATTR, property.getStringAttribute(BeanInfoConstants.MESSAGE) );
         }
 
         return json.build();

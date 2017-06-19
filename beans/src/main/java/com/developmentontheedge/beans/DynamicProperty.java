@@ -108,7 +108,6 @@ public class DynamicProperty implements Serializable
         this.value = value;  
         setDisplayName( displayName );
         setShortDescription( shortDesc );
-        checkValueType();
     }
 
     /**
@@ -123,7 +122,6 @@ public class DynamicProperty implements Serializable
         this.descriptor = descriptor;
         this.type = type;
         this.value = value;
-        checkValueType();
     }
 
     /**
@@ -284,7 +282,6 @@ public class DynamicProperty implements Serializable
         {
             parent.firePropertyChange( getName(), oldValue, value );
         }
-        checkValueType();
     }
 
     private HashMap<String,Object> localAttrs = null;
@@ -519,77 +516,6 @@ public class DynamicProperty implements Serializable
                 propBean.setAttributeToAllChildren( attrName, attrValue );
             }
         }
-    }
-
-    private void checkValueType()
-    {
-        if(value instanceof String && type != String.class)
-        {
-            try
-            {
-                value = getTypedValueFromString(value.toString());
-            }
-            catch (IllegalArgumentException e)
-            {
-                setState(Status.ERROR, e);
-            }
-        }
-        else
-        {
-            if (value != null && type != value.getClass())
-            {
-                setState(Status.ERROR, new IllegalArgumentException());
-            }
-        }
-    }
-
-    public void setState(Status status){
-        setState(status, "");
-    }
-
-    public void setState(Status status, Throwable e){
-        if(e.getClass() == NumberFormatException.class)
-            setState(status, "Error, value must be a " + type.getName());
-        else setState(status, e.getMessage());
-
-    }
-
-    public void setState(Status status, String message){
-        setAttribute( BeanInfoConstants.STATUS, status.toString().toLowerCase() );
-        if(message != null && !message.isEmpty())
-        {
-            setAttribute( BeanInfoConstants.MESSAGE, message );
-        }
-    }
-
-    private Object getTypedValueFromString(String value){
-        if (type == Integer.class)
-        {
-            return Integer.parseInt(value);
-        }
-        if (type == Long.class)
-        {
-            return Long.parseLong(value);
-        }
-        if (type == Float.class)
-        {
-            return Float.parseFloat(value);
-        }
-        if (type == Double.class)
-        {
-            return Double.parseDouble(value);
-        }
-        if (type == Boolean.class)
-        {
-            return Boolean.parseBoolean(value);
-        }
-
-        return value;
-    }
-
-    public enum Status
-    {
-        SUCCESS,WARNING,ERROR
     }
 
     @Override
