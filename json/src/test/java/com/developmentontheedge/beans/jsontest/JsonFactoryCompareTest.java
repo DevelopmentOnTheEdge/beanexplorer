@@ -1,22 +1,26 @@
 package com.developmentontheedge.beans.jsontest;
 
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.json.JsonObject;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 
 import static org.junit.Assert.*;
 
 public class JsonFactoryCompareTest
 {
+    private static final Jsonb jsonbBuilder = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
+    private static final Gson gsonBuilder = new GsonBuilder().serializeNulls().create();
+    private static final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
     @Test
     public void testSimpleBean() throws Exception
@@ -72,26 +76,21 @@ public class JsonFactoryCompareTest
                 JsonFactory.beanValues(new TestBeans.TypedResponse("form", jsonObject)).toString());
     }
 
-    void test(Object o){
-        String gson = new GsonBuilder().serializeNulls().create().toJson(o);
-        String jackson = "";
-        try
-        {
-            jackson = new ObjectMapper().writeValueAsString(o);
-        }
-        catch (JsonProcessingException e)
-        {
-            e.printStackTrace();
-        }
+    void test(Object o) throws Exception{
+        String gson = gsonBuilder.toJson(o);
+        String jackson = jacksonObjectMapper.writeValueAsString(o);
+        String jsonb = jsonbBuilder.toJson(o);
         String json = JsonFactory.beanValues(o).toString();
 
-        System.out.println("jack: "+jackson);
-        System.out.println("gson: "+gson);
-        System.out.println("json: "+json);
-        System.out.println();
+//        System.out.println("jack:  "+jackson);
+//        System.out.println("gson:  "+gson);
+//        System.out.println("jsonb: "+jsonb);
+//        System.out.println("json:  "+json);
+//        System.out.println();
 
         assertEquals(jackson, gson);
-        assertEquals(gson, json);
+        assertEquals(gson, jsonb);
+        assertEquals(jsonb, json);
     }
 
 
