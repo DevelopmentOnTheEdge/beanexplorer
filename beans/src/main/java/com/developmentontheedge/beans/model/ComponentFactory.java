@@ -319,6 +319,7 @@ public class ComponentFactory implements InternalConstants
         descriptor = merge( beanDescriptor, descriptor, owner instanceof DynamicPropertySet );
 
         // define whether the property is simple or composite
+        //TODO revert added JsonValue and javax.json-api from dependency
         boolean isSimple = (   type.isPrimitive()
                             || typeName.indexOf( "java.lang" ) >= 0
                             || JsonValue.class.isAssignableFrom(type))

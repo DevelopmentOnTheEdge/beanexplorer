@@ -314,6 +314,10 @@ public class JsonFactory
         return json.build();
     }
 
+    /**
+     * Этот класс только для java beans и DPS, всё остальное теперь можно сериализовать одной строчкой через javax.json.bind.Jsonb
+     * @see javax.json.bind.Jsonb
+     */
     @Deprecated
     private static JsonObject mapValues(Map<?, ?> map)
     {
@@ -327,6 +331,10 @@ public class JsonFactory
         return json.build();
     }
 
+    /**
+     * Этот класс только для java beans и DPS, всё остальное теперь можно сериализовать одной строчкой через javax.json.bind.Jsonb
+     * @see javax.json.bind.Jsonb
+     */
     @Deprecated
     private static JsonArray listValues(List<?> list)
     {

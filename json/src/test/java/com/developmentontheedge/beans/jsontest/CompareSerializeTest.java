@@ -64,16 +64,15 @@ public class CompareSerializeTest
         test(new TestBeans.BeanWithMap(ImmutableMap.of("key","value", "key2","value2")));
     }
 
-
     @Test
     public void testInnerJson() throws Exception
     {
         TestBeans.InnerBeanClass bean = new TestBeans.InnerBeanClass("foo");
         JsonObject jsonObject = JsonFactory.beanValues(bean);
-        JsonElement jsonElement = new GsonBuilder().serializeNulls().create().toJsonTree(bean);
+        JsonElement gsonJsonElement = new GsonBuilder().serializeNulls().create().toJsonTree(bean);
 
-        assertEquals(new Gson().toJson(new TestBeans.TypedResponse("form", jsonElement)),
-                JsonFactory.beanValues(new TestBeans.TypedResponse("form", jsonObject)).toString());
+        assertEquals(gson.toJson(new TestBeans.TypedResponse("form", gsonJsonElement)),
+                jsonb.toJson(new TestBeans.TypedResponse("form", jsonObject)));
     }
 
     void test(Object o) throws Exception
