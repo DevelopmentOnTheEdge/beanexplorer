@@ -19,7 +19,7 @@ public class JsonFactoryBeanWithListMapTest
                         "'values':{" +
                             "'field':{'key':'value','key2':'value2'}}," +
                         "'meta':{" +
-                            "'/field':{'type':'Map','readOnly':true}}," +
+                            "'/field':{'type':'Map'}}," +
                         "'order':['/field']" +
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
@@ -45,7 +45,7 @@ public class JsonFactoryBeanWithListMapTest
                         "'values':{" +
                             "'field':['item1','item2']}," +
                         "'meta':{" +
-                            "'/field':{'type':'List','readOnly':true}}," +
+                            "'/field':{'type':'List'}}," +
                         "'order':['/field']" +
                 "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }

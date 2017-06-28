@@ -196,7 +196,7 @@ public class JsonFactory
         json.add(name, propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
 
-    public static void addValueToArray(JsonArrayBuilder json, Object value)
+    static void addValueToArray(JsonArrayBuilder json, Object value)
     {
         if( value == null ){ json.addNull(); return; }
 
@@ -236,7 +236,7 @@ public class JsonFactory
      *
      * @param property Operation parameter
      */
-    public static JsonObject dynamicPropertyMeta(DynamicProperty property)
+    static JsonObject dynamicPropertyMeta(DynamicProperty property)
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
@@ -552,7 +552,7 @@ public class JsonFactory
      * @param color color to encode
      * @return array of color components
      */
-    public static JsonArrayBuilder encodeColor(Color color)
+    static JsonArrayBuilder encodeColor(Color color)
     {
         JsonArrayBuilder json = Json.createArrayBuilder();
         if(color == null || color.getAlpha() == 0) return json;

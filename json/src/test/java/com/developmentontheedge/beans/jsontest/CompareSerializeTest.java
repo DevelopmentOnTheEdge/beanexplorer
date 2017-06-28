@@ -16,11 +16,11 @@ import javax.json.bind.JsonbConfig;
 
 import static org.junit.Assert.*;
 
-public class JsonFactoryCompareTest
+public class CompareSerializeTest
 {
-    private static final Jsonb jsonbBuilder = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
-    private static final Gson gsonBuilder = new GsonBuilder().serializeNulls().create();
-    private static final ObjectMapper jacksonObjectMapper = new ObjectMapper();
+    private static final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
+    private static final Gson gson = new GsonBuilder().serializeNulls().create();
+    private static final ObjectMapper jackson = new ObjectMapper();
 
     @Test
     public void testSimpleBean() throws Exception
@@ -76,21 +76,22 @@ public class JsonFactoryCompareTest
                 JsonFactory.beanValues(new TestBeans.TypedResponse("form", jsonObject)).toString());
     }
 
-    void test(Object o) throws Exception{
-        String gson = gsonBuilder.toJson(o);
-        String jackson = jacksonObjectMapper.writeValueAsString(o);
-        String jsonb = jsonbBuilder.toJson(o);
-        String json = JsonFactory.beanValues(o).toString();
+    void test(Object o) throws Exception
+    {
+        String gsonJson = gson.toJson(o);
+        String jacksonJson = jackson.writeValueAsString(o);
+        String jsonbJson = jsonb.toJson(o);
+        String jfJson = JsonFactory.beanValues(o).toString();
 
 //        System.out.println("jack:  "+jackson);
 //        System.out.println("gson:  "+gson);
 //        System.out.println("jsonb: "+jsonb);
-//        System.out.println("json:  "+json);
+        System.out.println("json:  "+jfJson);
 //        System.out.println();
 
-        assertEquals(jackson, gson);
-        assertEquals(gson, jsonb);
-        assertEquals(jsonb, json);
+        assertEquals(jacksonJson, gsonJson);
+        assertEquals(gsonJson, jsonbJson);
+        assertEquals(jsonbJson, jfJson);
     }
 
 

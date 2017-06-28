@@ -1,4 +1,4 @@
-package com.developmentontheedge.beans.jsontest;
+package com.developmentontheedge.beans.json;
 
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;

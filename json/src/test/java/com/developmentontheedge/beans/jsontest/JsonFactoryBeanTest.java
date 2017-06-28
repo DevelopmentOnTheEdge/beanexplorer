@@ -60,9 +60,9 @@ public class JsonFactoryBeanTest
     {
         TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
         assertEquals("{" +
-                        "'/arr':{'type':'long[]','readOnly':true}," +
-                        "'/name':{'type':'String','readOnly':true}," +
-                        "'/number':{'type':'Integer','readOnly':true}}",
+                        "'/arr':{'type':'long[]'}," +
+                        "'/name':{'type':'String'}," +
+                        "'/number':{'type':'Integer'}}",
                 oneQuotes(JsonFactory.beanMeta(bean).toString()));
     }
 

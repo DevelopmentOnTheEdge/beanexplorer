@@ -5,6 +5,7 @@ import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
 
 import java.awt.Color;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ class TestBeans
 {
     public static class BeanWithMap
     {
-        final Map<String, String> field;
+        Map<String, String> field;
+
+        public BeanWithMap() {}
 
         BeanWithMap(Map<String, String> field)
         {
@@ -22,6 +25,30 @@ class TestBeans
         public Map<String, String> getField()
         {
             return field;
+        }
+
+        public void setField(Map<String, String> field)
+        {
+            this.field = field;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (!(o instanceof BeanWithMap)) return false;
+
+            BeanWithMap that = (BeanWithMap) o;
+
+            if (field != null ? !field.equals(that.field) : that.field != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return field != null ? field.hashCode() : 0;
         }
     }
 
@@ -66,7 +93,9 @@ class TestBeans
     {
         private List<String> field;
 
-        BeanWithList(List<String> field)
+        public BeanWithList(){}
+
+        public BeanWithList(List<String> field)
         {
             this.field = field;
         }
@@ -74,6 +103,28 @@ class TestBeans
         public List<String> getField()
         {
             return field;
+        }
+
+        public void setField(List<String> field)
+        {
+            this.field = field;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof BeanWithList)) return false;
+
+            BeanWithList that = (BeanWithList) o;
+
+            if (field != null ? !field.equals(that.field) : that.field != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return field != null ? field.hashCode() : 0;
         }
     }
 
@@ -90,11 +141,30 @@ class TestBeans
         {
             return field;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof BeanWithListLong)) return false;
+
+            BeanWithListLong that = (BeanWithListLong) o;
+
+            if (field != null ? !field.equals(that.field) : that.field != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return field != null ? field.hashCode() : 0;
+        }
     }
 
     public static class BeanWithListObj
     {
         private List<InnerBeanClass> field;
+
+        public BeanWithListObj(){}
 
         BeanWithListObj(List<InnerBeanClass> field)
         {
@@ -104,6 +174,28 @@ class TestBeans
         public List<InnerBeanClass> getField()
         {
             return field;
+        }
+
+        public void setField(List<InnerBeanClass> field)
+        {
+            this.field = field;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof BeanWithListObj)) return false;
+
+            BeanWithListObj that = (BeanWithListObj) o;
+
+            if (field != null ? !field.equals(that.field) : that.field != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return field != null ? field.hashCode() : 0;
         }
     }
 
@@ -135,6 +227,8 @@ class TestBeans
         private String name;
         private int number;
 
+        public SimpleBean() {}
+
         SimpleBean(String name, int number, long[] arr) {
 
             this.name = name;
@@ -152,6 +246,45 @@ class TestBeans
 
         public long[] getArr() {
             return arr;
+        }
+
+        public void setArr(long[] arr)
+        {
+            this.arr = arr;
+        }
+
+        public void setName(String name)
+        {
+            this.name = name;
+        }
+
+        public void setNumber(int number)
+        {
+            this.number = number;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (!(o instanceof SimpleBean)) return false;
+
+            SimpleBean that = (SimpleBean) o;
+
+            if (number != that.number) return false;
+            if (!Arrays.equals(arr, that.arr)) return false;
+            if (name != null ? !name.equals(that.name) : that.name != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = arr != null ? Arrays.hashCode(arr) : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            result = 31 * result + number;
+            return result;
         }
     }
 
@@ -172,8 +305,16 @@ class TestBeans
     public static class InnerBeanClass
     {
         String name;
+
+        public InnerBeanClass() {}
+
         InnerBeanClass(String name) {this.name = name;}
         public String getName() {return name;}
+
+        public void setName(String name)
+        {
+            this.name = name;
+        }
     }
 
     public static class TypedResponse {
