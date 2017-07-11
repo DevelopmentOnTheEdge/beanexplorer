@@ -188,20 +188,5 @@ public interface DynamicPropertySet extends Serializable, Cloneable, Iterable<Dy
     boolean isEmpty();
 
     Object clone();
-
-    /**
-     * For groovy
-     */
-    DynamicPropertySet plus( DynamicPropertySet dps );
-
-    /**
-     * For groovy
-     */
-    DynamicPropertySet leftShift( DynamicProperty property );
-
-    /**
-     * For groovy
-     */
-    DynamicPropertySet leftShift( Map<String, Object> properties );
 }
 

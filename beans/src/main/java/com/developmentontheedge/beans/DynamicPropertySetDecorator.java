@@ -112,21 +112,6 @@ public class DynamicPropertySetDecorator implements DynamicPropertySet
         return delegateDps.clone();
     }
 
-    public DynamicPropertySet plus( DynamicPropertySet dps )
-    {
-        return delegateDps.plus(dps);
-    }
-
-    public DynamicPropertySet leftShift(DynamicProperty property)
-    {
-        return delegateDps.leftShift(property);
-    }
-
-    public DynamicPropertySet leftShift(Map<String, Object> properties)
-    {
-        return delegateDps.leftShift(properties);
-    }
-
     public Iterator<String> nameIterator()
     {
         return delegateDps.nameIterator();
