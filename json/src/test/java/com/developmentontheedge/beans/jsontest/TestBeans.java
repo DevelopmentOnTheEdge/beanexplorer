@@ -129,27 +129,6 @@ class TestBeans
         }
     }
 
-    public static class TypedResponse {
-        final String type;
-        final Object value;
-
-        TypedResponse(String type, Object value)
-        {
-            this.type = type;
-            this.value = value;
-        }
-
-        public String getType()
-        {
-            return type;
-        }
-
-        public Object getValue()
-        {
-            return value;
-        }
-    }
-
     public static class TestBean
     {
         private String str;

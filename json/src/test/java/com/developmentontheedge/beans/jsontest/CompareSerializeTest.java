@@ -37,18 +37,6 @@ public class CompareSerializeTest
         ));
     }
 
-
-    @Test
-    public void testInnerJson() throws Exception
-    {
-        TestBeans.InnerBeanClass bean = new TestBeans.InnerBeanClass("foo");
-        JsonObject jsonObject = JsonFactory.beanValues(bean);
-        JsonElement gsonJsonElement = new GsonBuilder().serializeNulls().create().toJsonTree(bean);
-
-        assertEquals(gson.toJson(new TestBeans.TypedResponse("form", gsonJsonElement)),
-                jsonb.toJson(new TestBeans.TypedResponse("form", jsonObject)));
-    }
-
     void test(Object o) throws Exception
     {
         String gsonJson = gson.toJson(o);

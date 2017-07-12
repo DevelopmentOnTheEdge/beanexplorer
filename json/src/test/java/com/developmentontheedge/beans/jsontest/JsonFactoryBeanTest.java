@@ -25,22 +25,6 @@ public class JsonFactoryBeanTest
     }
 
     @Test
-    public void simpleBeanValuesWithJsonValue()
-    {
-        TestBeans.InnerBeanClass bean = new TestBeans.InnerBeanClass("foo");
-        JsonObject jsonObject = JsonFactory.beanValues(bean);
-        TestBeans.TypedResponse typedResponse = new TestBeans.TypedResponse("form", jsonObject);
-
-        assertEquals("{'name':'foo'}", oneQuotes(jsonObject.toString()));
-
-        assertEquals("" +
-                    "{" +
-                        "'type':'form'," +
-                        "'value':{'name':'foo'}" +
-            "}" , oneQuotes(JsonFactory.beanValues(typedResponse).toString()));
-    }
-
-    @Test
     public void beanWithInnerClass() throws Exception
     {
         BeanWithInnerClass bean = new BeanWithInnerClass(
