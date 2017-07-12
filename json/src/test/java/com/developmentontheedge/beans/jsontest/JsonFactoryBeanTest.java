@@ -112,18 +112,19 @@ public class JsonFactoryBeanTest
 //                , oneQuotes(JsonFactory.bean(TestBeans.EnumClass.test).toString()));
 //    }
 
-    @Test
-    public void beanWithEnum()
-    {
-        assertEquals("{" +
-                        "'values':{" +
-                            "'status':'test2'}," +
-                        "'meta':{" +
-                            "'/status':{'type':'EnumClass','readOnly':true}" +
-                        "}," +
-                        "'order':['/status']}"
-                , oneQuotes(JsonFactory.bean(new TestBeans.ClassWithEnum(TestBeans.EnumClass.test2)).toString()));
-    }
+//    not support in java beans
+//    @Test
+//    public void beanWithEnum()
+//    {
+//        assertEquals("{" +
+//                        "'values':{" +
+//                            "'status':'test2'}," +
+//                        "'meta':{" +
+//                            "'/status':{'type':'EnumClass','readOnly':true}" +
+//                        "}," +
+//                        "'order':['/status']}"
+//                , oneQuotes(JsonFactory.bean(new TestBeans.ClassWithEnum(TestBeans.EnumClass.test2)).toString()));
+//    }
 
 
 }

@@ -11,194 +11,6 @@ import java.util.Map;
 
 class TestBeans
 {
-    public static class BeanWithMap
-    {
-        Map<String, String> field;
-
-        public BeanWithMap() {}
-
-        BeanWithMap(Map<String, String> field)
-        {
-            this.field = field;
-        }
-
-        public Map<String, String> getField()
-        {
-            return field;
-        }
-
-        public void setField(Map<String, String> field)
-        {
-            this.field = field;
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if (this == o) return true;
-            if (!(o instanceof BeanWithMap)) return false;
-
-            BeanWithMap that = (BeanWithMap) o;
-
-            if (field != null ? !field.equals(that.field) : that.field != null) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return field != null ? field.hashCode() : 0;
-        }
-    }
-
-    public static class CellModelMapInMap
-    {
-        public final Object content;
-        public final Map<String, Map<String, String>> options;
-
-        CellModelMapInMap(Object content, Map<String, Map<String, String>> options)
-        {
-            this.content = content;
-            this.options = options;
-        }
-
-        public Object getContent()
-        {
-            return content;
-        }
-
-        public Map<String, Map<String, String>> getOptions()
-        {
-            return options;
-        }
-    }
-
-    public static class BeanWithMapLong
-    {
-        final Map<Long, Long> field;
-
-        BeanWithMapLong(Map<Long, Long> field)
-        {
-            this.field = field;
-        }
-
-        public Map<Long, Long> getField()
-        {
-            return field;
-        }
-    }
-
-    public static class BeanWithList
-    {
-        private List<String> field;
-
-        public BeanWithList(){}
-
-        public BeanWithList(List<String> field)
-        {
-            this.field = field;
-        }
-
-        public List<String> getField()
-        {
-            return field;
-        }
-
-        public void setField(List<String> field)
-        {
-            this.field = field;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof BeanWithList)) return false;
-
-            BeanWithList that = (BeanWithList) o;
-
-            if (field != null ? !field.equals(that.field) : that.field != null) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            return field != null ? field.hashCode() : 0;
-        }
-    }
-
-    public static class BeanWithListLong
-    {
-        private List<Long> field;
-
-        BeanWithListLong(List<Long> field)
-        {
-            this.field = field;
-        }
-
-        public List<Long> getField()
-        {
-            return field;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof BeanWithListLong)) return false;
-
-            BeanWithListLong that = (BeanWithListLong) o;
-
-            if (field != null ? !field.equals(that.field) : that.field != null) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            return field != null ? field.hashCode() : 0;
-        }
-    }
-
-    public static class BeanWithListObj
-    {
-        private List<InnerBeanClass> field;
-
-        public BeanWithListObj(){}
-
-        BeanWithListObj(List<InnerBeanClass> field)
-        {
-            this.field = field;
-        }
-
-        public List<InnerBeanClass> getField()
-        {
-            return field;
-        }
-
-        public void setField(List<InnerBeanClass> field)
-        {
-            this.field = field;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof BeanWithListObj)) return false;
-
-            BeanWithListObj that = (BeanWithListObj) o;
-
-            if (field != null ? !field.equals(that.field) : that.field != null) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            return field != null ? field.hashCode() : 0;
-        }
-    }
-
     public static class FormPresentation
     {
         final String title;
@@ -400,21 +212,21 @@ class TestBeans
 //        }
     }
 
-    enum EnumClass{
-        test,test2
-    }
-
-    public static class ClassWithEnum{
-        EnumClass status;
-
-        ClassWithEnum(EnumClass enumClass) {
-            this.status = enumClass;
-        }
-
-        public EnumClass getStatus() {
-            return status;
-        }
-    }
+//    enum EnumClass{
+//        test,test2
+//    }
+//
+//    public static class ClassWithEnum{
+//        EnumClass status;
+//
+//        ClassWithEnum(EnumClass enumClass) {
+//            this.status = enumClass;
+//        }
+//
+//        public EnumClass getStatus() {
+//            return status;
+//        }
+//    }
 
 
 //    @Test

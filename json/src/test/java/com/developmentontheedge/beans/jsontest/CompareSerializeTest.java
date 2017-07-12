@@ -37,32 +37,6 @@ public class CompareSerializeTest
         ));
     }
 
-    @Test
-    public void testList() throws Exception
-    {
-        test(new TestBeans.BeanWithList(ImmutableList.of("item1", "item2")));
-    }
-
-    @Test
-    public void testListOfObject() throws Exception
-    {
-        test(new TestBeans.BeanWithListObj(ImmutableList.of(
-                new TestBeans.InnerBeanClass("test1"),
-                new TestBeans.InnerBeanClass("test2")
-        )));
-    }
-
-    @Test
-    public void testListWithNull() throws Exception
-    {
-        test(new TestBeans.BeanWithListObj(null));
-    }
-
-    @Test
-    public void testMap() throws Exception
-    {
-        test(new TestBeans.BeanWithMap(ImmutableMap.of("key","value", "key2","value2")));
-    }
 
     @Test
     public void testInnerJson() throws Exception

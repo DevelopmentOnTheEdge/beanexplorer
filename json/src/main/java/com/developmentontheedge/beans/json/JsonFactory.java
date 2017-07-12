@@ -12,7 +12,6 @@ import com.developmentontheedge.beans.model.Property;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -270,16 +269,16 @@ public class JsonFactory
             json.add( COLUMN_SIZE_ATTR, "" + columnSizeAttr );
         }
 
-        if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
-        {
-            @SuppressWarnings("unchecked")
-            Map<String, String> tags = (Map<String, String>)property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR );
-
-            if( tags != null )
-            {
-                json.add( "tagList", mapValues(tags) );
-            }
-        }
+//        if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
+//        {
+//            @SuppressWarnings("unchecked")
+//            Map<String, String> tags = (Map<String, String>)property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR );
+//
+//            if( tags != null )
+//            {
+//                json.add( "tagList", tags );
+//            }
+//        }
 
         if(property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CHANGE ))
         {
@@ -314,40 +313,6 @@ public class JsonFactory
         return json.build();
     }
 
-    /**
-     * Этот класс только для java beans и DPS, всё остальное теперь можно сериализовать одной строчкой через javax.json.bind.Jsonb
-     * @see javax.json.bind.Jsonb
-     */
-    @Deprecated
-    private static JsonObject mapValues(Map<?, ?> map)
-    {
-        JsonObjectBuilder json = Json.createObjectBuilder();
-
-        for (Map.Entry<?, ?> item : map.entrySet())
-        {
-            addValueToObject(json, item.getKey().toString(), item.getValue());
-        }
-
-        return json.build();
-    }
-
-    /**
-     * Этот класс только для java beans и DPS, всё остальное теперь можно сериализовать одной строчкой через javax.json.bind.Jsonb
-     * @see javax.json.bind.Jsonb
-     */
-    @Deprecated
-    private static JsonArray listValues(List<?> list)
-    {
-        JsonArrayBuilder json = Json.createArrayBuilder();
-
-        for (Object o : list)
-        {
-            addValueToArray(json, o);
-        }
-
-        return json.build();
-    }
-
     private static String getTypeName(Class<?> klass)
     {
         return klass.getSimpleName();
@@ -370,18 +335,6 @@ public class JsonFactory
             }
 
             if(property instanceof CompositeProperty) {
-                if(property.getValue() instanceof List){
-                    json.add(property.getName(), listValues((List)property.getValue()) );
-                    continue;
-                }
-                if(property.getValue() instanceof Map){
-                    json.add(property.getName(), mapValues((Map)property.getValue()) );
-                    continue;
-                }
-                if(property.getValue() instanceof Enum){
-                    json.add(property.getName(), ((Enum) property.getValue()).name());
-                    continue;
-                }
                 json.add(property.getName(), propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
@@ -418,18 +371,6 @@ public class JsonFactory
             }
 
             if(property instanceof CompositeProperty) {
-                if(property.getValue() instanceof List){
-                    json.add(listValues((List)property.getValue()) );
-                    continue;
-                }
-                if(property.getValue() instanceof Map){
-                    json.add(mapValues((Map)property.getValue()) );
-                    continue;
-                }
-                if(property.getValue() instanceof Enum){
-                    json.add(((Enum) property.getValue()).name() );
-                    continue;
-                }
                 json.add(propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
@@ -464,9 +405,6 @@ public class JsonFactory
             if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
 
             if(property instanceof CompositeProperty) {
-                if(property.getValue() instanceof Map || property.getValue() instanceof List || property.getValue() instanceof Enum){
-                    continue;
-                }
                 propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
@@ -490,9 +428,6 @@ public class JsonFactory
             //if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
 
             if(property instanceof CompositeProperty) {
-                if(property.getValue() instanceof Map || property.getValue() instanceof List || property.getValue() instanceof Enum){
-                    continue;
-                }
                 propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
@@ -524,17 +459,7 @@ public class JsonFactory
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        if(property.getValue() instanceof Map){
-            json.add(TYPE_ATTR, "Map");
-        }
-        else if(property.getValue() instanceof List)
-        {
-            json.add(TYPE_ATTR, "List");
-        }
-        else
-        {
-            json.add(TYPE_ATTR, getTypeName(property.getValueClass()));
-        }
+        json.add(TYPE_ATTR, getTypeName(property.getValueClass()));
 
         if(!property.getName().equals(property.getDisplayName()))
         {
