@@ -11,6 +11,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 
+import java.util.Arrays;
+
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
@@ -92,11 +94,11 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
     }
 
     @Test
-    @Ignore
     public void testTagList()
     {
-        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, ImmutableMap.of("foo","bar","foo2","bar2"));
-        assertEquals("{'foo':'bar','foo2':'bar2'}",
+        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, new String[][]{new String[]{"foo","bar"},new String[]{"foo2","bar2"}});
+
+        assertEquals("[['foo','bar'],['foo2','bar2']]",
                 oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(TAG_LIST_ATTR)));
 
         dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, null);
@@ -126,17 +128,14 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
     }
 
     @Test
-    @Ignore
     public void testSeveralAttr()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_NAME, "foo");
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, 1);
         dynamicProperty.setAttribute(BeanInfoConstants.RELOAD_ON_CHANGE, true);
-        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, ImmutableMap.of("foo","bar","foo2","bar2"));
 
         assertEquals("{" +
                         "'displayName':'Name'," +
-                        "'tagList':{'foo':'bar','foo2':'bar2'}," +
                         "'reloadOnChange':true," +
                         "'groupName':'foo'," +
                         "'groupId':1" +

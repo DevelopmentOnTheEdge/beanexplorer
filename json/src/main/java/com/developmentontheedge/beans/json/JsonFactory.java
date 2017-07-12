@@ -12,6 +12,7 @@ import com.developmentontheedge.beans.model.Property;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -19,6 +20,9 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static java.util.Objects.requireNonNull;
@@ -28,6 +32,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class JsonFactory
 {
+    private static final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
+
     ///////////////////////////////////////////////////////////////////////////
     // public API
     //
@@ -269,16 +275,27 @@ public class JsonFactory
             json.add( COLUMN_SIZE_ATTR, "" + columnSizeAttr );
         }
 
-//        if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
-//        {
-//            @SuppressWarnings("unchecked")
-//            Map<String, String> tags = (Map<String, String>)property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR );
-//
-//            if( tags != null )
-//            {
-//                json.add( "tagList", tags );
-//            }
-//        }
+        if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
+        {
+            @SuppressWarnings("unchecked")
+            String[][] tags = (String[][])property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR );
+
+            if( tags != null )
+            {
+                JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                for (String[] tag : tags)
+                {
+                    JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
+                    for (String item : tag)
+                    {
+                        arrayBuilder2.add(item);
+                    }
+                    arrayBuilder.add(arrayBuilder2.build());
+                }
+
+                json.add(TAG_LIST_ATTR, arrayBuilder.build());
+            }
+        }
 
         if(property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CHANGE ))
         {
