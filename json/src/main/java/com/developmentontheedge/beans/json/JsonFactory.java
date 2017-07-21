@@ -316,9 +316,9 @@ public class JsonFactory
             json.add(GROUP_ID_ATTR, Long.parseLong(property.getAttribute(BeanInfoConstants.GROUP_ID).toString()) );
         }
 
-        if(property.getAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST) != null)
+        if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
         {
-            json.add(MULTIPLE_SELECTION_LIST, Long.parseLong(property.getAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST).toString()) );
+            json.add(MULTIPLE_SELECTION_LIST, true );
         }
 
         if(property.getStringAttribute(BeanInfoConstants.STATUS) != null)

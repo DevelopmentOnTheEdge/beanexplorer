@@ -74,6 +74,16 @@ public class JsonFactoryDynamicPropertyAttributesTest implements JsonPropertyAtt
     }
 
     @Test
+    public void testMultipleSelectionList()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
+        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(MULTIPLE_SELECTION_LIST));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, false);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(MULTIPLE_SELECTION_LIST));
+    }
+
+    @Test
     public void testRawValue()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.RAW_VALUE, true);
