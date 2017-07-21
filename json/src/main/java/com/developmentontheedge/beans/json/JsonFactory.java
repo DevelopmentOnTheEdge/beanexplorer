@@ -331,8 +331,19 @@ public class JsonFactory
             json.add(MESSAGE_ATTR, property.getStringAttribute(BeanInfoConstants.MESSAGE) );
         }
 
+        //addIfNotNull(json, CAN_BE_NULL, property);
+
         return json.build();
     }
+
+//    todo enum
+//    private static void addIfNotNull(JsonObjectBuilder json, JsonPropertyAttributes attr, DynamicProperty property)
+//    {
+//        if(property.getStringAttribute(attr.beanInfoConstants) != null)
+//        {
+//            json.add(attr.name, property.getStringAttribute(attr.beanInfoConstants) );
+//        }
+//    }
 
     private static String getTypeName(Class<?> klass)
     {

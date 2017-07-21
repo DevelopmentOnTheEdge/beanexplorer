@@ -27,4 +27,16 @@ public interface JsonPropertyAttributes
     String STATUS_ATTR = "status";
     String MESSAGE_ATTR = "message";
 
+//    todo enum
+//    CAN_BE_NULL(BeanInfoConstants.CAN_BE_NULL, "canBeNull"),
+//    RAW_VALUE(BeanInfoConstants.RAW_VALUE, "rawValue");
+//
+//    String name;
+//    String beanInfoConstants;
+//
+//    JsonPropertyAttributes(String name, String beanInfoConstants)
+//    {
+//        this.name = name;
+//        this.beanInfoConstants = beanInfoConstants;
+//    }
 }
