@@ -316,6 +316,11 @@ public class JsonFactory
             json.add(GROUP_ID_ATTR, Long.parseLong(property.getAttribute(BeanInfoConstants.GROUP_ID).toString()) );
         }
 
+        if(property.getAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST) != null)
+        {
+            json.add(MULTIPLE_SELECTION_LIST, Long.parseLong(property.getAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST).toString()) );
+        }
+
         if(property.getStringAttribute(BeanInfoConstants.STATUS) != null)
         {
             json.add(STATUS_ATTR, property.getStringAttribute(BeanInfoConstants.STATUS) );

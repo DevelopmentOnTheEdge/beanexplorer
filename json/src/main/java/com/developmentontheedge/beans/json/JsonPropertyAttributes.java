@@ -22,6 +22,7 @@ public interface JsonPropertyAttributes
     String TAG_LIST_ATTR = "tagList";
     String GROUP_NAME_ATTR = "groupName";
     String GROUP_ID_ATTR = "groupId";
+    String MULTIPLE_SELECTION_LIST = "multipleSelectionList";
 
     String STATUS_ATTR = "status";
     String MESSAGE_ATTR = "message";
