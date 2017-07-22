@@ -8,7 +8,6 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static org.junit.Assert.assertEquals;
 
 public class JsonFactoryDpsTest

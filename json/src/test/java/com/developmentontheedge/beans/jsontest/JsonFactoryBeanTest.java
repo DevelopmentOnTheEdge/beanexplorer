@@ -6,8 +6,6 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
 import org.junit.Test;
 
-import javax.json.JsonObject;
-
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
