@@ -23,14 +23,14 @@ enum JsonPropertyAttributes
     MESSAGE_ATTR(BeanInfoConstants.MESSAGE, "message", String.class);
 
 
-    public String beanInfoConstants;
-    public String name;
+    public String beanInfoConstant;
+    public String key;
     public Class<?> type;
 
-    JsonPropertyAttributes(String beanInfoConstants, String name, Class<?> type)
+    JsonPropertyAttributes(String beanInfoConstant, String key, Class<?> type)
     {
-        this.beanInfoConstants = beanInfoConstants;
-        this.name = name;
+        this.beanInfoConstant = beanInfoConstant;
+        this.key = key;
         this.type = type;
     }
 
@@ -38,8 +38,8 @@ enum JsonPropertyAttributes
     public String toString()
     {
         return "JsonPropertyAttributes{" +
-                "beanInfoConstants='" + beanInfoConstants + '\'' +
-                ", name='" + name + '\'' +
+                "beanInfoConstant='" + beanInfoConstant + '\'' +
+                ", key='" + key + '\'' +
                 '}';
     }
 }
