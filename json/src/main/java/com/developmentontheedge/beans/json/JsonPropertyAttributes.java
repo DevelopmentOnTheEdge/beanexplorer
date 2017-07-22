@@ -5,38 +5,41 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 /**
  * @see BeanInfoConstants
  */
-public interface JsonPropertyAttributes
+public enum JsonPropertyAttributes
 {
-    String TYPE_ATTR = "type";
-    String DISPLAY_NAME_ATTR = "displayName";
-    String DESCRIPTION_ATTR = "description";
+    TYPE_ATTR(null, "type"),
+    DESCRIPTION_ATTR(null, "description"),
 
-    String DICTIONARY_ATTR = "dictionary";
+    DISPLAY_NAME_ATTR(BeanInfoConstants.DISPLAY_NAME, "displayName"),
+    CAN_BE_NULL_ATTR(BeanInfoConstants.CAN_BE_NULL, "canBeNull"),
+    HIDDEN_ATTR(BeanInfoConstants.HIDDEN, "hidden"),
+    RAW_VALUE_ATTR(BeanInfoConstants.RAW_VALUE, "rawValue"),
+    READONLY_ATTR(BeanInfoConstants.READ_ONLY, "readOnly"),
+    RELOAD_ON_CHANGE_ATTR(BeanInfoConstants.RELOAD_ON_CHANGE, "reloadOnChange"),
+    COLUMN_SIZE_ATTR(BeanInfoConstants.COLUMN_SIZE_ATTR, "columnSize"),
+    TAG_LIST_ATTR(BeanInfoConstants.TAG_LIST_ATTR, "tagList"),
+    GROUP_NAME_ATTR(BeanInfoConstants.GROUP_NAME, "groupName"),
+    GROUP_ID_ATTR(BeanInfoConstants.GROUP_ID,"groupId"),
+    MULTIPLE_SELECTION_LIST(BeanInfoConstants.MULTIPLE_SELECTION_LIST,"groupId"),
 
-    String CAN_BE_NULL_ATTR = "canBeNull";
-    String HIDDEN_ATTR = "hidden";
-    String RAW_VALUE_ATTR = "rawValue";
-    String READONLY_ATTR = "readOnly";
-    String RELOAD_ON_CHANGE_ATTR = "reloadOnChange";
-    String COLUMN_SIZE_ATTR = "columnSize";
-    String TAG_LIST_ATTR = "tagList";
-    String GROUP_NAME_ATTR = "groupName";
-    String GROUP_ID_ATTR = "groupId";
-    String MULTIPLE_SELECTION_LIST = "multipleSelectionList";
+    STATUS_ATTR(BeanInfoConstants.STATUS,"groupId"),
+    MESSAGE_ATTR(BeanInfoConstants.MESSAGE,"groupId");
 
-    String STATUS_ATTR = "status";
-    String MESSAGE_ATTR = "message";
+    String beanInfoConstants;
+    String name;
 
-//    todo enum
-//    CAN_BE_NULL(BeanInfoConstants.CAN_BE_NULL, "canBeNull"),
-//    RAW_VALUE(BeanInfoConstants.RAW_VALUE, "rawValue");
-//
-//    String name;
-//    String beanInfoConstants;
-//
-//    JsonPropertyAttributes(String name, String beanInfoConstants)
-//    {
-//        this.name = name;
-//        this.beanInfoConstants = beanInfoConstants;
-//    }
+    JsonPropertyAttributes(String beanInfoConstants, String name)
+    {
+        this.beanInfoConstants = beanInfoConstants;
+        this.name = name;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "JsonPropertyAttributes{" +
+                "beanInfoConstants='" + beanInfoConstants + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

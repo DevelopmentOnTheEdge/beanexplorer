@@ -244,26 +244,26 @@ public class JsonFactory
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        json.add(DISPLAY_NAME_ATTR, property.getDisplayName() );
+        json.add(DISPLAY_NAME_ATTR.name, property.getDisplayName() );
 
         if(property.getType() != String.class)
         {
-            json.add(TYPE_ATTR, getTypeName(property.getType()) );
+            json.add(TYPE_ATTR.name, getTypeName(property.getType()) );
         }
 
         if(property.isHidden())
         {
-            json.add(HIDDEN_ATTR, true );
+            json.add(HIDDEN_ATTR.name, true );
         }
 
         if(property.isReadOnly())
         {
-            json.add(READONLY_ATTR, true);
+            json.add(READONLY_ATTR.name, true);
         }
 
         if(property.isCanBeNull())
         {
-            json.add(CAN_BE_NULL_ATTR, true);
+            json.add(CAN_BE_NULL_ATTR.name, true);
         }
 
         //json.add( "extraAttrs", property.getAttribute( BeanInfoConstants.EXTRA_ATTRS ) );
@@ -271,7 +271,7 @@ public class JsonFactory
         Object columnSizeAttr = property.getAttribute( BeanInfoConstants.COLUMN_SIZE_ATTR );
         if(columnSizeAttr != null)
         {
-            json.add( COLUMN_SIZE_ATTR, "" + columnSizeAttr );
+            json.add( COLUMN_SIZE_ATTR.name, "" + columnSizeAttr );
         }
 
         if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
@@ -292,43 +292,43 @@ public class JsonFactory
                     arrayBuilder.add(arrayBuilder2.build());
                 }
 
-                json.add(TAG_LIST_ATTR, arrayBuilder.build());
+                json.add(TAG_LIST_ATTR.name, arrayBuilder.build());
             }
         }
 
         if(property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CHANGE ))
         {
-            json.add(RELOAD_ON_CHANGE_ATTR, true );
+            json.add(RELOAD_ON_CHANGE_ATTR.name, true );
         }
 
         if(property.getBooleanAttribute( BeanInfoConstants.RAW_VALUE ))
         {
-            json.add(RAW_VALUE_ATTR, true );
+            json.add(RAW_VALUE_ATTR.name, true );
         }
 
         if(property.getStringAttribute(BeanInfoConstants.GROUP_NAME) != null)
         {
-            json.add(GROUP_NAME_ATTR, property.getStringAttribute(BeanInfoConstants.GROUP_NAME) );
+            json.add(GROUP_NAME_ATTR.name, property.getStringAttribute(BeanInfoConstants.GROUP_NAME) );
         }
 
         if(property.getAttribute(BeanInfoConstants.GROUP_ID) != null)
         {
-            json.add(GROUP_ID_ATTR, Long.parseLong(property.getAttribute(BeanInfoConstants.GROUP_ID).toString()) );
+            json.add(GROUP_ID_ATTR.name, Long.parseLong(property.getAttribute(BeanInfoConstants.GROUP_ID).toString()) );
         }
 
         if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
         {
-            json.add(MULTIPLE_SELECTION_LIST, true );
+            json.add(MULTIPLE_SELECTION_LIST.name, true );
         }
 
         if(property.getStringAttribute(BeanInfoConstants.STATUS) != null)
         {
-            json.add(STATUS_ATTR, property.getStringAttribute(BeanInfoConstants.STATUS) );
+            json.add(STATUS_ATTR.name, property.getStringAttribute(BeanInfoConstants.STATUS) );
         }
 
         if(property.getStringAttribute(BeanInfoConstants.MESSAGE) != null)
         {
-            json.add(MESSAGE_ATTR, property.getStringAttribute(BeanInfoConstants.MESSAGE) );
+            json.add(MESSAGE_ATTR.name, property.getStringAttribute(BeanInfoConstants.MESSAGE) );
         }
 
         //addIfNotNull(json, CAN_BE_NULL, property);
@@ -491,22 +491,22 @@ public class JsonFactory
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        json.add(TYPE_ATTR, getTypeName(property.getValueClass()));
+        json.add(TYPE_ATTR.name, getTypeName(property.getValueClass()));
 
         if(!property.getName().equals(property.getDisplayName()))
         {
-            json.add(DISPLAY_NAME_ATTR, property.getDisplayName());
+            json.add(DISPLAY_NAME_ATTR.name, property.getDisplayName());
         }
 
         String shortDescription = property.getShortDescription().split("\n")[0];
         if(!property.getName().equals(shortDescription))
         {
-            json.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
+            json.add(DESCRIPTION_ATTR.name, property.getShortDescription().split("\n")[0]);
         }
 
         if(property.isReadOnly())
         {
-            json.add(READONLY_ATTR, true);
+            json.add(READONLY_ATTR.name, true);
         }
 
         return json.build();
