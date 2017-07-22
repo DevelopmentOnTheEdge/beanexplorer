@@ -256,22 +256,12 @@ public class JsonFactory
             json.add(HIDDEN_ATTR.name, true );
         }
 
-        if(property.isReadOnly())
-        {
-            json.add(READONLY_ATTR.name, true);
-        }
-
-        if(property.isCanBeNull())
-        {
-            json.add(CAN_BE_NULL_ATTR.name, true);
-        }
-
         //json.add( "extraAttrs", property.getAttribute( BeanInfoConstants.EXTRA_ATTRS ) );
 
         Object columnSizeAttr = property.getAttribute( BeanInfoConstants.COLUMN_SIZE_ATTR );
         if(columnSizeAttr != null)
         {
-            json.add( COLUMN_SIZE_ATTR.name, "" + columnSizeAttr );
+            json.add(COLUMN_SIZE_ATTR.name, "" + columnSizeAttr );
         }
 
         if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
@@ -296,54 +286,38 @@ public class JsonFactory
             }
         }
 
-        if(property.getBooleanAttribute( BeanInfoConstants.RELOAD_ON_CHANGE ))
-        {
-            json.add(RELOAD_ON_CHANGE_ATTR.name, true );
-        }
-
-        if(property.getBooleanAttribute( BeanInfoConstants.RAW_VALUE ))
-        {
-            json.add(RAW_VALUE_ATTR.name, true );
-        }
-
-        if(property.getStringAttribute(BeanInfoConstants.GROUP_NAME) != null)
-        {
-            json.add(GROUP_NAME_ATTR.name, property.getStringAttribute(BeanInfoConstants.GROUP_NAME) );
-        }
-
-        if(property.getAttribute(BeanInfoConstants.GROUP_ID) != null)
-        {
-            json.add(GROUP_ID_ATTR.name, Long.parseLong(property.getAttribute(BeanInfoConstants.GROUP_ID).toString()) );
-        }
-
-        if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
-        {
-            json.add(MULTIPLE_SELECTION_LIST.name, true );
-        }
-
-        if(property.getStringAttribute(BeanInfoConstants.STATUS) != null)
-        {
-            json.add(STATUS_ATTR.name, property.getStringAttribute(BeanInfoConstants.STATUS) );
-        }
-
-        if(property.getStringAttribute(BeanInfoConstants.MESSAGE) != null)
-        {
-            json.add(MESSAGE_ATTR.name, property.getStringAttribute(BeanInfoConstants.MESSAGE) );
-        }
-
-        //addIfNotNull(json, CAN_BE_NULL, property);
+        addAttr(json, property, RELOAD_ON_CHANGE_ATTR);
+        addAttr(json, property, RAW_VALUE_ATTR);
+        addAttr(json, property, GROUP_NAME_ATTR);
+        addAttr(json, property, GROUP_ID_ATTR);
+        addAttr(json, property, MULTIPLE_SELECTION_LIST_ATTR);
+        addAttr(json, property, STATUS_ATTR);
+        addAttr(json, property, MESSAGE_ATTR);
+        addAttr(json, property, READ_ONLY_ATTR);
+        addAttr(json, property, CAN_BE_NULL_ATTR);
 
         return json.build();
     }
 
-//    todo enum
-//    private static void addIfNotNull(JsonObjectBuilder json, JsonPropertyAttributes attr, DynamicProperty property)
-//    {
-//        if(property.getStringAttribute(attr.beanInfoConstants) != null)
-//        {
-//            json.add(attr.name, property.getStringAttribute(attr.beanInfoConstants) );
-//        }
-//    }
+    private static void addAttr(JsonObjectBuilder json, DynamicProperty property, JsonPropertyAttributes attr)
+    {
+        if(attr.beanInfoConstants != null )
+        {
+            if(attr.type == Boolean.class)
+            {
+                if(property.getBooleanAttribute(attr.beanInfoConstants))json.add(attr.name, true );
+            }
+            else if(attr.type == String.class)
+            {
+                if(property.getStringAttribute(attr.beanInfoConstants) != null)
+                    json.add(attr.name, property.getStringAttribute(attr.beanInfoConstants) );
+            }
+            else if(property.getAttribute(attr.beanInfoConstants) != null)
+            {
+                json.add(attr.name, property.getAttribute(attr.beanInfoConstants).toString() );
+            }
+        }
+    }
 
     private static String getTypeName(Class<?> klass)
     {
@@ -506,7 +480,7 @@ public class JsonFactory
 
         if(property.isReadOnly())
         {
-            json.add(READONLY_ATTR.name, true);
+            json.add(READ_ONLY_ATTR.name, true);
         }
 
         return json.build();

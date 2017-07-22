@@ -2,16 +2,11 @@ package com.developmentontheedge.beans.json;
 
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.beans.json.JsonFactory;
-import com.developmentontheedge.beans.json.JsonPropertyAttributes;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-
-import java.util.Arrays;
 
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
@@ -58,10 +53,10 @@ public class JsonFactoryDynamicPropertyAttributesTest
     public void testReadonly()
     {
         dynamicProperty.setReadOnly(true);
-        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(READONLY_ATTR.name));
+        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(READ_ONLY_ATTR.name));
 
         dynamicProperty.setReadOnly(false);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(READONLY_ATTR.name));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(READ_ONLY_ATTR.name));
     }
 
     @Test
@@ -78,10 +73,10 @@ public class JsonFactoryDynamicPropertyAttributesTest
     public void testMultipleSelectionList()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
-        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(MULTIPLE_SELECTION_LIST.name));
+        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(MULTIPLE_SELECTION_LIST_ATTR.name));
 
         dynamicProperty.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, false);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(MULTIPLE_SELECTION_LIST.name));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(MULTIPLE_SELECTION_LIST_ATTR.name));
     }
 
     @Test
@@ -129,13 +124,22 @@ public class JsonFactoryDynamicPropertyAttributesTest
     @Test
     public void testGroupId()
     {
-        dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, 1);
+        dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, "1");
 
-        assertEquals(1L, Long.parseLong(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(GROUP_ID_ATTR.name).toString()) );
-        assertEquals(1, Integer.parseInt(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(GROUP_ID_ATTR.name).toString()) );
+        assertEquals("{'displayName':'Name','groupId':'1'}",
+                oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).toString())) ;
 
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, null);
         assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(GROUP_ID_ATTR.name));
+    }
+
+    @Test
+    public void testGroupIdInt()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, 1);
+
+        assertEquals("{'displayName':'Name','groupId':'1'}",
+                oneQuotes( JsonFactory.dynamicPropertyMeta(dynamicProperty).toString()));
     }
 
     @Test
@@ -149,7 +153,7 @@ public class JsonFactoryDynamicPropertyAttributesTest
                         "'displayName':'Name'," +
                         "'reloadOnChange':true," +
                         "'groupName':'foo'," +
-                        "'groupId':1" +
+                        "'groupId':'1'" +
             "}",oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).toString()));
     }
 }
