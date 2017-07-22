@@ -1,5 +1,6 @@
 package com.developmentontheedge.beans.jsontest;
 
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -7,6 +8,7 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static org.junit.Assert.assertEquals;
 
 public class JsonFactoryDpsTest
@@ -42,6 +44,23 @@ public class JsonFactoryDpsTest
     {
         assertEquals("['/name','/number']",
                 oneQuotes(JsonFactory.dpsOrder(dps).toString()));
+    }
+
+    @Test
+    public void testDpsMetaAttr() throws Exception
+    {
+        dps.getProperty("name").setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
+        dps.getProperty("name").setAttribute(BeanInfoConstants.MESSAGE, "Invalid type");
+        dps.getProperty("name").setAttribute(BeanInfoConstants.STATUS, "error");
+        assertEquals("{" +
+                        "'/name':{" +
+                            "'displayName':'Name'," +
+                            "'multipleSelectionList':true," +
+                            "'status':'error'," +
+                            "'message':'Invalid type'" +
+                        "}," +
+                        "'/number':{'displayName':'Number','type':'Long'}" +
+            "}", oneQuotes(JsonFactory.dpsMeta(dps).toString()));
     }
 
     @Test
