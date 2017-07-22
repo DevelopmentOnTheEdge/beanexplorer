@@ -2,10 +2,7 @@ package com.developmentontheedge.beans.json;
 
 import com.developmentontheedge.beans.BeanInfoConstants;
 
-/**
- * @see BeanInfoConstants
- */
-public enum JsonPropertyAttributes
+enum JsonPropertyAttributes
 {
     TYPE_ATTR(null, "type", Class.class),
     DESCRIPTION_ATTR(null, "description", String.class),
