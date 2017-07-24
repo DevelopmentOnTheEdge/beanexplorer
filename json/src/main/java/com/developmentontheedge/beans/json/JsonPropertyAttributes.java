@@ -13,12 +13,15 @@ enum JsonPropertyAttributes
     RAW_VALUE_ATTR(BeanInfoConstants.RAW_VALUE, "rawValue", Boolean.class),
     READ_ONLY_ATTR(BeanInfoConstants.READ_ONLY, "readOnly", Boolean.class),
     RELOAD_ON_CHANGE_ATTR(BeanInfoConstants.RELOAD_ON_CHANGE, "reloadOnChange", Boolean.class),
-    COLUMN_SIZE_ATTR(BeanInfoConstants.COLUMN_SIZE_ATTR, "columnSize", String.class),
     TAG_LIST_ATTR(BeanInfoConstants.TAG_LIST_ATTR, "tagList", String.class),
     GROUP_NAME_ATTR(BeanInfoConstants.GROUP_NAME, "groupName", String.class),
     GROUP_ID_ATTR(BeanInfoConstants.GROUP_ID, "groupId", Object.class),
-    MULTIPLE_SELECTION_LIST_ATTR(BeanInfoConstants.MULTIPLE_SELECTION_LIST, "multipleSelectionList", Boolean.class),
 
+    MULTIPLE_SELECTION_LIST_ATTR(BeanInfoConstants.MULTIPLE_SELECTION_LIST, "multipleSelectionList", Boolean.class),
+    PASSWORD_FIELD(BeanInfoConstants.PASSWORD_FIELD, "passwordField", Boolean.class),
+
+    COLUMN_SIZE_ATTR(BeanInfoConstants.COLUMN_SIZE_ATTR, "columnSize", Object.class),
+    INPUT_SIZE_ATTR(BeanInfoConstants.INPUT_SIZE_ATTR, "inputSize", Object.class),
     STATUS_ATTR(BeanInfoConstants.STATUS, "status", String.class),
     MESSAGE_ATTR(BeanInfoConstants.MESSAGE, "message", String.class);
 

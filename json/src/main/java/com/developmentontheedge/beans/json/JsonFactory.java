@@ -274,14 +274,7 @@ public class JsonFactory
             json.add(HIDDEN_ATTR.key, true );
         }
 
-        //json.add( "extraAttrs", property.getAttribute( BeanInfoConstants.EXTRA_ATTRS ) );
-
-        Object columnSizeAttr = property.getAttribute( BeanInfoConstants.COLUMN_SIZE_ATTR );
-        if(columnSizeAttr != null)
-        {
-            json.add(COLUMN_SIZE_ATTR.key, "" + columnSizeAttr );
-        }
-
+        //todo  NO_TAG_LIST, EXTRA_ATTRS make array type and move logic to  addAttr()
         if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
         {
             @SuppressWarnings("unchecked")
@@ -308,11 +301,15 @@ public class JsonFactory
         addAttr(json, property, RAW_VALUE_ATTR);
         addAttr(json, property, GROUP_NAME_ATTR);
         addAttr(json, property, GROUP_ID_ATTR);
-        addAttr(json, property, MULTIPLE_SELECTION_LIST_ATTR);
-        addAttr(json, property, STATUS_ATTR);
-        addAttr(json, property, MESSAGE_ATTR);
         addAttr(json, property, READ_ONLY_ATTR);
         addAttr(json, property, CAN_BE_NULL_ATTR);
+        addAttr(json, property, MULTIPLE_SELECTION_LIST_ATTR);
+        addAttr(json, property, PASSWORD_FIELD);
+        addAttr(json, property, INPUT_SIZE_ATTR);
+        addAttr(json, property, COLUMN_SIZE_ATTR);
+        addAttr(json, property, STATUS_ATTR);
+        addAttr(json, property, MESSAGE_ATTR);
+        //json.add( "extraAttrs", property.getAttribute( BeanInfoConstants.EXTRA_ATTRS ) );
 
         return json.build();
     }
