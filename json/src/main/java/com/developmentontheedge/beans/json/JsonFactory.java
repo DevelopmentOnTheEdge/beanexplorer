@@ -150,12 +150,11 @@ public class JsonFactory
 
     private static void dpsOrder(DynamicPropertySet dps, JsonArrayBuilder json, JsonPath path)
     {
-        for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
+        for (DynamicProperty property: dps)
         {
-            String key = entry.getKey();
-            Object value = entry.getValue();
+            Object value = property.getValue();
 
-            JsonPath newPath = path.append(key);
+            JsonPath newPath = path.append(property.getName());
             json.add(newPath.get());
             if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, newPath);
         }
@@ -163,14 +162,14 @@ public class JsonFactory
 
     private static void dpsMeta(DynamicPropertySet dps, JsonObjectBuilder json, JsonPath path)
     {
-        for( DynamicProperty dynamicProperty : dps )
+        for(DynamicProperty property : dps)
         {
-            JsonPath newPath = path.append(dynamicProperty.getName());
-            json.add( newPath.get(), dynamicPropertyMeta(dynamicProperty) );
+            JsonPath newPath = path.append(property.getName());
+            json.add( newPath.get(), dynamicPropertyMeta(property) );
 
-            if(dynamicProperty.getValue() instanceof DynamicPropertySet)
+            if(property.getValue() instanceof DynamicPropertySet)
             {
-                dpsMeta((DynamicPropertySet)dynamicProperty.getValue(), json, newPath);
+                dpsMeta((DynamicPropertySet)property.getValue(), json, newPath);
             }
         }
     }
@@ -228,9 +227,9 @@ public class JsonFactory
     private static JsonObjectBuilder dpsValuesBuilder(DynamicPropertySet dps)
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
-        for (Map.Entry<String, Object> entry :dps.asMap().entrySet())
+        for(DynamicProperty property : dps)
         {
-            addValueToObject(json, entry.getKey(), entry.getValue());
+            addValueToObject(json, property.getName(), property.getValue());
         }
         return json;
     }

@@ -18,14 +18,14 @@ public class JsonFactoryDpsTest
     public void init()
     {
         dps = new DynamicPropertySetSupport();
-        dps.add(new DynamicProperty("name", "Name", String.class, "testName"));
         dps.add(new DynamicProperty("number", "Number", Long.class, 1L));
+        dps.add(new DynamicProperty("name", "Name", String.class, "testName"));
     }
 
     @Test
     public void testDpsValues() throws Exception
     {
-        assertEquals("{'name':'testName','number':1}",
+        assertEquals("{'number':1,'name':'testName'}",
                 oneQuotes(JsonFactory.dpsValues(dps).toString()));
     }
 
@@ -33,21 +33,22 @@ public class JsonFactoryDpsTest
     public void testDpsMeta() throws Exception
     {
         assertEquals("{" +
-                        "'/name':{'displayName':'Name'}," +
-                        "'/number':{'displayName':'Number','type':'Long'}" +
+                        "'/number':{'displayName':'Number','type':'Long'}," +
+                        "'/name':{'displayName':'Name'}" +
             "}",oneQuotes(JsonFactory.dpsMeta(dps).toString()));
     }
 
     @Test
     public void testDpsOrder() throws Exception
     {
-        assertEquals("['/name','/number']",
+        assertEquals("['/number','/name']",
                 oneQuotes(JsonFactory.dpsOrder(dps).toString()));
     }
 
     @Test
     public void testDpsMetaAttr() throws Exception
     {
+        dps.remove("number");
         dps.getProperty("name").setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
         dps.getProperty("name").setAttribute(BeanInfoConstants.MESSAGE, "Invalid type");
         dps.getProperty("name").setAttribute(BeanInfoConstants.STATUS, "error");
@@ -57,8 +58,7 @@ public class JsonFactoryDpsTest
                             "'multipleSelectionList':true," +
                             "'status':'error'," +
                             "'message':'Invalid type'" +
-                        "}," +
-                        "'/number':{'displayName':'Number','type':'Long'}" +
+                        "}" +
             "}", oneQuotes(JsonFactory.dpsMeta(dps).toString()));
     }
 
@@ -66,12 +66,12 @@ public class JsonFactoryDpsTest
     public void testDps() throws Exception
     {
         assertEquals("{" +
-                        "'values':{'name':'testName','number':1}," +
+                        "'values':{'number':1,'name':'testName'}," +
                         "'meta':{" +
-                            "'/name':{'displayName':'Name'}," +
-                            "'/number':{'displayName':'Number','type':'Long'}" +
+                            "'/number':{'displayName':'Number','type':'Long'}," +
+                            "'/name':{'displayName':'Name'}" +
                         "}," +
-                        "'order':['/name','/number']" +
+                        "'order':['/number','/name']" +
                     "}",
                 oneQuotes(JsonFactory.dps(dps).toString()));
     }
