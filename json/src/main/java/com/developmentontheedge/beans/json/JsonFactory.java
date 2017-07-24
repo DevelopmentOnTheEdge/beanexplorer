@@ -12,6 +12,7 @@ import com.developmentontheedge.beans.model.Property;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Date;
 import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -187,6 +188,8 @@ public class JsonFactory
         if( klass == Float.class ){     json.add(name, (float)value ); return;}
         if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return;}
         if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return;}
+
+        if( klass == Date.class ){json.add(name, value.toString() ); return;}
 
         if( value instanceof JsonValue ){
             json.add(name, (JsonValue)value); return;

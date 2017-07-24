@@ -8,6 +8,10 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import static org.junit.Assert.assertEquals;
 
 public class JsonFactoryDpsTest
@@ -43,6 +47,21 @@ public class JsonFactoryDpsTest
     {
         assertEquals("['/number','/name']",
                 oneQuotes(JsonFactory.dpsOrder(dps).toString()));
+    }
+
+    @Test
+    public void testDpsValueDate() throws Exception
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        Date date = new Date(df.parse("2017-07-24").getTime());
+        dps.add(new DynamicProperty("a", "a", Date.class, date.toString()));
+        assertEquals("{'a':'2017-01-24'}",
+                oneQuotes(JsonFactory.dpsValues(dps).toString()));
+
+        dps.getProperty("a").setValue(date);
+        assertEquals("{'a':'2017-01-24'}",
+                oneQuotes(JsonFactory.dpsValues(dps).toString()));
     }
 
     @Test
