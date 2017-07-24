@@ -191,13 +191,24 @@ public class JsonFactory
 
         if( klass == Date.class ){json.add(name, value.toString() ); return;}
 
-        if( value instanceof JsonValue ){
+        if( value instanceof JsonValue )
+        {
             json.add(name, (JsonValue)value); return;
         }
 
-        if( value instanceof DynamicPropertySet){
+        if( value instanceof DynamicPropertySet)
+        {
             json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return;
         }
+
+        if( value instanceof Object[])
+        {
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+            for (Object aValueArr : (Object[]) value)addValueToArray(arrayBuilder, aValueArr);
+            json.add(name, arrayBuilder.build());
+            return;
+        }
+
         CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
         json.add(name, propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }
@@ -216,13 +227,18 @@ public class JsonFactory
         if( klass == BigInteger.class ){json.add((BigInteger) value ); return;}
         if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return;}
 
-        if( value instanceof JsonValue ){
+        if( klass == Date.class ){json.add(value.toString() ); return;}
+
+        if( value instanceof JsonValue )
+        {
             json.add((JsonValue)value); return;
         }
 
-        if( value instanceof DynamicPropertySet){
+        if( value instanceof DynamicPropertySet)
+        {
             json.add(dpsValuesBuilder((DynamicPropertySet)value));return;
         }
+
         CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
         json.add(propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
     }

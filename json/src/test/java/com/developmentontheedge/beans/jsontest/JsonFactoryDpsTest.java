@@ -65,6 +65,18 @@ public class JsonFactoryDpsTest
     }
 
     @Test
+    public void testDpsValueArray() throws Exception
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+
+        dps.add(new DynamicProperty("a", "a", String.class, new String[]{"vacation","sick"}));
+        dps.getProperty("a").setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
+
+        assertEquals("{'a':['vacation','sick']}",
+                oneQuotes(JsonFactory.dpsValues(dps).toString()));
+    }
+
+    @Test
     public void testDpsMetaAttr() throws Exception
     {
         dps.remove("number");
