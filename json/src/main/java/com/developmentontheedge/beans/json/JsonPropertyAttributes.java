@@ -19,9 +19,10 @@ enum JsonPropertyAttributes
 
     MULTIPLE_SELECTION_LIST_ATTR(BeanInfoConstants.MULTIPLE_SELECTION_LIST, "multipleSelectionList", Boolean.class),
     PASSWORD_FIELD(BeanInfoConstants.PASSWORD_FIELD, "passwordField", Boolean.class),
+    LABEL_FIELD(BeanInfoConstants.LABEL_FIELD, "labelField", Boolean.class),
 
     COLUMN_SIZE_ATTR(BeanInfoConstants.COLUMN_SIZE_ATTR, "columnSize", Object.class),
-    INPUT_SIZE_ATTR(BeanInfoConstants.INPUT_SIZE_ATTR, "inputSize", Object.class),
+    CSS_CLASSES(BeanInfoConstants.CSS_CLASSES, "cssClasses", String.class),
     STATUS_ATTR(BeanInfoConstants.STATUS, "status", String.class),
     MESSAGE_ATTR(BeanInfoConstants.MESSAGE, "message", String.class);
 

@@ -305,7 +305,8 @@ public class JsonFactory
         addAttr(json, property, CAN_BE_NULL_ATTR);
         addAttr(json, property, MULTIPLE_SELECTION_LIST_ATTR);
         addAttr(json, property, PASSWORD_FIELD);
-        addAttr(json, property, INPUT_SIZE_ATTR);
+        addAttr(json, property, LABEL_FIELD);
+        addAttr(json, property, CSS_CLASSES);
         addAttr(json, property, COLUMN_SIZE_ATTR);
         addAttr(json, property, STATUS_ATTR);
         addAttr(json, property, MESSAGE_ATTR);
