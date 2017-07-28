@@ -44,8 +44,6 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.IconResource;
 import com.developmentontheedge.beans.log.Logger;
 
-import javax.json.JsonValue;
-
 public class ComponentFactory implements InternalConstants
 {
     public static final String DEFAULT_SWING_BEANINFO_PATH = "com.developmentontheedge.beans.swing.infos";
@@ -94,7 +92,7 @@ public class ComponentFactory implements InternalConstants
         {
             return addPropertyChangeListeners;
         }
-        
+
         private boolean skipClassProperty;
         public boolean getSkipClassProperty()
         {
@@ -177,7 +175,7 @@ public class ComponentFactory implements InternalConstants
                     if( dynamicProperty != null )
                     {
                         Property p = createProperty( dynamicProperty.getType(), owner, dynamicProperty.getDescriptor(), parent, policy );
-                        
+
                         if( p != null && !(policy.getSkipClassProperty() && p.getName().equals("class")) )
                         {
                             vProperties.addElement( p );
@@ -306,22 +304,20 @@ public class ComponentFactory implements InternalConstants
 
         String typeName = type.getName();
         BeanInfo typeBeanInfo = Introspector.getBeanInfo( type );
-        
+
         BeanDescriptor beanDescriptor = typeBeanInfo.getBeanDescriptor();
-        
+
         if( beanDescriptor != null )
             synchronized( beanDescriptor )
             {
-               //Following line will init FeatureDescriptor.table to prevent further race conditions
+                //Following line will init FeatureDescriptor.table to prevent further race conditions
                 beanDescriptor.attributeNames();
             }
-        
+
         descriptor = merge( beanDescriptor, descriptor, owner instanceof DynamicPropertySet );
 
         // define whether the property is simple or composite
-        boolean isSimple = (   type.isPrimitive()
-                            || typeName.indexOf( "java.lang" ) >= 0
-                            || JsonValue.class.isAssignableFrom(type))
+        boolean isSimple = ( type.isPrimitive() || typeName.indexOf( "java.lang" ) >= 0 )
                 && ( typeName.indexOf( "java.lang.Object" ) == -1 );
 
         if( !isSimple && descriptor.getValue( BeanInfoEx.SIMPLE ) != null )

@@ -5,86 +5,10 @@ import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
 
 import java.awt.Color;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 
 class TestBeans
 {
-    public static class BeanWithMap
-    {
-        final Map<String, String> field;
-
-        BeanWithMap(Map<String, String> field)
-        {
-            this.field = field;
-        }
-
-        public Map<String, String> getField()
-        {
-            return field;
-        }
-    }
-
-    public static class BeanWithMapLong
-    {
-        final Map<Long, Long> field;
-
-        BeanWithMapLong(Map<Long, Long> field)
-        {
-            this.field = field;
-        }
-
-        public Map<Long, Long> getField()
-        {
-            return field;
-        }
-    }
-
-    public static class BeanWithList
-    {
-        private List<String> field;
-
-        BeanWithList(List<String> field)
-        {
-            this.field = field;
-        }
-
-        public List<String> getField()
-        {
-            return field;
-        }
-    }
-
-    public static class BeanWithListLong
-    {
-        private List<Long> field;
-
-        BeanWithListLong(List<Long> field)
-        {
-            this.field = field;
-        }
-
-        public List<Long> getField()
-        {
-            return field;
-        }
-    }
-
-    public static class BeanWithListObj
-    {
-        private List<InnerBeanClass> field;
-
-        BeanWithListObj(List<InnerBeanClass> field)
-        {
-            this.field = field;
-        }
-
-        public List<InnerBeanClass> getField()
-        {
-            return field;
-        }
-    }
-
     public static class FormPresentation
     {
         final String title;
@@ -109,9 +33,11 @@ class TestBeans
 
     public static class SimpleBean
     {
+        private long arr[];
         private String name;
         private int number;
-        private long arr[];
+
+        public SimpleBean() {}
 
         SimpleBean(String name, int number, long[] arr) {
 
@@ -131,12 +57,51 @@ class TestBeans
         public long[] getArr() {
             return arr;
         }
+
+        public void setArr(long[] arr)
+        {
+            this.arr = arr;
+        }
+
+        public void setName(String name)
+        {
+            this.name = name;
+        }
+
+        public void setNumber(int number)
+        {
+            this.number = number;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (!(o instanceof SimpleBean)) return false;
+
+            SimpleBean that = (SimpleBean) o;
+
+            if (number != that.number) return false;
+            if (!Arrays.equals(arr, that.arr)) return false;
+            if (name != null ? !name.equals(that.name) : that.name != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = arr != null ? Arrays.hashCode(arr) : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            result = 31 * result + number;
+            return result;
+        }
     }
 
     public static class BeanWithInnerClass
     {
-        private InnerBeanClass field1;
         private InnerBeanClass arr[];
+        private InnerBeanClass field1;
 
         BeanWithInnerClass(InnerBeanClass field1, InnerBeanClass[] arr) {
             this.field1 = field1;
@@ -150,28 +115,15 @@ class TestBeans
     public static class InnerBeanClass
     {
         String name;
+
+        public InnerBeanClass() {}
+
         InnerBeanClass(String name) {this.name = name;}
         public String getName() {return name;}
-    }
 
-    public static class TypedResponse {
-        final String type;
-        final Object value;
-
-        TypedResponse(String type, Object value)
+        public void setName(String name)
         {
-            this.type = type;
-            this.value = value;
-        }
-
-        public String getType()
-        {
-            return type;
-        }
-
-        public Object getValue()
-        {
-            return value;
+            this.name = name;
         }
     }
 
@@ -236,6 +188,23 @@ class TestBeans
 //            this.interval = interval;
 //        }
     }
+
+//    enum EnumClass{
+//        test,test2
+//    }
+//
+//    public static class ClassWithEnum{
+//        EnumClass status;
+//
+//        ClassWithEnum(EnumClass enumClass) {
+//            this.status = enumClass;
+//        }
+//
+//        public EnumClass getStatus() {
+//            return status;
+//        }
+//    }
+
 
 //    @Test
 //    public void testGetModelAsJson()

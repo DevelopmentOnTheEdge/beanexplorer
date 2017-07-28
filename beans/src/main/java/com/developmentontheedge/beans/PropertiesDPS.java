@@ -224,6 +224,16 @@ public class PropertiesDPS extends Option implements DynamicPropertySet
         throw new UnsupportedOperationException();
     }
 
+    public DynamicPropertySet plus( DynamicPropertySet dps ){return null;}
+    public DynamicPropertySet leftShift(DynamicProperty property)
+    {
+        return null;
+    }
+    public DynamicPropertySet leftShift(Map<String, Object> properties)
+    {
+        return null;
+    }
+
     @Override
     public void firePropertyChange(PropertyChangeEvent evt)
     {

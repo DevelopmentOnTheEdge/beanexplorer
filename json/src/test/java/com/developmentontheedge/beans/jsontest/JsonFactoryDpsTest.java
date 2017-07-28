@@ -1,11 +1,16 @@
 package com.developmentontheedge.beans.jsontest;
 
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,14 +22,14 @@ public class JsonFactoryDpsTest
     public void init()
     {
         dps = new DynamicPropertySetSupport();
-        dps.add(new DynamicProperty("name", "Name", String.class, "testName"));
         dps.add(new DynamicProperty("number", "Number", Long.class, 1L));
+        dps.add(new DynamicProperty("name", "Name", String.class, "testName"));
     }
 
     @Test
     public void testDpsValues() throws Exception
     {
-        assertEquals("{'name':'testName','number':1}",
+        assertEquals("{'number':1,'name':'testName'}",
                 oneQuotes(JsonFactory.dpsValues(dps).toString()));
     }
 
@@ -32,28 +37,72 @@ public class JsonFactoryDpsTest
     public void testDpsMeta() throws Exception
     {
         assertEquals("{" +
-                        "'/name':{'displayName':'Name'}," +
-                        "'/number':{'displayName':'Number','type':'Long'}" +
+                        "'/number':{'displayName':'Number','type':'Long'}," +
+                        "'/name':{'displayName':'Name'}" +
             "}",oneQuotes(JsonFactory.dpsMeta(dps).toString()));
     }
 
     @Test
     public void testDpsOrder() throws Exception
     {
-        assertEquals("['/name','/number']",
+        assertEquals("['/number','/name']",
                 oneQuotes(JsonFactory.dpsOrder(dps).toString()));
+    }
+
+    @Test
+    public void testDpsValueDate() throws Exception
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        Date date = new Date(df.parse("2017-07-24").getTime());
+        dps.add(new DynamicProperty("a", "a", Date.class, date.toString()));
+        assertEquals("{'a':'2017-01-24'}",
+                oneQuotes(JsonFactory.dpsValues(dps).toString()));
+
+        dps.getProperty("a").setValue(date);
+        assertEquals("{'a':'2017-01-24'}",
+                oneQuotes(JsonFactory.dpsValues(dps).toString()));
+    }
+
+    @Test
+    public void testDpsValueArray() throws Exception
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+
+        dps.add(new DynamicProperty("a", "a", String.class, new String[]{"vacation","sick"}));
+        dps.getProperty("a").setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
+
+        assertEquals("{'a':['vacation','sick']}",
+                oneQuotes(JsonFactory.dpsValues(dps).toString()));
+    }
+
+    @Test
+    public void testDpsMetaAttr() throws Exception
+    {
+        dps.remove("number");
+        dps.getProperty("name").setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
+        dps.getProperty("name").setAttribute(BeanInfoConstants.MESSAGE, "Invalid type");
+        dps.getProperty("name").setAttribute(BeanInfoConstants.STATUS, "error");
+        assertEquals("{" +
+                        "'/name':{" +
+                            "'displayName':'Name'," +
+                            "'multipleSelectionList':true," +
+                            "'status':'error'," +
+                            "'message':'Invalid type'" +
+                        "}" +
+            "}", oneQuotes(JsonFactory.dpsMeta(dps).toString()));
     }
 
     @Test
     public void testDps() throws Exception
     {
         assertEquals("{" +
-                        "'values':{'name':'testName','number':1}," +
+                        "'values':{'number':1,'name':'testName'}," +
                         "'meta':{" +
-                            "'/name':{'displayName':'Name'}," +
-                            "'/number':{'displayName':'Number','type':'Long'}" +
+                            "'/number':{'displayName':'Number','type':'Long'}," +
+                            "'/name':{'displayName':'Name'}" +
                         "}," +
-                        "'order':['/name','/number']" +
+                        "'order':['/number','/name']" +
                     "}",
                 oneQuotes(JsonFactory.dps(dps).toString()));
     }

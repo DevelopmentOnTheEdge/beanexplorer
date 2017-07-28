@@ -95,6 +95,19 @@ public class DynamicPropertySetAsMap extends AbstractDynamicPropertySet
         return retVal;
     }
 
+    public DynamicPropertySet plus( DynamicPropertySet dps )
+    {
+        return null;
+    }
+    public DynamicPropertySet leftShift(DynamicProperty property)
+    {
+        return null;
+    }
+    public DynamicPropertySet leftShift(Map<String, Object> properties)
+    {
+        return null;
+    }
+
     @Override
     public Iterator<String> nameIterator()
     {

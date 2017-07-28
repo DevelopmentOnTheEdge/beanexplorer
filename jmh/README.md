@@ -2,37 +2,40 @@
 
 ```
 $ mvn clean install
-$ java -jar target/benchmarks.jar JsonFactoryBeanTestArray -wi 10 -i 10 -f 1
+$ java -jar target/benchmarks.jar JsonFactoryTestBeanSimple -wi 10 -i 40 -f 1
 ```
 
+### Tested on i5-3550 3.3GHz
 ```text
-# Run complete. Total time: 00:04:07
+# Run complete. Total time: 00:03:22
 
-Benchmark                                 Mode  Cnt      Score      Error  Units
-JsonFactoryBeanTestSimple.simpleGson         thrpt   40  55159,157 ▒ 4445,051  ops/s
-JsonFactoryBeanTestSimple.simpleJackson      thrpt   40  96416,320 ▒ 3944,335  ops/s
-JsonFactoryBeanTestSimple.simpleJsonFactory  thrpt   40  56475,096 ▒  955,274  ops/s
-```
+Benchmark                               Mode  Cnt        Score       Error  Units
+JsonFactoryTestBeanSimple.gson         thrpt   40  2610378,517 ▒ 37294,638  ops/s
+JsonFactoryTestBeanSimple.jackson      thrpt   40  5865670,372 ▒ 21658,370  ops/s
+JsonFactoryTestBeanSimple.jsonB        thrpt   40  4154190,199 ▒ 10952,141  ops/s
+JsonFactoryTestBeanSimple.jsonFactory  thrpt   40    88148,975 ▒   390,955  ops/s
 
-```text
-Benchmark                                        Mode  Cnt       Score       Error  Units
-JsonFactoryTestDps.simpleGsonForSimilarBean     thrpt   10   53037,139 ▒ 14217,360  ops/s
-JsonFactoryTestDps.simpleJacksonForSimilarBean  thrpt   10   25844,191 ▒   555,991  ops/s
-JsonFactoryTestDps.simpleJsonFactory            thrpt   10  117725,407 ▒  3230,461  ops/s
-```
+# Run complete. Total time: 00:03:22
 
-```text
-# Run complete. Total time: 00:04:07
+Benchmark                             Mode  Cnt      Score     Error  Units
+JsonFactoryTestBeanList.gson         thrpt   40  37445,630 ▒ 284,642  ops/s
+JsonFactoryTestBeanList.jackson      thrpt   40  83592,827 ▒ 218,986  ops/s
+JsonFactoryTestBeanList.jsonb        thrpt   40  61246,003 ▒ 121,260  ops/s
+JsonFactoryTestBeanList.jsonFactory  thrpt   40    983,276 ▒   8,150  ops/s
+
+# Run complete. Total time: 00:03:23
 
 Benchmark                              Mode  Cnt      Score     Error  Units
-JsonFactoryBeanTestArray.simpleGson         thrpt   40   4524,384 ▒ 217,785  ops/s
-JsonFactoryBeanTestArray.simpleJackson      thrpt   40  15017,219 ▒ 315,174  ops/s
-JsonFactoryBeanTestArray.simpleJsonFactory  thrpt   40    171,877 ▒   3,781  ops/s
+JsonFactoryTestBeanArray.gson         thrpt   40  10093,246 ▒ 107,504  ops/s
+JsonFactoryTestBeanArray.jackson      thrpt   40  44485,383 ▒ 374,160  ops/s
+JsonFactoryTestBeanArray.jsonB        thrpt   40  11151,769 ▒ 197,650  ops/s
+JsonFactoryTestBeanArray.jsonFactory  thrpt   40    273,284 ▒   1,629  ops/s
 ```
 
 ```text
-Benchmark                                   Mode  Cnt      Score      Error  Units
-JsonFactoryTestBeanList.simpleGson         thrpt    5   9110,273 ▒  646,035  ops/s
-JsonFactoryTestBeanList.simpleJackson      thrpt    5  16060,306 ▒ 4799,021  ops/s
-JsonFactoryTestBeanList.simpleJsonFactory  thrpt    5    635,596 ▒   46,014  ops/s
+Benchmark                                  Mode  Cnt        Score       Error  Units
+JsonFactoryTestDps.gsonForSimilarBean     thrpt   40  2796662,363 ▒ 21188,789  ops/s
+JsonFactoryTestDps.jacksonForSimilarBean  thrpt   40  5888056,654 ▒ 13279,409  ops/s
+JsonFactoryTestDps.jsonBForSimilarBean    thrpt   40  3732156,036 ▒ 19159,581  ops/s
+JsonFactoryTestDps.jsonFactory            thrpt   40   167830,285 ▒   360,549  ops/s
 ```

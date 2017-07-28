@@ -3,12 +3,15 @@ package com.developmentontheedge.beans;
 import java.beans.PropertyDescriptor;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.StringTokenizer;
@@ -38,6 +41,27 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     public DynamicPropertySetSupport()
     {
         this(true);
+    }
+
+    public DynamicPropertySetSupport( DynamicPropertySet dps, boolean useAddIndexes )
+    {
+        this( useAddIndexes );
+        dps.forEach( dp ->
+        {
+            try
+            {
+                add( cloneProperty( dp ) );
+            }
+            catch( Exception wierd )
+            {
+                Logger.getLogger().error( "Unable to clone property " + dp.getName() + ", message = " + wierd.getMessage() );
+            }
+        } );
+    }
+
+    public DynamicPropertySetSupport( DynamicPropertySet dps )
+    {
+        this( dps, dps instanceof DynamicPropertySetSupport && ( ( DynamicPropertySetSupport )dps ).isUseAddIndexes() );
     }
 
     public DynamicPropertySetSupport( Map<String,?> map )
@@ -739,5 +763,33 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         }
 
         return label.toString();
+    }
+
+    private Object removeFromMap( Map map, Object element )
+    {
+        if( map.containsKey( element ) )
+        {
+            return map.remove( element );
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private String asString( Object o )
+    {
+        return o != null ? o.toString() : null;
+    }
+
+    static final List<String> beanInfoConstants = new ArrayList<>();
+    static {
+        Field[] fields = BeanInfoConstants.class.getDeclaredFields();
+        for (Field f : fields)
+        {
+            if (Modifier.isStatic(f.getModifiers())) {
+                beanInfoConstants.add(f.getName());//f.get(null).toString()
+            }
+        }
     }
 }

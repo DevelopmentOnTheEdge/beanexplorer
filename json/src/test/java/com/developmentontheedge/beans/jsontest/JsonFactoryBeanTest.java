@@ -6,8 +6,6 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
 import org.junit.Test;
 
-import javax.json.JsonObject;
-
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
@@ -22,22 +20,6 @@ public class JsonFactoryBeanTest
                         "'name':'bean'," +
                         "'number':5" +
                 "}", oneQuotes(JsonFactory.beanValues(bean).toString()));
-    }
-
-    @Test
-    public void simpleBeanValuesWithJsonValue()
-    {
-        TestBeans.InnerBeanClass bean = new TestBeans.InnerBeanClass("foo");
-        JsonObject jsonObject = JsonFactory.beanValues(bean);
-        TestBeans.TypedResponse typedResponse = new TestBeans.TypedResponse("form", jsonObject);
-
-        assertEquals("{'name':'foo'}", oneQuotes(jsonObject.toString()));
-
-        assertEquals("" +
-                    "{" +
-                        "'type':'form'," +
-                        "'value':{'name':'foo'}" +
-            "}" , oneQuotes(JsonFactory.beanValues(typedResponse).toString()));
     }
 
     @Test
@@ -60,9 +42,9 @@ public class JsonFactoryBeanTest
     {
         TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
         assertEquals("{" +
-                        "'/arr':{'type':'long[]','readOnly':true}," +
-                        "'/name':{'type':'String','readOnly':true}," +
-                        "'/number':{'type':'Integer','readOnly':true}}",
+                        "'/arr':{'type':'long[]'}," +
+                        "'/name':{'type':'String'}," +
+                        "'/number':{'type':'Integer'}}",
                 oneQuotes(JsonFactory.beanMeta(bean).toString()));
     }
 
@@ -90,5 +72,41 @@ public class JsonFactoryBeanTest
                         "'order':['/dps','/dps/name','/title']" +
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
+
+//    @Test
+//    public void beanInt()
+//    {
+//        assertEquals("{"
+//                , oneQuotes(JsonFactory.bean(1).toString()));
+//    }
+//
+//    @Test
+//    public void beanString()
+//    {
+//        assertEquals("{"
+//                , oneQuotes(JsonFactory.bean("string").toString()));
+//    }
+//
+//    @Test
+//    public void beanEnum()
+//    {
+//        assertEquals("{"
+//                , oneQuotes(JsonFactory.bean(TestBeans.EnumClass.test).toString()));
+//    }
+
+//    not support in java beans
+//    @Test
+//    public void beanWithEnum()
+//    {
+//        assertEquals("{" +
+//                        "'values':{" +
+//                            "'status':'test2'}," +
+//                        "'meta':{" +
+//                            "'/status':{'type':'EnumClass','readOnly':true}" +
+//                        "}," +
+//                        "'order':['/status']}"
+//                , oneQuotes(JsonFactory.bean(new TestBeans.ClassWithEnum(TestBeans.EnumClass.test2)).toString()));
+//    }
+
 
 }

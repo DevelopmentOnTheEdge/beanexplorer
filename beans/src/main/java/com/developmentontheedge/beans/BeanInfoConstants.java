@@ -163,6 +163,10 @@ public interface BeanInfoConstants
      */
     String HIDE_CHILDREN = "hide-children";
 
+    String STATUS = "status";
+
+    String MESSAGE = "message";
+
     ////////////////////////////////////////
     //
     //
@@ -249,6 +253,7 @@ public interface BeanInfoConstants
     String PASSWORD_FIELD = "password-field";
     String PSEUDO_PROPERTY = "pseudo-property";
     String COLOR_PICKER = "color-picker";
+    String LABEL_FIELD = "label-field";
 
     // attributes for text area size
     String INPUT_SIZE_ATTR = "input-size-attr";
@@ -256,6 +261,7 @@ public interface BeanInfoConstants
     String NCOLUMNS_ATTR = "cols-attr";
     String NROWS_ATTR = "rows-attr";
     String SKIP_SMART_BOOLEAN_TRUNC_ATTR = "skip-smart-boolean-trunc-attr";
+    String CSS_CLASSES = "css-classes";
 
     // HTML Form Property Inspector
     String EXTRA_ATTRS = "extra-attrs-attr";
