@@ -9,7 +9,6 @@ import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 
-import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -40,12 +39,11 @@ public class JsonFactory
     public static JsonObject dps(DynamicPropertySet dps)
     {
         requireNonNull(dps);
-
-        JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add("values", dpsValues(dps));
-        result.add("meta", dpsMeta(dps));
-        result.add("order", dpsOrder(dps));
-        return result.build();
+        return Json.createObjectBuilder()
+                .add("values", dpsValues(dps))
+                .add("meta", dpsMeta(dps))
+                .add("order", dpsOrder(dps))
+                .build();
     }
 
     public static JsonObject dpsValues(DynamicPropertySet dps)
@@ -86,11 +84,11 @@ public class JsonFactory
         requireNonNull(fieldMap);
         if (bean instanceof DynamicPropertySet)return dps((DynamicPropertySet) bean);
 
-        JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add("values", beanValues(bean, fieldMap));
-        result.add("meta", beanMeta(bean, fieldMap));
-        result.add("order", beanOrder(bean, fieldMap));
-        return result.build();
+        return Json.createObjectBuilder()
+                .add("values", beanValues(bean, fieldMap))
+                .add("meta", beanMeta(bean, fieldMap))
+                .add("order", beanOrder(bean, fieldMap))
+                .build();
     }
 
     public static JsonObject beanValues(Object bean)
