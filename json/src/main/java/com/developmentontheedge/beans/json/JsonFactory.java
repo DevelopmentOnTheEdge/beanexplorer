@@ -499,18 +499,18 @@ public class JsonFactory
 
         return json.build();
     }
-
-    /**
-     * Counterpart for parseColor
-     * @param color color to encode
-     * @return array of color components
-     */
-    static JsonArrayBuilder encodeColor(Color color)
-    {
-        JsonArrayBuilder json = Json.createArrayBuilder();
-        if(color == null || color.getAlpha() == 0) return json;
-
-        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
-    }
+//
+//    /**
+//     * Counterpart for parseColor
+//     * @param color color to encode
+//     * @return array of color components
+//     */
+//    static JsonArrayBuilder encodeColor(Color color)
+//    {
+//        JsonArrayBuilder json = Json.createArrayBuilder();
+//        if(color == null || color.getAlpha() == 0) return json;
+//
+//        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
+//    }
 
 }
