@@ -13,7 +13,6 @@ import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
-import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -275,7 +274,7 @@ public class JsonFactory
         }
 
         //todo  NO_TAG_LIST, EXTRA_ATTRS make array type and move logic to  addAttr()
-        if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
+        if(!property.getBooleanAttribute( BeanInfoConstants.NO_TAG_LIST ))
         {
             @SuppressWarnings("unchecked")
             String[][] tags = (String[][])property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR );
@@ -283,16 +282,15 @@ public class JsonFactory
             if( tags != null )
             {
                 JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
                 for (String[] tag : tags)
                 {
-                    JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
-                    for (String item : tag)
-                    {
-                        arrayBuilder2.add(item);
-                    }
-                    arrayBuilder.add(arrayBuilder2.build());
+                    arrayBuilder.add(arrayBuilder2
+                            .add(tag[0])
+                            .add(tag[1])
+                            .build()
+                    );
                 }
-
                 json.add(TAG_LIST_ATTR.key, arrayBuilder.build());
             }
         }
