@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class JsonFactory
 {
-    private static final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
+    public static final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
 
     ///////////////////////////////////////////////////////////////////////////
     // public API
