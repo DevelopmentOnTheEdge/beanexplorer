@@ -8,6 +8,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
@@ -20,6 +24,14 @@ public class JsonFactoryDynamicPropertyAttributesTest
     public void init()
     {
         dynamicProperty = new DynamicProperty("name", "Name", String.class, "testName");
+    }
+
+    @Test
+    public void test()
+    {
+        JsonPropertyAttributes[] values = JsonPropertyAttributes.values();
+        Set<String> collect = Stream.of(values).map(value -> value.key).sorted().collect(Collectors.toSet());
+        assertEquals(values.length, collect.size());
     }
 
     @Test
