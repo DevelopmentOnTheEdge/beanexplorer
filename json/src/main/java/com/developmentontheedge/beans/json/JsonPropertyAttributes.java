@@ -6,39 +6,37 @@ import java.lang.reflect.Array;
 
 enum JsonPropertyAttributes
 {
-    TYPE_ATTR(null, "type", Class.class),
-    DESCRIPTION_ATTR(null, "description", String.class),
+    type(null, Class.class),
+    description(null, String.class),
 
-    DISPLAY_NAME_ATTR(BeanInfoConstants.DISPLAY_NAME, "displayName", String.class),
-    CAN_BE_NULL_ATTR(BeanInfoConstants.CAN_BE_NULL, "canBeNull", Boolean.class),
-    HIDDEN_ATTR(BeanInfoConstants.HIDDEN, "hidden", Boolean.class),
-    RAW_VALUE_ATTR(BeanInfoConstants.RAW_VALUE, "rawValue", Boolean.class),
-    READ_ONLY_ATTR(BeanInfoConstants.READ_ONLY, "readOnly", Boolean.class),
-    RELOAD_ON_CHANGE_ATTR(BeanInfoConstants.RELOAD_ON_CHANGE, "reloadOnChange", Boolean.class),
-    TAG_LIST_ATTR(BeanInfoConstants.TAG_LIST_ATTR, "tagList", Array.class),
-    EXTRA_ATTRS(BeanInfoConstants.EXTRA_ATTRS, "extraAttrs", Array.class),
-    GROUP_NAME_ATTR(BeanInfoConstants.GROUP_NAME, "groupName", String.class),
-    GROUP_ID_ATTR(BeanInfoConstants.GROUP_ID, "groupId", Object.class),
+    displayName(BeanInfoConstants.DISPLAY_NAME, String.class),
+    canBeNull(BeanInfoConstants.CAN_BE_NULL, Boolean.class),
+    hidden(BeanInfoConstants.HIDDEN, Boolean.class),
+    rawValue(BeanInfoConstants.RAW_VALUE, Boolean.class),
+    readOnly(BeanInfoConstants.READ_ONLY, Boolean.class),
+    reloadOnChange(BeanInfoConstants.RELOAD_ON_CHANGE, Boolean.class),
+    tagList(BeanInfoConstants.TAG_LIST_ATTR, Array.class),
+    extraAttrs(BeanInfoConstants.EXTRA_ATTRS, Array.class),
+    groupName(BeanInfoConstants.GROUP_NAME, String.class),
+    groupId(BeanInfoConstants.GROUP_ID, Object.class),
 
-    MULTIPLE_SELECTION_LIST_ATTR(BeanInfoConstants.MULTIPLE_SELECTION_LIST, "multipleSelectionList", Boolean.class),
-    PASSWORD_FIELD(BeanInfoConstants.PASSWORD_FIELD, "passwordField", Boolean.class),
-    LABEL_FIELD(BeanInfoConstants.LABEL_FIELD, "labelField", Boolean.class),
+    multipleSelectionList(BeanInfoConstants.MULTIPLE_SELECTION_LIST, Boolean.class),
+    passwordField(BeanInfoConstants.PASSWORD_FIELD, Boolean.class),
+    labelField(BeanInfoConstants.LABEL_FIELD, Boolean.class),
 
-    COLUMN_SIZE_ATTR(BeanInfoConstants.COLUMN_SIZE_ATTR, "columnSize", Object.class),
-    CSS_CLASSES(BeanInfoConstants.CSS_CLASSES, "cssClasses", String.class),
-    STATUS_ATTR(BeanInfoConstants.STATUS, "status", String.class),
-    MESSAGE_ATTR(BeanInfoConstants.MESSAGE, "message", String.class);
+    columnSize(BeanInfoConstants.COLUMN_SIZE_ATTR, Object.class),
+    cssClasses(BeanInfoConstants.CSS_CLASSES, String.class),
+    status(BeanInfoConstants.STATUS, String.class),
+    message(BeanInfoConstants.MESSAGE, String.class);
 
 
     public String beanInfoConstant;
-    public String key;
-    public Class<?> type;
+    public Class<?> attrType;
 
-    JsonPropertyAttributes(String beanInfoConstant, String key, Class<?> type)
+    JsonPropertyAttributes(String beanInfoConstant, Class<?> attrType)
     {
         this.beanInfoConstant = beanInfoConstant;
-        this.key = key;
-        this.type = type;
+        this.attrType = attrType;
     }
 
     @Override
@@ -46,7 +44,7 @@ enum JsonPropertyAttributes
     {
         return "JsonPropertyAttributes{" +
                 "beanInfoConstant='" + beanInfoConstant + '\'' +
-                ", key='" + key + '\'' +
+                ", name='" + name() + '\'' +
                 '}';
     }
 }

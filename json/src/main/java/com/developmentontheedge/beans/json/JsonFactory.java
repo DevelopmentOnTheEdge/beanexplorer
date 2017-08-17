@@ -260,37 +260,37 @@ public class JsonFactory
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        json.add(DISPLAY_NAME_ATTR.key, property.getDisplayName() );
+        json.add(displayName.name(), property.getDisplayName() );
 
         if(property.getType() != String.class)
         {
-            json.add(TYPE_ATTR.key, getTypeName(property.getType()) );
+            json.add(type.name(), getTypeName(property.getType()) );
         }
 
         if(property.isHidden())
         {
-            json.add(HIDDEN_ATTR.key, true );
+            json.add(hidden.name(), true );
         }
 
-        addAttr(json, property, RELOAD_ON_CHANGE_ATTR);
-        addAttr(json, property, RAW_VALUE_ATTR);
-        addAttr(json, property, GROUP_NAME_ATTR);
-        addAttr(json, property, GROUP_ID_ATTR);
-        addAttr(json, property, READ_ONLY_ATTR);
-        addAttr(json, property, CAN_BE_NULL_ATTR);
-        addAttr(json, property, MULTIPLE_SELECTION_LIST_ATTR);
-        addAttr(json, property, PASSWORD_FIELD);
-        addAttr(json, property, LABEL_FIELD);
-        addAttr(json, property, CSS_CLASSES);
-        addAttr(json, property, COLUMN_SIZE_ATTR);
-        addAttr(json, property, STATUS_ATTR);
-        addAttr(json, property, MESSAGE_ATTR);
+        addAttr(json, property, reloadOnChange);
+        addAttr(json, property, rawValue);
+        addAttr(json, property, groupName);
+        addAttr(json, property, groupId);
+        addAttr(json, property, readOnly);
+        addAttr(json, property, canBeNull);
+        addAttr(json, property, multipleSelectionList);
+        addAttr(json, property, passwordField);
+        addAttr(json, property, labelField);
+        addAttr(json, property, cssClasses);
+        addAttr(json, property, columnSize);
+        addAttr(json, property, status);
+        addAttr(json, property, message);
 
         if(!property.getBooleanAttribute( BeanInfoConstants.NO_TAG_LIST ))
         {
-            addAttr(json, property, TAG_LIST_ATTR);
+            addAttr(json, property, tagList);
         }
-        addAttr(json, property, EXTRA_ATTRS);
+        addAttr(json, property, extraAttrs);
 
         return json.build();
     }
@@ -299,16 +299,16 @@ public class JsonFactory
     {
         if(attr.beanInfoConstant != null )
         {
-            if(attr.type == Boolean.class)
+            if(attr.attrType == Boolean.class)
             {
-                if(property.getBooleanAttribute(attr.beanInfoConstant))json.add(attr.key, true );
+                if(property.getBooleanAttribute(attr.beanInfoConstant))json.add(attr.name(), true );
             }
-            else if(attr.type == String.class)
+            else if(attr.attrType == String.class)
             {
                 if(property.getStringAttribute(attr.beanInfoConstant) != null)
-                    json.add(attr.key, property.getStringAttribute(attr.beanInfoConstant) );
+                    json.add(attr.name(), property.getStringAttribute(attr.beanInfoConstant) );
             }
-            else if(attr.type == Array.class)
+            else if(attr.attrType == Array.class)
             {
                 @SuppressWarnings("unchecked")
                 String[][] tags = (String[][])property.getAttribute(attr.beanInfoConstant);
@@ -320,12 +320,12 @@ public class JsonFactory
                     {
                         arrayBuilder.add(arrayBuilder2.add(tag[0]).add(tag[1]).build());
                     }
-                    json.add(attr.key, arrayBuilder.build());
+                    json.add(attr.name(), arrayBuilder.build());
                 }
             }
             else if(property.getAttribute(attr.beanInfoConstant) != null)
             {
-                json.add(attr.key, property.getAttribute(attr.beanInfoConstant).toString() );
+                json.add(attr.name(), property.getAttribute(attr.beanInfoConstant).toString() );
             }
         }
     }
@@ -476,22 +476,22 @@ public class JsonFactory
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        json.add(TYPE_ATTR.key, getTypeName(property.getValueClass()));
+        json.add(type.name(), getTypeName(property.getValueClass()));
 
         if(!property.getName().equals(property.getDisplayName()))
         {
-            json.add(DISPLAY_NAME_ATTR.key, property.getDisplayName());
+            json.add(displayName.name(), property.getDisplayName());
         }
 
         String shortDescription = property.getShortDescription().split("\n")[0];
         if(!property.getName().equals(shortDescription))
         {
-            json.add(DESCRIPTION_ATTR.key, property.getShortDescription().split("\n")[0]);
+            json.add(description.name(), property.getShortDescription().split("\n")[0]);
         }
 
         if(property.isReadOnly())
         {
-            json.add(READ_ONLY_ATTR.key, true);
+            json.add(readOnly.name(), true);
         }
 
         return json.build();
