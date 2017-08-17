@@ -2,6 +2,8 @@ package com.developmentontheedge.beans.json;
 
 import com.developmentontheedge.beans.BeanInfoConstants;
 
+import java.lang.reflect.Array;
+
 enum JsonPropertyAttributes
 {
     TYPE_ATTR(null, "type", Class.class),
@@ -13,7 +15,8 @@ enum JsonPropertyAttributes
     RAW_VALUE_ATTR(BeanInfoConstants.RAW_VALUE, "rawValue", Boolean.class),
     READ_ONLY_ATTR(BeanInfoConstants.READ_ONLY, "readOnly", Boolean.class),
     RELOAD_ON_CHANGE_ATTR(BeanInfoConstants.RELOAD_ON_CHANGE, "reloadOnChange", Boolean.class),
-    TAG_LIST_ATTR(BeanInfoConstants.TAG_LIST_ATTR, "tagList", String.class),
+    TAG_LIST_ATTR(BeanInfoConstants.TAG_LIST_ATTR, "tagList", Array.class),
+    EXTRA_ATTRS(BeanInfoConstants.EXTRA_ATTRS, "tagList", Array.class),
     GROUP_NAME_ATTR(BeanInfoConstants.GROUP_NAME, "groupName", String.class),
     GROUP_ID_ATTR(BeanInfoConstants.GROUP_ID, "groupId", Object.class),
 

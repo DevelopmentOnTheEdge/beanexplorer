@@ -102,13 +102,29 @@ public class JsonFactoryDynamicPropertyAttributesTest
     @Test
     public void testTagList()
     {
-        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, new String[][]{new String[]{"foo","bar"},new String[]{"foo2","bar2"}});
+        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, new String[][]{
+                new String[]{"foo","bar"},new String[]{"foo2","bar2"}
+        });
 
         assertEquals("[['foo','bar'],['foo2','bar2']]",
                 oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(TAG_LIST_ATTR.key)));
 
         dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, null);
         assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(TAG_LIST_ATTR.key));
+    }
+
+    @Test
+    public void testExtraAttributes()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.EXTRA_ATTRS, new String[][]{
+                new String[]{"inputType","Creatable"},new String[]{"matchPos","any"}
+        });
+
+        assertEquals("[['inputType','Creatable'],['matchPos','any']]",
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(EXTRA_ATTRS.key)));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.EXTRA_ATTRS, null);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(EXTRA_ATTRS.key));
     }
 
     @Test

@@ -9,6 +9,7 @@ import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -271,28 +272,6 @@ public class JsonFactory
             json.add(HIDDEN_ATTR.key, true );
         }
 
-        //todo  NO_TAG_LIST, EXTRA_ATTRS make array type and move logic to  addAttr()
-        if(!property.getBooleanAttribute( BeanInfoConstants.NO_TAG_LIST ))
-        {
-            @SuppressWarnings("unchecked")
-            String[][] tags = (String[][])property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR );
-
-            if( tags != null )
-            {
-                JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-                JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
-                for (String[] tag : tags)
-                {
-                    arrayBuilder.add(arrayBuilder2
-                            .add(tag[0])
-                            .add(tag[1])
-                            .build()
-                    );
-                }
-                json.add(TAG_LIST_ATTR.key, arrayBuilder.build());
-            }
-        }
-
         addAttr(json, property, RELOAD_ON_CHANGE_ATTR);
         addAttr(json, property, RAW_VALUE_ATTR);
         addAttr(json, property, GROUP_NAME_ATTR);
@@ -306,7 +285,12 @@ public class JsonFactory
         addAttr(json, property, COLUMN_SIZE_ATTR);
         addAttr(json, property, STATUS_ATTR);
         addAttr(json, property, MESSAGE_ATTR);
-        //json.add( "extraAttrs", property.getAttribute( BeanInfoConstants.EXTRA_ATTRS ) );
+
+        if(!property.getBooleanAttribute( BeanInfoConstants.NO_TAG_LIST ))
+        {
+            addAttr(json, property, TAG_LIST_ATTR);
+        }
+        addAttr(json, property, EXTRA_ATTRS);
 
         return json.build();
     }
@@ -323,6 +307,21 @@ public class JsonFactory
             {
                 if(property.getStringAttribute(attr.beanInfoConstant) != null)
                     json.add(attr.key, property.getStringAttribute(attr.beanInfoConstant) );
+            }
+            else if(attr.type == Array.class)
+            {
+                @SuppressWarnings("unchecked")
+                String[][] tags = (String[][])property.getAttribute(attr.beanInfoConstant);
+                if( tags != null )
+                {
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                    JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
+                    for (String[] tag : tags)
+                    {
+                        arrayBuilder.add(arrayBuilder2.add(tag[0]).add(tag[1]).build());
+                    }
+                    json.add(attr.key, arrayBuilder.build());
+                }
             }
             else if(property.getAttribute(attr.beanInfoConstant) != null)
             {
