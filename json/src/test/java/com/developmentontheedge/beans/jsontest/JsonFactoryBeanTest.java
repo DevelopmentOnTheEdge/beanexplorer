@@ -73,6 +73,13 @@ public class JsonFactoryBeanTest
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 
+    @Test
+    public void notShowNullInJson() throws Exception
+    {
+        assertEquals("{'number':0}"
+                , oneQuotes(JsonFactory.jsonb.toJson(new TestBeans.SimpleBean(null, 0, null))));
+    }
+
 //    @Test
 //    public void beanInt()
 //    {
@@ -107,6 +114,5 @@ public class JsonFactoryBeanTest
 //                        "'order':['/status']}"
 //                , oneQuotes(JsonFactory.bean(new TestBeans.ClassWithEnum(TestBeans.EnumClass.test2)).toString()));
 //    }
-
 
 }
