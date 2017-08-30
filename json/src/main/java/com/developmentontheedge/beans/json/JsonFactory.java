@@ -21,7 +21,6 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
 
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static java.util.Objects.requireNonNull;
@@ -311,17 +310,17 @@ public class JsonFactory
             }
             else if(attr.attrType == Array.class)
             {
-                @SuppressWarnings("unchecked")
-                String[][] tags = (String[][])property.getAttribute(attr.beanInfoConstant);
-                if( tags != null )
+                if(property.getAttribute(attr.beanInfoConstant) instanceof String[][])
                 {
-                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-                    JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
-                    for (String[] tag : tags)
-                    {
-                        arrayBuilder.add(arrayBuilder2.add(tag[0]).add(tag[1]).build());
+                    String[][] tags = (String[][]) property.getAttribute(attr.beanInfoConstant);
+                    if (tags != null) {
+                        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                        JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
+                        for (String[] tag : tags) {
+                            arrayBuilder.add(arrayBuilder2.add(tag[0]).add(tag[1]).build());
+                        }
+                        json.add(attr.name(), arrayBuilder.build());
                     }
-                    json.add(attr.name(), arrayBuilder.build());
                 }
             }
             else if(property.getAttribute(attr.beanInfoConstant) != null)
