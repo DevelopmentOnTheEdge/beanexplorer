@@ -131,6 +131,20 @@ public class JsonFactoryDynamicPropertyAttributesTest
     }
 
     @Test
+    public void testValidationRules()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES, new String[][]{
+                new String[]{"integer","Please specify an integer number."}
+        });
+
+        assertEquals("[['integer','Please specify an integer number.']]",
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(validationRules.name())));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES, null);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(validationRules.name()));
+    }
+
+    @Test
     public void testGroupName()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_NAME, "foo");

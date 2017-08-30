@@ -291,6 +291,7 @@ public class JsonFactory
             addAttr(json, property, tagList);
         }
         addAttr(json, property, extraAttrs);
+        addAttr(json, property, validationRules);
 
         return json.build();
     }
