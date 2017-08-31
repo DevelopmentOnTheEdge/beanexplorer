@@ -312,29 +312,26 @@ public class JsonFactory
             else if(attr.attrType == Array.class)
             {
                 Object tagsObject = property.getAttribute(attr.beanInfoConstant);
-                if (tagsObject != null) {
-                    if (tagsObject instanceof String[][]) {
-                        String[][] tags = (String[][]) tagsObject;
-
-                        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-                        JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
-                        for (String[] tag : tags) {
+                if (tagsObject != null)
+                {
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                    JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
+                    if (tagsObject instanceof String[][])
+                    {
+                        for (String[] tag : ((String[][]) tagsObject))
+                        {
                             arrayBuilder.add(arrayBuilder2.add(tag[0]).add(tag[1]).build());
                         }
-                        json.add(attr.name(), arrayBuilder.build());
                     }
-                    if (tagsObject instanceof Map<?,?>) {
-                        Map<?,?> tags = (Map<?,?>) tagsObject;
-
-                        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-                        JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
-                        for (Map.Entry tag : tags.entrySet()) {
+                    else if (tagsObject instanceof Map<?,?>)
+                    {
+                        for (Map.Entry tag : ((Map<?,?>) tagsObject).entrySet())
+                        {
                             arrayBuilder.add(arrayBuilder2.add(tag.getKey().toString())
                                                           .add(tag.getValue().toString()).build());
                         }
-                        json.add(attr.name(), arrayBuilder.build());
-
                     }
+                    json.add(attr.name(), arrayBuilder.build());
                 }
             }
             else if(property.getAttribute(attr.beanInfoConstant) != null)
