@@ -13,6 +13,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
+import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -310,16 +311,29 @@ public class JsonFactory
             }
             else if(attr.attrType == Array.class)
             {
-                if(property.getAttribute(attr.beanInfoConstant) instanceof String[][])
-                {
-                    String[][] tags = (String[][]) property.getAttribute(attr.beanInfoConstant);
-                    if (tags != null) {
+                Object tagsObject = property.getAttribute(attr.beanInfoConstant);
+                if (tagsObject != null) {
+                    if (tagsObject instanceof String[][]) {
+                        String[][] tags = (String[][]) tagsObject;
+
                         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
                         JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
                         for (String[] tag : tags) {
                             arrayBuilder.add(arrayBuilder2.add(tag[0]).add(tag[1]).build());
                         }
                         json.add(attr.name(), arrayBuilder.build());
+                    }
+                    if (tagsObject instanceof Map<?,?>) {
+                        Map<?,?> tags = (Map<?,?>) tagsObject;
+
+                        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                        JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
+                        for (Map.Entry tag : tags.entrySet()) {
+                            arrayBuilder.add(arrayBuilder2.add(tag.getKey().toString())
+                                                          .add(tag.getValue().toString()).build());
+                        }
+                        json.add(attr.name(), arrayBuilder.build());
+
                     }
                 }
             }

@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -142,6 +144,13 @@ public class JsonFactoryDynamicPropertyAttributesTest
 
         dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES, null);
         assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(validationRules.name()));
+
+        //map
+        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES,
+                Collections.singletonMap("number", "Please enter only digits.")
+        );
+        assertEquals("[['number','Please enter only digits.']]",
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(validationRules.name())));
     }
 
     @Test
