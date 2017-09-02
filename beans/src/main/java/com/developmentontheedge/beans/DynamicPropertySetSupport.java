@@ -195,6 +195,11 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         return builder; 
     }
 
+    public DynamicPropertyBuilder getAsBuilder( String name )
+    {
+        return new DynamicPropertyBuilder( findProperty( name ) );
+    }
+
     /**
      * Checks if property does exist in this set
      */
@@ -765,31 +770,4 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         return label.toString();
     }
 
-    private Object removeFromMap( Map map, Object element )
-    {
-        if( map.containsKey( element ) )
-        {
-            return map.remove( element );
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    private String asString( Object o )
-    {
-        return o != null ? o.toString() : null;
-    }
-
-    static final List<String> beanInfoConstants = new ArrayList<>();
-    static {
-        Field[] fields = BeanInfoConstants.class.getDeclaredFields();
-        for (Field f : fields)
-        {
-            if (Modifier.isStatic(f.getModifiers())) {
-                beanInfoConstants.add(f.getName());//f.get(null).toString()
-            }
-        }
-    }
 }

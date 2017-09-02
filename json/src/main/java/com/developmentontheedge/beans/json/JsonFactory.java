@@ -9,7 +9,7 @@ import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 
-import java.awt.Color;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -22,7 +22,6 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
 
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static java.util.Objects.requireNonNull;
@@ -32,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class JsonFactory
 {
-    private static final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
+    public static final Jsonb jsonb = JsonbBuilder.create();
 
     ///////////////////////////////////////////////////////////////////////////
     // public API
@@ -41,12 +40,11 @@ public class JsonFactory
     public static JsonObject dps(DynamicPropertySet dps)
     {
         requireNonNull(dps);
-
-        JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add("values", dpsValues(dps));
-        result.add("meta", dpsMeta(dps));
-        result.add("order", dpsOrder(dps));
-        return result.build();
+        return Json.createObjectBuilder()
+                .add("values", dpsValues(dps))
+                .add("meta", dpsMeta(dps))
+                .add("order", dpsOrder(dps))
+                .build();
     }
 
     public static JsonObject dpsValues(DynamicPropertySet dps)
@@ -87,11 +85,11 @@ public class JsonFactory
         requireNonNull(fieldMap);
         if (bean instanceof DynamicPropertySet)return dps((DynamicPropertySet) bean);
 
-        JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add("values", beanValues(bean, fieldMap));
-        result.add("meta", beanMeta(bean, fieldMap));
-        result.add("order", beanOrder(bean, fieldMap));
-        return result.build();
+        return Json.createObjectBuilder()
+                .add("values", beanValues(bean, fieldMap))
+                .add("meta", beanMeta(bean, fieldMap))
+                .add("order", beanOrder(bean, fieldMap))
+                .build();
     }
 
     public static JsonObject beanValues(Object bean)
@@ -262,55 +260,38 @@ public class JsonFactory
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        json.add(DISPLAY_NAME_ATTR.key, property.getDisplayName() );
+        json.add(displayName.name(), property.getDisplayName() );
 
         if(property.getType() != String.class)
         {
-            json.add(TYPE_ATTR.key, getTypeName(property.getType()) );
+            json.add(type.name(), getTypeName(property.getType()) );
         }
 
         if(property.isHidden())
         {
-            json.add(HIDDEN_ATTR.key, true );
+            json.add(hidden.name(), true );
         }
 
-        //todo  NO_TAG_LIST, EXTRA_ATTRS make array type and move logic to  addAttr()
-        if(!Boolean.TRUE.equals( property.getAttribute( BeanInfoConstants.NO_TAG_LIST ) ))
+        addAttr(json, property, reloadOnChange);
+        addAttr(json, property, rawValue);
+        addAttr(json, property, groupName);
+        addAttr(json, property, groupId);
+        addAttr(json, property, readOnly);
+        addAttr(json, property, canBeNull);
+        addAttr(json, property, multipleSelectionList);
+        addAttr(json, property, passwordField);
+        addAttr(json, property, labelField);
+        addAttr(json, property, cssClasses);
+        addAttr(json, property, columnSize);
+        addAttr(json, property, status);
+        addAttr(json, property, message);
+
+        if(!property.getBooleanAttribute( BeanInfoConstants.NO_TAG_LIST ))
         {
-            @SuppressWarnings("unchecked")
-            String[][] tags = (String[][])property.getAttribute( BeanInfoConstants.TAG_LIST_ATTR );
-
-            if( tags != null )
-            {
-                JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-                for (String[] tag : tags)
-                {
-                    JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
-                    for (String item : tag)
-                    {
-                        arrayBuilder2.add(item);
-                    }
-                    arrayBuilder.add(arrayBuilder2.build());
-                }
-
-                json.add(TAG_LIST_ATTR.key, arrayBuilder.build());
-            }
+            addAttr(json, property, tagList);
         }
-
-        addAttr(json, property, RELOAD_ON_CHANGE_ATTR);
-        addAttr(json, property, RAW_VALUE_ATTR);
-        addAttr(json, property, GROUP_NAME_ATTR);
-        addAttr(json, property, GROUP_ID_ATTR);
-        addAttr(json, property, READ_ONLY_ATTR);
-        addAttr(json, property, CAN_BE_NULL_ATTR);
-        addAttr(json, property, MULTIPLE_SELECTION_LIST_ATTR);
-        addAttr(json, property, PASSWORD_FIELD);
-        addAttr(json, property, LABEL_FIELD);
-        addAttr(json, property, CSS_CLASSES);
-        addAttr(json, property, COLUMN_SIZE_ATTR);
-        addAttr(json, property, STATUS_ATTR);
-        addAttr(json, property, MESSAGE_ATTR);
-        //json.add( "extraAttrs", property.getAttribute( BeanInfoConstants.EXTRA_ATTRS ) );
+        addAttr(json, property, extraAttrs);
+        addAttr(json, property, validationRules);
 
         return json.build();
     }
@@ -319,18 +300,43 @@ public class JsonFactory
     {
         if(attr.beanInfoConstant != null )
         {
-            if(attr.type == Boolean.class)
+            if(attr.attrType == Boolean.class)
             {
-                if(property.getBooleanAttribute(attr.beanInfoConstant))json.add(attr.key, true );
+                if(property.getBooleanAttribute(attr.beanInfoConstant))json.add(attr.name(), true );
             }
-            else if(attr.type == String.class)
+            else if(attr.attrType == String.class)
             {
                 if(property.getStringAttribute(attr.beanInfoConstant) != null)
-                    json.add(attr.key, property.getStringAttribute(attr.beanInfoConstant) );
+                    json.add(attr.name(), property.getStringAttribute(attr.beanInfoConstant) );
+            }
+            else if(attr.attrType == Array.class)
+            {
+                Object tagsObject = property.getAttribute(attr.beanInfoConstant);
+                if (tagsObject != null)
+                {
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                    JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
+                    if (tagsObject instanceof String[][])
+                    {
+                        for (String[] tag : ((String[][]) tagsObject))
+                        {
+                            arrayBuilder.add(arrayBuilder2.add(tag[0]).add(tag[1]).build());
+                        }
+                    }
+                    else if (tagsObject instanceof Map<?,?>)
+                    {
+                        for (Map.Entry tag : ((Map<?,?>) tagsObject).entrySet())
+                        {
+                            arrayBuilder.add(arrayBuilder2.add(tag.getKey().toString())
+                                                          .add(tag.getValue().toString()).build());
+                        }
+                    }
+                    json.add(attr.name(), arrayBuilder.build());
+                }
             }
             else if(property.getAttribute(attr.beanInfoConstant) != null)
             {
-                json.add(attr.key, property.getAttribute(attr.beanInfoConstant).toString() );
+                json.add(attr.name(), property.getAttribute(attr.beanInfoConstant).toString() );
             }
         }
     }
@@ -481,38 +487,38 @@ public class JsonFactory
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        json.add(TYPE_ATTR.key, getTypeName(property.getValueClass()));
+        json.add(type.name(), getTypeName(property.getValueClass()));
 
         if(!property.getName().equals(property.getDisplayName()))
         {
-            json.add(DISPLAY_NAME_ATTR.key, property.getDisplayName());
+            json.add(displayName.name(), property.getDisplayName());
         }
 
         String shortDescription = property.getShortDescription().split("\n")[0];
         if(!property.getName().equals(shortDescription))
         {
-            json.add(DESCRIPTION_ATTR.key, property.getShortDescription().split("\n")[0]);
+            json.add(description.name(), property.getShortDescription().split("\n")[0]);
         }
 
         if(property.isReadOnly())
         {
-            json.add(READ_ONLY_ATTR.key, true);
+            json.add(readOnly.name(), true);
         }
 
         return json.build();
     }
-
-    /**
-     * Counterpart for parseColor
-     * @param color color to encode
-     * @return array of color components
-     */
-    static JsonArrayBuilder encodeColor(Color color)
-    {
-        JsonArrayBuilder json = Json.createArrayBuilder();
-        if(color == null || color.getAlpha() == 0) return json;
-
-        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
-    }
+//
+//    /**
+//     * Counterpart for parseColor
+//     * @param color color to encode
+//     * @return array of color components
+//     */
+//    static JsonArrayBuilder encodeColor(Color color)
+//    {
+//        JsonArrayBuilder json = Json.createArrayBuilder();
+//        if(color == null || color.getAlpha() == 0) return json;
+//
+//        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
+//    }
 
 }

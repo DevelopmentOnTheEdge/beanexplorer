@@ -109,6 +109,15 @@ public class DynamicPropertyBuilder
         return this;
     }
 
+    public DynamicPropertyBuilder attrs( Map<String,Object> vals )
+    {
+        for( String key : vals.keySet() )
+        {
+            property.setAttribute( key, vals.get( key ) );
+        }
+        return this;
+    }
+
     public DynamicPropertyBuilder noServerCheck()
     {
         property.setAttribute( BeanInfoConstants.SKIP_SERVER_NULL_CHECK, true );
@@ -243,7 +252,7 @@ public class DynamicPropertyBuilder
 
     public DynamicPropertyBuilder rawValue( boolean rawValue )
     {
-        return attr( BeanInfoConstants.RAW_VALUE, Boolean.valueOf( rawValue ) );
+        return attr( BeanInfoConstants.RAW_VALUE, rawValue );
     }
 
     public DynamicPropertyBuilder rawValue()
@@ -278,6 +287,68 @@ public class DynamicPropertyBuilder
         property.setParent( parent );
         return this;
     }
+
+    private void addToAttrMap( String attrName, Map<String,Object> map )
+    {
+        @SuppressWarnings("unchecked")
+        Map<String,Object> curMap = ( Map<String,Object> )property.getAttribute( attrName );
+        if( curMap == null )
+        {
+            property.setAttribute( attrName, new LinkedHashMap<>( map ) );
+        }
+        else
+        {
+            curMap.putAll( map );
+        }
+    }
+//
+//    public DynamicPropertyBuilder uniqueValidate( String entityName, String column, String message, String ... extras )
+//    {
+//        Validation.UniqueStruct us = new Validation.UniqueStruct();
+//        us.entity = entityName;
+//        us.column = column;
+//        us.message = message;
+//        if( extras.length > 0 )
+//        {
+//            LinkedHashMap<String,String> map = new LinkedHashMap<>( extras.length );
+//            for( int i = 0; i < extras.length; i += 2 )
+//            {
+//                map.put( extras[ i ], extras[ i + 1 ] );
+//            }
+//            us.extraParams = map;
+//        }
+//        addToAttrMap( Validation.RULES_ATTR, Collections.singletonMap( Validation.UNIQUE, us ) );
+//        return this;
+//    }
+//
+//    public DynamicPropertyBuilder queryValidate( String entityName, String queryName, String message, String ... extras )
+//    {
+//        Validation.QueryStruct us = new Validation.QueryStruct();
+//        us.entity = entityName;
+//        us.query = queryName;
+//        us.message = message;
+//        if( extras.length > 0 )
+//        {
+//            LinkedHashMap<String,String> map = new LinkedHashMap<>( extras.length );
+//            for( int i = 0; i < extras.length; i += 2 )
+//            {
+//                map.put( extras[ i ], extras[ i + 1 ] );
+//            }
+//            us.extraParams = map;
+//        }
+//        addToAttrMap( Validation.RULES_ATTR, Collections.singletonMap( Validation.QUERY, us ) );
+//        return this;
+//    }
+//
+//    public DynamicPropertyBuilder intervalCheck( String message, Object intervalFrom, Object intervalTo )
+//    {
+//        Validation.IntervalStruct us = new Validation.IntervalStruct();
+//        us.intervalFrom = intervalFrom;
+//        us.intervalTo = intervalTo;
+//        us.message = message;
+//        addToAttrMap( Validation.RULES_ATTR, Collections.singletonMap( Validation.INTERVAL, us ) );
+//        return this;
+//    }
 
     public DynamicPropertyBuilder type( Class<?> clazz )
     {

@@ -4,9 +4,14 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
@@ -26,99 +31,136 @@ public class JsonFactoryDynamicPropertyAttributesTest
     public void testNameValue()
     {
         assertEquals("Name", JsonFactory.dynamicPropertyMeta(dynamicProperty)
-                .getJsonString(DISPLAY_NAME_ATTR.key).getString());
+                .getJsonString(displayName.name()).getString());
     }
 
     @Test
     public void testCanBeNull()
     {
         dynamicProperty.setCanBeNull(true);
-        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(CAN_BE_NULL_ATTR.key));
+        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(canBeNull.name()));
 
         dynamicProperty.setCanBeNull(false);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(CAN_BE_NULL_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(canBeNull.name()));
     }
 
     @Test
     public void testReloadOnChange()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.RELOAD_ON_CHANGE, true);
-        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(RELOAD_ON_CHANGE_ATTR.key));
+        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(reloadOnChange.name()));
 
         dynamicProperty.setAttribute(BeanInfoConstants.RELOAD_ON_CHANGE, false);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(RELOAD_ON_CHANGE_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(reloadOnChange.name()));
     }
 
     @Test
     public void testReadonly()
     {
         dynamicProperty.setReadOnly(true);
-        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(READ_ONLY_ATTR.key));
+        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(readOnly.name()));
 
         dynamicProperty.setReadOnly(false);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(READ_ONLY_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(readOnly.name()));
     }
 
     @Test
     public void testHidden()
     {
         dynamicProperty.setHidden(true);
-        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(HIDDEN_ATTR.key));
+        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(hidden.name()));
 
         dynamicProperty.setHidden(false);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(HIDDEN_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(hidden.name()));
     }
 
     @Test
     public void testMultipleSelectionList()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
-        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(MULTIPLE_SELECTION_LIST_ATTR.key));
+        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(multipleSelectionList.name()));
 
         dynamicProperty.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, false);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(MULTIPLE_SELECTION_LIST_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(multipleSelectionList.name()));
     }
 
     @Test
     public void testRawValue()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.RAW_VALUE, true);
-        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(RAW_VALUE_ATTR.key));
+        assertEquals(true, JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(rawValue.name()));
 
         dynamicProperty.setAttribute(BeanInfoConstants.RAW_VALUE, false);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(RAW_VALUE_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(rawValue.name()));
     }
 
     @Test
     public void testColumnSize()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, 30);
-        assertEquals("'30'", oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(COLUMN_SIZE_ATTR.key)));
+        assertEquals("'30'", oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(columnSize.name())));
 
         dynamicProperty.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, null);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(COLUMN_SIZE_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(columnSize.name()));
     }
 
     @Test
     public void testTagList()
     {
-        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, new String[][]{new String[]{"foo","bar"},new String[]{"foo2","bar2"}});
+        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, new String[][]{
+                new String[]{"foo","bar"},new String[]{"foo2","bar2"}
+        });
 
         assertEquals("[['foo','bar'],['foo2','bar2']]",
-                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(TAG_LIST_ATTR.key)));
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(tagList.name())));
 
         dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, null);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(TAG_LIST_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(tagList.name()));
+    }
+
+    @Test
+    public void testExtraAttributes()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.EXTRA_ATTRS, new String[][]{
+                new String[]{"inputType","Creatable"},new String[]{"matchPos","any"}
+        });
+
+        assertEquals("[['inputType','Creatable'],['matchPos','any']]",
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(extraAttrs.name())));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.EXTRA_ATTRS, null);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(extraAttrs.name()));
+    }
+
+    @Test
+    public void testValidationRules()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES, new String[][]{
+                new String[]{"integer","Please specify an integer number."}
+        });
+
+        assertEquals("[['integer','Please specify an integer number.']]",
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(validationRules.name())));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES, null);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(validationRules.name()));
+
+        //map
+        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES,
+                Collections.singletonMap("number", "Please enter only digits.")
+        );
+        assertEquals("[['number','Please enter only digits.']]",
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(validationRules.name())));
     }
 
     @Test
     public void testGroupName()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_NAME, "foo");
-        assertEquals("'foo'", oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(GROUP_NAME_ATTR.key).toString()));
+        assertEquals("'foo'", oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(groupName.name()).toString()));
 
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_NAME, null);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(GROUP_NAME_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(groupName.name()));
     }
 
     @Test
@@ -130,7 +172,7 @@ public class JsonFactoryDynamicPropertyAttributesTest
                 oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).toString())) ;
 
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, null);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(GROUP_ID_ATTR.key));
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(groupId.name()));
     }
 
     @Test
