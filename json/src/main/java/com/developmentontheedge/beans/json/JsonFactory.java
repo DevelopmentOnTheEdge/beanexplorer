@@ -195,6 +195,7 @@ public class JsonFactory
         if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return true;}
 
         if( klass == Date.class ){json.add(name, value.toString() ); return true;}
+        if( klass == java.util.Date.class ){json.add(name, new java.sql.Date(((java.util.Date)value).getTime()).toString() ); return true;}
 
         if( value instanceof JsonValue )
         {
@@ -232,6 +233,7 @@ public class JsonFactory
         if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return true;}
 
         if( klass == Date.class ){json.add(value.toString() ); return true;}
+        if( klass == java.util.Date.class ){json.add(new java.sql.Date(((java.util.Date)value).getTime()).toString() ); return true;}
 
         if( value instanceof JsonValue )
         {

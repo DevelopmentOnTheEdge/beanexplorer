@@ -77,6 +77,19 @@ public class JsonFactoryDpsTest
     }
 
     @Test
+    public void testDpsDate() throws Exception
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+
+        java.util.Date utilDate = new java.util.Date();
+        dps.add(new DynamicProperty("a", "a", java.util.Date.class, utilDate));
+
+        Date date = new Date(utilDate.getTime());
+        assertEquals("{'a':'" + date.toString() + "'}",
+                oneQuotes(JsonFactory.dpsValues(dps).toString()));
+    }
+
+    @Test
     public void testDpsMetaAttr() throws Exception
     {
         dps.remove("number");
