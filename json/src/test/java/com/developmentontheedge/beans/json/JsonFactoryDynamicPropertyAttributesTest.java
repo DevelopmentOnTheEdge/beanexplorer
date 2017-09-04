@@ -132,26 +132,26 @@ public class JsonFactoryDynamicPropertyAttributesTest
         assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(extraAttrs.name()));
     }
 
-    @Test
-    public void testValidationRules()
-    {
-        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES, new String[][]{
-                new String[]{"integer","Please specify an integer number."}
-        });
-
-        assertEquals("[['integer','Please specify an integer number.']]",
-                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(validationRules.name())));
-
-        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES, null);
-        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(validationRules.name()));
-
-        //map
-        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES,
-                Collections.singletonMap("number", "Please enter only digits.")
-        );
-        assertEquals("[['number','Please enter only digits.']]",
-                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(validationRules.name())));
-    }
+//    @Test
+//    public void testValidationRules()
+//    {
+//        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES, new String[][]{
+//                new String[]{"integer","Please specify an integer number."}
+//        });
+//
+//        assertEquals("[['integer','Please specify an integer number.']]",
+//                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(validationRules.name())));
+//
+//        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES, null);
+//        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(validationRules.name()));
+//
+//        //map
+//        dynamicProperty.setAttribute(BeanInfoConstants.VALIDATION_RULES,
+//                Collections.singletonMap("number", "Please enter only digits.")
+//        );
+//        assertEquals("[['number','Please enter only digits.']]",
+//                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(validationRules.name())));
+//    }
 
     @Test
     public void testGroupName()

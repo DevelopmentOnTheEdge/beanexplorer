@@ -13,6 +13,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -101,6 +102,12 @@ public class JsonFactory
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
+//for beanValuesInt, beanValuesString
+//        JsonArrayBuilder test = Json.createArrayBuilder();
+//        if(addValueToArray(test, bean)){
+//            return Json.createValue()
+//        }
+
         if (bean instanceof DynamicPropertySet)return dpsValues((DynamicPropertySet) bean);
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
@@ -173,30 +180,30 @@ public class JsonFactory
         }
     }
 
-    private static void addValueToObject(JsonObjectBuilder json, String name, Object value)
+    private static boolean addValueToObject(JsonObjectBuilder json, String name, Object value)
     {
-        if( value == null ){ json.addNull(name);return;}
+        if( value == null ){return true;}
 
         Class<?> klass = value.getClass();
-        if( klass == String.class ){    json.add(name, (String) value); return;}
-        if( klass == Double.class ){    json.add(name, (double)value ); return;}
-        if( klass == Long.class ){      json.add(name, (long)value ); return;}
-        if( klass == Integer.class ){   json.add(name, (int)value ); return;}
-        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return;}
-        if( klass == Float.class ){     json.add(name, (float)value ); return;}
-        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return;}
-        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return;}
+        if( klass == String.class ){    json.add(name, (String) value); return true;}
+        if( klass == Double.class ){    json.add(name, (double)value ); return true;}
+        if( klass == Long.class ){      json.add(name, (long)value ); return true;}
+        if( klass == Integer.class ){   json.add(name, (int)value ); return true;}
+        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return true;}
+        if( klass == Float.class ){     json.add(name, (float)value ); return true;}
+        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return true;}
+        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return true;}
 
-        if( klass == Date.class ){json.add(name, value.toString() ); return;}
+        if( klass == Date.class ){json.add(name, value.toString() ); return true;}
 
         if( value instanceof JsonValue )
         {
-            json.add(name, (JsonValue)value); return;
+            json.add(name, (JsonValue)value); return true;
         }
 
         if( value instanceof DynamicPropertySet)
         {
-            json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return;
+            json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return true;
         }
 
         if( value instanceof Object[])
@@ -204,41 +211,39 @@ public class JsonFactory
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             for (Object aValueArr : (Object[]) value)addValueToArray(arrayBuilder, aValueArr);
             json.add(name, arrayBuilder.build());
-            return;
+            return true;
         }
 
-        CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
-        json.add(name, propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
+        return false;
     }
 
-    static void addValueToArray(JsonArrayBuilder json, Object value)
+    static boolean addValueToArray(JsonArrayBuilder json, Object value)
     {
-        if( value == null ){ json.addNull(); return; }
+        if( value == null ){return true; }
 
         Class<?> klass = value.getClass();
-        if( klass == String.class ){    json.add((String) value); return;}
-        if( klass == Double.class ){    json.add((double)value ); return;}
-        if( klass == Long.class ){      json.add((long)value ); return;}
-        if( klass == Integer.class ){   json.add((int)value ); return;}
-        if( klass == Boolean.class ){   json.add((boolean)value ); return;}
-        if( klass == Float.class ){     json.add((float)value ); return;}
-        if( klass == BigInteger.class ){json.add((BigInteger) value ); return;}
-        if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return;}
+        if( klass == String.class ){    json.add((String) value); return true;}
+        if( klass == Double.class ){    json.add((double)value ); return true;}
+        if( klass == Long.class ){      json.add((long)value ); return true;}
+        if( klass == Integer.class ){   json.add((int)value ); return true;}
+        if( klass == Boolean.class ){   json.add((boolean)value ); return true;}
+        if( klass == Float.class ){     json.add((float)value ); return true;}
+        if( klass == BigInteger.class ){json.add((BigInteger) value ); return true;}
+        if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return true;}
 
-        if( klass == Date.class ){json.add(value.toString() ); return;}
+        if( klass == Date.class ){json.add(value.toString() ); return true;}
 
         if( value instanceof JsonValue )
         {
-            json.add((JsonValue)value); return;
+            json.add((JsonValue)value); return true;
         }
 
         if( value instanceof DynamicPropertySet)
         {
-            json.add(dpsValuesBuilder((DynamicPropertySet)value));return;
+            json.add(dpsValuesBuilder((DynamicPropertySet)value));return true;
         }
 
-        CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
-        json.add(propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
+        return false;
     }
 
     private static JsonObjectBuilder dpsValuesBuilder(DynamicPropertySet dps)
@@ -332,6 +337,21 @@ public class JsonFactory
                         }
                     }
                     json.add(attr.name(), arrayBuilder.build());
+                }
+            }
+            else if(attr.attrType == JsonPropertyAttributes.POJOorListOfPOJO.class)
+            {
+                Object value = property.getAttribute(attr.beanInfoConstant);
+
+                if(value instanceof List){
+                    List list = (List)value;
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                    for (Object valueItem : list){
+                        if(valueItem != null)arrayBuilder.add(beanValues(valueItem));
+                    }
+                    json.add(attr.name(), arrayBuilder.build());
+                }else{
+                    if(value != null)json.add(attr.name(), beanValues(value));
                 }
             }
             else if(property.getAttribute(attr.beanInfoConstant) != null)
