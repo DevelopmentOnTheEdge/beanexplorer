@@ -52,6 +52,11 @@ public class DynamicPropertySetDecorator implements DynamicPropertySet
         return delegateDps.getValueAsString( name );
     }
 
+    public Long getValueAsLong( String name )
+    {
+        return delegateDps.getValueAsLong( name );
+    }
+
     public <T> T cast( String name, Class<T> clazz )
     {
         return clazz.cast( getValue( name ) ); 
@@ -180,5 +185,10 @@ public class DynamicPropertySetDecorator implements DynamicPropertySet
     public boolean isEmpty()
     {
         return delegateDps.isEmpty();
+    }
+
+    @Override
+    public DynamicPropertyBuilder getAsBuilder(String name) {
+        return delegateDps.getAsBuilder(name);
     }
 }

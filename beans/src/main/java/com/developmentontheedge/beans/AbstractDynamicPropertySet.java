@@ -42,6 +42,15 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
     }
 
     @Override
+    public Long getValueAsLong(String name)
+    {
+        Object val = getValue( name );
+        if( val == null )
+            return null;
+        return Long.parseLong(val.toString());
+    }
+
+    @Override
 	public DynamicProperty getProperty(String name)
     {
         return findProperty( name );
@@ -89,10 +98,10 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
         return prop.getValue().toString();
     }
 
-    public DynamicPropertyBuilder getAsBuilder( String name )
+    @Override
+    public DynamicPropertyBuilder getAsBuilder(String name)
     {
-        DynamicPropertyBuilder builder = new DynamicPropertyBuilder( findProperty( name ) );
-        return builder;
+        return new DynamicPropertyBuilder( findProperty( name ) );
     }
 
     @Override

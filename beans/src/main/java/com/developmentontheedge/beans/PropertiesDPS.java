@@ -59,6 +59,15 @@ public class PropertiesDPS extends Option implements DynamicPropertySet
     }
 
     @Override
+    public Long getValueAsLong(String name)
+    {
+        Object val = getValue( name );
+        if( val == null )
+            return null;
+        return Long.parseLong(val.toString());
+    }
+
+    @Override
     public void setValue(String name, Object value)
     {
         if(readOnly) throw new SecurityException();
@@ -240,5 +249,12 @@ public class PropertiesDPS extends Option implements DynamicPropertySet
     public void setPropertyAttribute( String propName, String attrName, Object attrValue )
     {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public DynamicPropertyBuilder getAsBuilder( String name )
+    {
+        DynamicPropertyBuilder builder = new DynamicPropertyBuilder( getProperty( name ) );
+        return builder;
     }
 }
