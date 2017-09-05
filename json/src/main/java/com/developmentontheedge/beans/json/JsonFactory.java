@@ -280,6 +280,7 @@ public class JsonFactory
         }
 
         addAttr(json, property, reloadOnChange);
+        addAttr(json, property, reloadOnFocusOut);
         addAttr(json, property, rawValue);
         addAttr(json, property, groupName);
         addAttr(json, property, groupId);
