@@ -30,8 +30,10 @@ enum JsonPropertyAttributes
 
     validationRules(BeanInfoConstants.VALIDATION_RULES, POJOorListOfPOJO.class),
     status(BeanInfoConstants.STATUS, String.class),
-    message(BeanInfoConstants.MESSAGE, String.class);
+    message(BeanInfoConstants.MESSAGE, String.class),
 
+    children(null, null),
+    dictionary(null, null);
 
     public String beanInfoConstant;
     public Class<?> attrType;

@@ -3,6 +3,8 @@ package com.developmentontheedge.beans.json;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.editors.CustomEditorSupport;
+import com.developmentontheedge.beans.editors.PropertyEditorEx;
 import com.developmentontheedge.beans.model.ArrayProperty;
 import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.CompositeProperty;
@@ -127,7 +129,14 @@ public class JsonFactory
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         JsonObjectBuilder json = Json.createObjectBuilder();
-        propertiesMeta(property, fieldMap, Property.SHOW_USUAL, json, new JsonPath());
+        try
+        {
+            fillCompositePropertyMeta(property, fieldMap, Property.SHOW_USUAL, json, new JsonPath());
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);//todo new error
+        }
 
         return json.build();
     }
@@ -153,6 +162,9 @@ public class JsonFactory
     //public static JsonObject dictionaryValues(Object obj){return null;}
 
     ///////////////////////////////////////////////////////////////////////////
+
+    public static final String VALUE_ATTR = "value";
+    public static final String NAME_ATTR = "name";
 
     private static void dpsOrder(DynamicPropertySet dps, JsonArrayBuilder json, JsonPath path)
     {
@@ -442,8 +454,8 @@ public class JsonFactory
      * @param fieldMap fieldMap of properties to include. Cannot be null. Use {@link FieldMap#ALL} to include all fields
      * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
      */
-    private static void propertiesMeta(CompositeProperty properties, FieldMap fieldMap, int showMode,
-                                       JsonObjectBuilder json, JsonPath path)
+    private static void fillCompositePropertyMeta(CompositeProperty properties, FieldMap fieldMap, int showMode,
+                                                  JsonObjectBuilder json, JsonPath path) throws Exception
     {
 
         for( int i = 0; i < properties.getPropertyCount(); i++ )
@@ -453,40 +465,108 @@ public class JsonFactory
                 continue;
             }
             JsonPath newPath = path.append(property.getName());
-            if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
+            if(!property.getName().equals("class"))json.add(newPath.get(), convertSinglePropertyMeta(property));
 
             if(property instanceof CompositeProperty) {
-                propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
+                fillCompositePropertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
 
             if(property instanceof ArrayProperty) {
-                propertiesMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
+                fillArrayPropertyMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
             }
         }
     }
 
-    private static void propertiesMeta(ArrayProperty properties, FieldMap fieldMap, int showMode,
-                                       JsonObjectBuilder json, JsonPath path)
+    private static void fillArrayPropertyMeta(ArrayProperty property, FieldMap fieldMap, int showMode,
+                                              JsonObjectBuilder json, JsonPath path) throws Exception
     {
-        for( int i = 0; i < properties.getPropertyCount(); i++ )
+        JsonObjectBuilder item = Json.createObjectBuilder();
+        Class<?> c = property.getPropertyEditorClass();
+        if( c != null )
         {
-            Property property = properties.getPropertyAt(i);
-            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
-                continue;
-            }
-            JsonPath newPath = path.append(property.getName());
-            //if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
-
-            if(property instanceof CompositeProperty) {
-                propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
-                continue;
-            }
-
-            if(property instanceof ArrayProperty) {
-                propertiesMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
+            if( CustomEditorSupport.class.isAssignableFrom(c) )
+            {
+                CustomEditorSupport editor = (CustomEditorSupport)c.newInstance();
+                initEditor( property, editor );
+                String[] tags = editor.getTags();
+                if( tags != null )
+                {
+                    json.add(dictionary.name(), createDictionary(tags, false));
+                    json.add(type.name(), "multi-select");
+                    Object[] vals = (Object[])property.getValue();
+                    JsonArrayBuilder value = Json.createArrayBuilder();
+                    if( vals != null )
+                    {
+                        for( Object val : vals )
+                        {
+                            value.add(val.toString());
+                        }
+                    }
+                    /*json.add(VALUE_ATTR, value);*/
+                    return;
+                }
+//                if( editor instanceof JSONCompatibleEditor )
+//                {
+//                    ( (JSONCompatibleEditor)editor ).addAsJSON(property, p, fieldMap, showMode);
+//                    return p;
+//                }
             }
         }
+        /*JsonArrayBuilder value = Json.createArrayBuilder();*/
+        for( int j = 0; j < property.getPropertyCount(); j++ )
+        {
+            Property element = property.getPropertyAt(j);
+            if( element instanceof CompositeProperty )
+            {
+                JsonPath newPath = path.append(property.getName());
+                getModelAsJSON((CompositeProperty)element, fieldMap.get(property), showMode, json, newPath);
+            }
+            else
+            {
+                JsonObjectBuilder pCh = Json.createObjectBuilder();
+                Object val = element.getValue();
+                if( val != null )
+                {
+                    pCh.add(type.name(), (val instanceof Boolean) ? "bool" : "code-string");
+                    pCh.add(NAME_ATTR, element.getName());
+                    pCh.add(displayName.name(), element.getName());
+                    pCh.add(VALUE_ATTR, val.toString());
+                    pCh.add(readOnly.name(), element.isReadOnly());
+                    /*value.add(Json.createArrayBuilder().add(pCh).build());*/
+                }
+            }
+        }
+        json.add(type.name(), "collection");
+        /*json.add(VALUE_ATTR, value);*/
+//        for( int i = 0; i < properties.getPropertyCount(); i++ )
+//        {
+//            Property property = properties.getPropertyAt(i);
+//            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
+//                continue;
+//            }
+//            JsonPath newPath = path.append(property.getName());
+//            //if(!property.getName().equals("class"))json.add(newPath.get(), convertSinglePropertyMeta(property));
+//
+//            if(property instanceof CompositeProperty) {
+//                fillCompositePropertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
+//                continue;
+//            }
+//
+//            if(property instanceof ArrayProperty) {
+//                fillArrayPropertyMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
+//            }
+//        }
+    }
+
+    private static void initEditor(Property property, PropertyEditorEx editor)
+    {
+        Object owner = property.getOwner();
+        if( owner instanceof Property.PropWrapper )
+            owner = ( (Property.PropWrapper)owner ).getOwner();
+        editor.setValue(property.getValue());
+        editor.setBean(owner);
+        editor.setDescriptor(property.getDescriptor());
     }
 
     private static void beanOrder(CompositeProperty properties, FieldMap fieldMap, int showMode, JsonArrayBuilder json, JsonPath path)
@@ -506,7 +586,7 @@ public class JsonFactory
         }
     }
 
-    private static JsonObject propertyMeta(Property property)
+    private static JsonObject convertSinglePropertyMeta(Property property)
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
@@ -530,6 +610,34 @@ public class JsonFactory
 
         return json.build();
     }
+
+        /**
+     * Convert model to JSON
+     * @param properties model to convert
+     * @param fieldMap fieldMap of properties to include. Cannot be null. Use {@link FieldMap#ALL} to include all fields
+     * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
+     */
+    public static JSONArray getModelAsJSON(CompositeProperty properties, FieldMap fieldMap, int showMode)
+            throws Exception
+    {
+        JSONArray result = new JSONArray();
+        for( int i = 0; i < properties.getPropertyCount(); i++ )
+        {
+            Property property = properties.getPropertyAt(i);
+            try
+            {
+                JSONObject object = convertSingleProperty( fieldMap, showMode, property );
+                if(object != null)
+                    result.put(object);
+            }
+            catch( Exception e )
+            {
+                throw new BiosoftInternalException( e, "Unable to convert property: #" + i + ": "
+                        + ( property == null ? null : property.getName() ) );
+            }
+        }
+        return result;
+    }
 //
 //    /**
 //     * Counterpart for parseColor
@@ -544,4 +652,262 @@ public class JsonFactory
 //        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
 //    }
 
+//    /**
+//     * Convert model to JSON
+//     * @param properties model to convert
+//     * @param fieldMap fieldMap of properties to include. Cannot be null. Use {@link FieldMap#ALL} to include all fields
+//     * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
+//     */
+//    public static JSONArray getModelAsJSON(CompositeProperty properties, FieldMap fieldMap, int showMode)
+//            throws Exception
+//    {
+//        JSONArray result = new JSONArray();
+//        for( int i = 0; i < properties.getPropertyCount(); i++ )
+//        {
+//            Property property = properties.getPropertyAt(i);
+//            try
+//            {
+//                JSONObject object = convertSingleProperty( fieldMap, showMode, property );
+//                if(object != null)
+//                    result.put(object);
+//            }
+//            catch( Exception e )
+//            {
+//                throw new BiosoftInternalException( e, "Unable to convert property: #" + i + ": "
+//                        + ( property == null ? null : property.getName() ) );
+//            }
+//        }
+//        return result;
+//    }
+//
+//    private static JSONObject convertSingleProperty(FieldMap fieldMap, int showMode, Property property) throws Exception
+//    {
+//        String name = property.getName();
+//        if( !property.isVisible(showMode) || !fieldMap.contains(name) )
+//            return null;
+//        JSONObject p = new JSONObject();
+//        p.put(NAME_ATTR, name);
+//        p.put(DISPLAYNAME_ATTR, property.getDisplayName());
+//        p.put(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
+//        p.put(READONLY_ATTR, property.isReadOnly());
+//        if( property instanceof CompositeProperty && (!property.isHideChildren() || property.getPropertyEditorClass() == PenEditor.class) )
+//        {
+//            return fillCompositeProperty( fieldMap, showMode, property, p );
+//        }
+//        if( property instanceof ArrayProperty && !property.isHideChildren() )
+//        {
+//            return fillArrayPropertyMeta( fieldMap, showMode, property, p );
+//        }
+//        return fillSimpleProperty( property, p );
+//    }
+//
+//    private static JSONObject fillSimpleProperty(Property property, JSONObject p) throws InstantiationException, IllegalAccessException,
+//            JSONException
+//    {
+//        Class<?> editorClass = property.getPropertyEditorClass();
+//        if( editorClass != null )
+//        {
+//            if( JSONSerializable.class.isAssignableFrom(editorClass) )
+//            {
+//                JSONSerializable editor = (JSONSerializable)editorClass.newInstance();
+//                if( editor instanceof PropertyEditorEx )
+//                {
+//                    initEditor( property, (PropertyEditorEx)editor );
+//                    JSONObject p1 = editor.toJSON();
+//                    if( p1 != null )
+//                    {
+//                        Iterator<?> iterator = p1.keys();
+//                        while( iterator.hasNext() )
+//                        {
+//                            String key = iterator.next().toString();
+//                            if( key.equals("dictionary") )
+//                            {
+//                                JSONArray array = p1.optJSONArray("dictionary");
+//                                if( array != null )
+//                                {
+//                                    String[] elements = new String[array.length()];
+//                                    for( int index = 0; index < array.length(); index++ )
+//                                        elements[index] = array.optString(index);
+//                                    p.put(DICTIONARY_ATTR, createDictionary(elements, false));
+//                                }
+//                            }
+//                            else
+//                            {
+//                                p.put(key, p1.get(key));
+//                            }
+//                        }
+//                        return p;
+//                    }
+//                }
+//            }
+//            else if( TagEditorSupport.class.isAssignableFrom(editorClass) )
+//            {
+//                TagEditorSupport editor = (TagEditorSupport)editorClass.newInstance();
+//                String[] tags = editor.getTags();
+//                if( tags != null )
+//                {
+//                    p.put(DICTIONARY_ATTR, createDictionary(tags, true));
+//                }
+//            }
+//            else if( StringTagEditorSupport.class.isAssignableFrom(editorClass) )
+//            {
+//                StringTagEditorSupport editor = (StringTagEditorSupport)editorClass.newInstance();
+//                String[] tags = editor.getTags();
+//                if( tags != null )
+//                {
+//                    p.put(DICTIONARY_ATTR, createDictionary(tags, false));
+//                }
+//            }
+//            else if( CustomEditorSupport.class.isAssignableFrom(editorClass) )
+//            {
+//                CustomEditorSupport editor = null;
+//                //TODO: support or correctly process some editors
+//                //Some editors like biouml.model.util.ReactionEditor, biouml.model.util.FormulaEditor
+//                //use Application.getApplicationFrame(), so we got a NullPointerException here
+//                try
+//                {
+//                    editor = (CustomEditorSupport)editorClass.newInstance();
+//                    initEditor( property, editor );
+//                    String[] tags = editor.getTags();
+//                    if( tags != null )
+//                    {
+//                        p.put(DICTIONARY_ATTR, createDictionary(tags, false));
+//                    }
+//                }
+//                catch( Exception e )
+//                {
+//                }
+//            }
+//        }
+//
+//        Object value = property.getValue();
+//        if( value != null )
+//        {
+//            p.put(TYPE_ATTR, (value instanceof Boolean) ? "bool" : "code-string");
+//            p.put(VALUE_ATTR, value.toString());
+//        }
+//        return p;
+//    }
+//
+//    private static JSONObject fillArrayPropertyMeta(FieldMap fieldMap, int showMode, Property property, JSONObject p)
+//            throws Exception
+//    {
+//        Class<?> c = property.getPropertyEditorClass();
+//        if( c != null )
+//        {
+//            if( CustomEditorSupport.class.isAssignableFrom(c) )
+//            {
+//                CustomEditorSupport editor = (CustomEditorSupport)c.newInstance();
+//                initEditor( property, editor );
+//                String[] tags = editor.getTags();
+//                if( tags != null )
+//                {
+//                    p.put(DICTIONARY_ATTR, createDictionary(tags, false));
+//                    p.put(TYPE_ATTR, "multi-select");
+//                    Object[] vals = (Object[])property.getValue();
+//                    JSONArray value = new JSONArray();
+//                    if( vals != null )
+//                    {
+//                        for( Object val : vals )
+//                        {
+//                            value.put(val.toString());
+//                        }
+//                    }
+//                    p.put(VALUE_ATTR, value);
+//                    return p;
+//                }
+//                if( editor instanceof JSONCompatibleEditor )
+//                {
+//                    ( (JSONCompatibleEditor)editor ).addAsJSON(property, p, fieldMap, showMode);
+//                    return p;
+//                }
+//            }
+//        }
+//        JSONArray value = new JSONArray();
+//        ArrayProperty array = (ArrayProperty)property;
+//        for( int j = 0; j < array.getPropertyCount(); j++ )
+//        {
+//            Property element = array.getPropertyAt(j);
+//            if( element instanceof CompositeProperty )
+//            {
+//                value.put(fillCompositePropertyMeta((CompositeProperty)element, fieldMap.get(property), showMode));
+//            }
+//            else
+//            {
+//                JSONObject pCh = new JSONObject();
+//                Object val = element.getValue();
+//                if( val != null )
+//                {
+//                    pCh.put(TYPE_ATTR, (val instanceof Boolean) ? "bool" : "code-string");
+//                    pCh.put(NAME_ATTR, element.getName());
+//                    pCh.put(DISPLAYNAME_ATTR, element.getName());
+//                    pCh.put(VALUE_ATTR, val.toString());
+//                    pCh.put(READONLY_ATTR, element.isReadOnly());
+//                    value.put(new JSONArray().put(pCh));
+//                }
+//            }
+//        }
+//        p.put(TYPE_ATTR, "collection");
+//        p.put(VALUE_ATTR, value);
+//        return p;
+//    }
+//
+//    private static JSONObject fillCompositeProperty(FieldMap fieldMap, int showMode, Property property, JSONObject p)
+//            throws Exception
+//    {
+//        Object value = property.getValue();
+//        Class<?> valueClass = property.getValueClass();
+//        if( GenericComboBoxItem.class.isAssignableFrom( valueClass ) )
+//        {
+//            p.put(TYPE_ATTR, "code-string");
+//            p.put(VALUE_ATTR, ( (GenericComboBoxItem)value ).getValue());
+//            ( (GenericComboBoxItem)value ).updateAvailableValues();
+//            p.put(DICTIONARY_ATTR, createDictionary( ( (GenericComboBoxItem)value ).getAvailableValues(), false));
+//        }
+//        else if( GenericMultiSelectItem.class.isAssignableFrom( valueClass ) )
+//        {
+//            p.put(TYPE_ATTR, "multi-select");
+//            p.put(VALUE_ATTR, ( (GenericMultiSelectItem)value ).getValues());
+//            ( (GenericMultiSelectItem)value ).updateAvailableValues();
+//            p.put(DICTIONARY_ATTR, createDictionary( ( (GenericMultiSelectItem)value ).getAvailableValues(), false));
+//        }
+//        else if( value != null && customBeans.containsKey( valueClass ) )
+//        {
+//            Object wrapper = customBeans.get( valueClass ).getConstructor( valueClass ).newInstance( value );
+//            p.put(TYPE_ATTR, "composite");
+//            p.put(VALUE_ATTR, fillCompositePropertyMeta(ComponentFactory.getModel( wrapper ), fieldMap.get(property), showMode));
+//        }
+//        else if( Color.class.isAssignableFrom( valueClass ) )
+//        {
+//            p.put(TYPE_ATTR, "color-selector");
+//            JSONArray valueEl = new JSONArray();
+//            valueEl.put(encodeColor((Color)value));
+//            p.put(VALUE_ATTR, valueEl);
+//        }
+//        else
+//        {
+//            p.put(TYPE_ATTR, "composite");
+//            p.put(VALUE_ATTR, fillCompositePropertyMeta((CompositeProperty)property, fieldMap.get(property), showMode));
+//        }
+//        return p;
+//    }
+
+    protected static JsonArrayBuilder createDictionary(Object[] strings, boolean byPosition)
+    {
+        if( strings == null )
+            strings = new Object[] {};
+        int position = 0;
+        JsonArrayBuilder values = Json.createArrayBuilder();
+        JsonArrayBuilder pair = Json.createArrayBuilder();
+        for( Object tagObj : strings )
+        {
+            String tag = tagObj.toString();
+            if( byPosition )
+                values.add(pair.add(position).add(tag).build());
+            else
+                values.add(pair.add(tag).add(tag).build());
+            position++;
+        }
+        return values;
+    }
 }
