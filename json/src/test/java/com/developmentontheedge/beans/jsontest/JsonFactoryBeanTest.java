@@ -36,6 +36,24 @@ public class JsonFactoryBeanTest
                 "'field1':{'name':'foo'}}",
             oneQuotes(JsonFactory.beanValues(bean).toString()));
     }
+//
+//    @Test
+//    public void beanWithInnerClassAll() throws Exception
+//    {
+//        BeanWithInnerClass bean = new BeanWithInnerClass(
+//                new TestBeans.InnerBeanClass("foo"),
+//                new TestBeans.InnerBeanClass[]{new TestBeans.InnerBeanClass("foo1"),new TestBeans.InnerBeanClass("foo2")}
+//        );
+//        assertEquals("{'values':{'arr':[{'name':'foo1'},{'name':'foo2'}],'field1':{'name':'foo'}}," +
+//                        "'meta':{" +
+//                            "'/arr':{'type':'InnerBeanClass[]','readOnly':true}," +
+//                            "'/arr/[0]/name':{'type':'String'}," +
+//                            "'/arr/[1]/name':{'type':'String'}," +
+//                            "'/field1':{'type':'InnerBeanClass','readOnly':true}," +
+//                            "'/field1/name':{'type':'String','readOnly':true}}," +
+//                        "'order':['/arr','/field1']}",
+//                oneQuotes(JsonFactory.bean(bean).toString()));
+//    }
 
     @Test
     public void simpleBeanMeta()
