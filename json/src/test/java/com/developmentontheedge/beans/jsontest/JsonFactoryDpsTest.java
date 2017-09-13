@@ -5,6 +5,7 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
+import com.developmentontheedge.beans.test.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.assertEquals;
 
-public class JsonFactoryDpsTest
+public class JsonFactoryDpsTest extends TestUtils
 {
     private DynamicPropertySet dps;
 
@@ -163,9 +164,5 @@ public class JsonFactoryDpsTest
                 "}", oneQuotes(JsonFactory.dps(dps).toString()));
     }
 
-    public static String oneQuotes(String s)
-    {
-        return s.replace("\"", "'");
-    }
 
 }
