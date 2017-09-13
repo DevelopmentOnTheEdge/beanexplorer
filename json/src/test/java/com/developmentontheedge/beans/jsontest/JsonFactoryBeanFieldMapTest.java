@@ -2,6 +2,7 @@ package com.developmentontheedge.beans.jsontest;
 
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.model.FieldMap;
+import com.developmentontheedge.beans.model.Property;
 import org.junit.Test;
 
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
@@ -15,25 +16,25 @@ public class JsonFactoryBeanFieldMapTest
     @Test
     public void bean() throws Exception
     {
-        assertEquals("{'values':{},'meta':{},'order':[]}", oneQuotes(JsonFactory.bean(bean, fieldMap).toString()));
+        assertEquals("{'values':{},'meta':{},'order':[]}", oneQuotes(JsonFactory.bean(bean, fieldMap, Property.SHOW_USUAL).toString()));
     }
 
     @Test
     public void beanValues() throws Exception
     {
-        assertEquals("{}", oneQuotes(JsonFactory.beanValues(bean, fieldMap).toString()));
+        assertEquals("{}", oneQuotes(JsonFactory.beanValues(bean, fieldMap, Property.SHOW_USUAL).toString()));
     }
 
     @Test
     public void beanMeta() throws Exception
     {
-        assertEquals("{}", oneQuotes(JsonFactory.beanMeta(bean, fieldMap).toString()));
+        assertEquals("{}", oneQuotes(JsonFactory.beanMeta(bean, fieldMap, Property.SHOW_USUAL).toString()));
     }
 
     @Test
     public void beanOrder() throws Exception
     {
-        assertEquals("[]", oneQuotes(JsonFactory.beanOrder(bean, fieldMap).toString()));
+        assertEquals("[]", oneQuotes(JsonFactory.beanOrder(bean, fieldMap, Property.SHOW_USUAL).toString()));
     }
 
 }

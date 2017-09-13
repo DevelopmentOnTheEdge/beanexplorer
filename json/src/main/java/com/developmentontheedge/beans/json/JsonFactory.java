@@ -83,28 +83,28 @@ public class JsonFactory
 
     public static JsonObject bean(Object bean)
     {
-        return bean(bean, FieldMap.ALL);
+        return bean(bean, FieldMap.ALL, Property.SHOW_USUAL);
     }
 
-    public static JsonObject bean(Object bean, FieldMap fieldMap)
+    public static JsonObject bean(Object bean, FieldMap fieldMap, int showMode)
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
         if (bean instanceof DynamicPropertySet)return dps((DynamicPropertySet) bean);
 
         return Json.createObjectBuilder()
-                .add("values", beanValues(bean, fieldMap))
-                .add("meta", beanMeta(bean, fieldMap))
-                .add("order", beanOrder(bean, fieldMap))
+                .add("values", beanValues(bean, fieldMap, showMode))
+                .add("meta", beanMeta(bean, fieldMap, showMode))
+                .add("order", beanOrder(bean, fieldMap, showMode))
                 .build();
     }
 
     public static JsonObject beanValues(Object bean)
     {
-        return beanValues(bean, FieldMap.ALL);
+        return beanValues(bean, FieldMap.ALL, Property.SHOW_USUAL);
     }
 
-    public static JsonObject beanValues(Object bean, FieldMap fieldMap)
+    public static JsonObject beanValues(Object bean, FieldMap fieldMap, int showMode)
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
@@ -117,15 +117,15 @@ public class JsonFactory
         if (bean instanceof DynamicPropertySet)return dpsValues((DynamicPropertySet) bean);
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
-        return propertiesValues(property, fieldMap, Property.SHOW_USUAL).build();
+        return propertiesValues(property, fieldMap, showMode).build();
     }
 
     public static JsonObject beanMeta(Object bean)
     {
-        return beanMeta(bean, FieldMap.ALL);
+        return beanMeta(bean, FieldMap.ALL, Property.SHOW_USUAL);
     }
 
-    public static JsonObject beanMeta(Object bean, FieldMap fieldMap)
+    public static JsonObject beanMeta(Object bean, FieldMap fieldMap, int showMode)
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
@@ -135,7 +135,7 @@ public class JsonFactory
         JsonObjectBuilder json = Json.createObjectBuilder();
         try
         {
-            fillCompositePropertyMeta(property, fieldMap, Property.SHOW_USUAL, json, new JsonPath());
+            fillCompositePropertyMeta(property, fieldMap, showMode, json, new JsonPath());
         }
         catch (Exception e)
         {
@@ -147,10 +147,10 @@ public class JsonFactory
 
     public static JsonArray beanOrder(Object bean)
     {
-        return beanOrder(bean, FieldMap.ALL);
+        return beanOrder(bean, FieldMap.ALL, Property.SHOW_USUAL);
     }
 
-    public static JsonArray beanOrder(Object bean, FieldMap fieldMap)
+    public static JsonArray beanOrder(Object bean, FieldMap fieldMap, int showMode)
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
@@ -158,7 +158,7 @@ public class JsonFactory
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         JsonArrayBuilder json = Json.createArrayBuilder();
-        beanOrder(property, fieldMap, Property.SHOW_USUAL, json, new JsonPath());
+        beanOrder(property, fieldMap, showMode, json, new JsonPath());
 
         return json.build();
     }
