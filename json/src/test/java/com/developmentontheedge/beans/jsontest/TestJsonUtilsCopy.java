@@ -153,7 +153,16 @@ public class TestJsonUtilsCopy extends TestUtils
         ComponentModel model = ComponentFactory.getModel(bean);
         JsonArray json = JsonFactoryCopy.getModelAsJSON(model).build();
 
-        assertNotNull(json);
+        assertEquals("[" +
+                "{'name':'str','displayName':'String','description':'Test string property','readOnly':false,'type':'code-string','value':'string value'}," +
+                "{'name':'color','displayName':'color','description':'Color property','readOnly':false,'type':'code-string','value':'java.awt.Color[r=0,g=0,b=0]'}," +
+                "{'name':'select','displayName':'select','description':'select','readOnly':false," +
+                    "'dictionary':[['one','one'],['two','two']]," +
+                    "'type':'code-string','value':'one'}," +
+                "{'name':'interval','displayName':'interval','description':'interval','readOnly':false," +
+                    "'dictionary':[['(0,100)','(0,100)'],['(100,200)','(100,200)'],['(200,300)','(200,300)']]," +
+                    "'type':'code-string','value':'(0,100)'}" +
+            "]", oneQuotes(json.toString()));
 
 
 //        json = JsonFactoryCopy.getModelAsJSON(model, FieldMap.ALL, Property.SHOW_EXPERT);
@@ -161,21 +170,6 @@ public class TestJsonUtilsCopy extends TestUtils
 //        assertEquals(model.getPropertyCount(), json.length());
 //
 
-        assertEquals("{'name':'str','displayName':'String','description':'Test string property'," +
-                        "'readOnly':false,'type':'code-string','value':'string value'}",
-                oneQuotes(json.getJsonObject(0).toString()));
-
-        assertEquals("{'name':'color','displayName':'color','description':'Color property','readOnly':false,'type':'code-string','value':'java.awt.Color[r=0,g=0,b=0]'}",
-                oneQuotes(json.getJsonObject(1).toString()));
-        assertEquals("{'name':'select','displayName':'select','description':'select','readOnly':false," +
-                        "'dictionary':[['one','one'],['two','two']]," +
-                        "'type':'code-string'," +
-                        "'value':'one'}",
-                oneQuotes(json.getJsonObject(2).toString()));
-        assertEquals("{'name':'interval','displayName':'interval','description':'interval','readOnly':false," +
-                        "'dictionary':[['(0,100)','(0,100)'],['(100,200)','(100,200)'],['(200,300)','(200,300)']]," +
-                        "'type':'code-string','value':'(0,100)'}",
-                oneQuotes(json.getJsonObject(3).toString()));
 
         JsonObject property = json.getJsonObject(0);
         assertEquals("str", property.getString("name"));
