@@ -146,23 +146,22 @@ public class JsonFactoryCopy
      * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
      */
     public static JsonArrayBuilder getModelAsJSON(CompositeProperty properties, FieldMap fieldMap, int showMode)
-            throws Exception
     {
         JsonArrayBuilder result = Json.createArrayBuilder();
         for( int i = 0; i < properties.getPropertyCount(); i++ )
         {
             Property property = properties.getPropertyAt(i);
-//            try
-//            {
+            try
+            {
                 JsonObjectBuilder object = convertSingleProperty( fieldMap, showMode, property );
                 if(object != null)
                     result.add(object);
-//            }
-//            catch( Exception e )
-//            {
-//                throw new BiosoftInternalException( e, "Unable to convert property: #" + i + ": "
-//                        + ( property == null ? null : property.getName() ) );
-//            }
+            }
+            catch( Exception e )
+            {
+                throw new RuntimeException( "Unable to convert property: #" + i + ": "
+                        + ( property == null ? null : property.getName() ) ,e);
+            }
         }
         return result;
     }

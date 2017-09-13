@@ -128,7 +128,7 @@ public class TestJsonUtilsCopy extends TestUtils
         public void initProperties() throws Exception
         {
             add("str");
-            //findPropertyDescriptor("str").setExpert(true);
+            findPropertyDescriptor("str").setExpert(true);
 //            property( "input" ).inputElement( TableDataCollection.class ).add();
 //            property( "output" ).outputElement( Diagram.class ).add();
             add("color", ColorEditor.class);
@@ -153,23 +153,22 @@ public class TestJsonUtilsCopy extends TestUtils
         ComponentModel model = ComponentFactory.getModel(bean);
         JsonArray json = JsonFactoryCopy.getModelAsJSON(model).build();
 
+        assertEquals(model.getPropertyCount()-1 , json.size());
+
+        json = JsonFactoryCopy.getModelAsJSON(model, FieldMap.ALL, Property.SHOW_EXPERT).build();
+
+        assertEquals(model.getPropertyCount(), json.size());
+
         assertEquals("[" +
                 "{'name':'str','displayName':'String','description':'Test string property','readOnly':false,'type':'code-string','value':'string value'}," +
                 "{'name':'color','displayName':'color','description':'Color property','readOnly':false,'type':'code-string','value':'java.awt.Color[r=0,g=0,b=0]'}," +
                 "{'name':'select','displayName':'select','description':'select','readOnly':false," +
-                    "'dictionary':[['one','one'],['two','two']]," +
-                    "'type':'code-string','value':'one'}," +
+                "'dictionary':[['one','one'],['two','two']]," +
+                "'type':'code-string','value':'one'}," +
                 "{'name':'interval','displayName':'interval','description':'interval','readOnly':false," +
-                    "'dictionary':[['(0,100)','(0,100)'],['(100,200)','(100,200)'],['(200,300)','(200,300)']]," +
-                    "'type':'code-string','value':'(0,100)'}" +
-            "]", oneQuotes(json.toString()));
-
-
-//        json = JsonFactoryCopy.getModelAsJSON(model, FieldMap.ALL, Property.SHOW_EXPERT);
-//        assertNotNull(json);
-//        assertEquals(model.getPropertyCount(), json.length());
-//
-
+                "'dictionary':[['(0,100)','(0,100)'],['(100,200)','(100,200)'],['(200,300)','(200,300)']]," +
+                "'type':'code-string','value':'(0,100)'}" +
+                "]", oneQuotes(json.toString()));
 
         JsonObject property = json.getJsonObject(0);
         assertEquals("str", property.getString("name"));
