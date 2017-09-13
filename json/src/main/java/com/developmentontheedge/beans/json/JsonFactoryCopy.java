@@ -54,19 +54,19 @@ public class JsonFactoryCopy
         editor.setDescriptor(property.getDescriptor());
     }
 
-    private static CompositeProperty resolveModel(Object bean)
-    {
-        CompositeProperty model;
-        if( bean instanceof CompositeProperty )
-        {
-            model = (CompositeProperty)bean;
-        }
-        else
-        {
-            model = ComponentFactory.getModel(bean, ComponentFactory.Policy.UI, true);
-        }
-        return model;
-    }
+//    private static CompositeProperty resolveModel(Object bean)
+//    {
+//        CompositeProperty model;
+//        if( bean instanceof CompositeProperty )
+//        {
+//            model = (CompositeProperty)bean;
+//        }
+//        else
+//        {
+//            model = ComponentFactory.getModel(bean, ComponentFactory.Policy.UI, true);
+//        }
+//        return model;
+//    }
 
     /**
      * Counterpart for parseColor

@@ -14,6 +14,7 @@ import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 import com.developmentontheedge.beans.model.SimpleProperty;
 
+import java.awt.*;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -220,6 +221,11 @@ public class JsonFactory
             json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return true;
         }
 
+        if( Color.class.isAssignableFrom( value.getClass() ) )
+        {
+            json.add(name, encodeColor((Color)value));return true;
+        }
+
         if( value instanceof Object[])
         {
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
@@ -228,7 +234,8 @@ public class JsonFactory
             return true;
         }
 
-        return false;
+        json.add(name, value.toString());
+        return true;
     }
 
     static boolean addValueToArray(JsonArrayBuilder json, Object value)
@@ -258,7 +265,13 @@ public class JsonFactory
             json.add(dpsValuesBuilder((DynamicPropertySet)value));return true;
         }
 
-        return false;
+        if( Color.class.isAssignableFrom( value.getClass() ) )
+        {
+            json.add(encodeColor((Color)value));return true;
+        }
+
+        json.add(value.toString());
+        return true;
     }
 
     private static JsonObjectBuilder dpsValuesBuilder(DynamicPropertySet dps)
@@ -531,7 +544,14 @@ public class JsonFactory
                 Object val = element.getValue();
                 if( val != null )
                 {
-                    pCh.add(type.name(), (val instanceof Boolean) ? "bool" : "code-string");
+                    if( Color.class.isAssignableFrom( val.getClass() ) )
+                    {
+                        pCh.add(TYPE_ATTR, "color-selector");
+                    }
+                    else
+                    {
+                        pCh.add(type.name(), (val instanceof Boolean) ? "bool" : "code-string");
+                    }
                     pCh.add(NAME_ATTR, element.getName());
                     pCh.add(displayName.name(), element.getName());
                     pCh.add(VALUE_ATTR, val.toString());
@@ -540,8 +560,9 @@ public class JsonFactory
                 }
             }
         }
-        json.add(type.name(), "collection");
+        //json.add(type.name(), "collection");
         /*json.add(VALUE_ATTR, value);*/
+
 //        for( int i = 0; i < properties.getPropertyCount(); i++ )
 //        {
 //            Property property = properties.getPropertyAt(i);
@@ -562,10 +583,13 @@ public class JsonFactory
 //        }
     }
 
-    private static void fillSimplePropertyMeta(SimpleProperty property, FieldMap fieldMap, int showMode,
-                                               JsonObjectBuilder json, JsonPath path) throws Exception
+    private static void fillSimplePropertyMeta(SimpleProperty property, JsonObjectBuilder json, JsonPath path) throws Exception
     {
         JsonObjectBuilder p = Json.createObjectBuilder();
+        //p.add(NAME_ATTR, name);
+        p.add(DISPLAYNAME_ATTR, property.getDisplayName());
+        p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
+        p.add(READONLY_ATTR, property.isReadOnly());
 
         Class<?> editorClass = property.getPropertyEditorClass();
         if( editorClass != null )
@@ -646,10 +670,17 @@ public class JsonFactory
         Object value = property.getValue();
         if( value != null )
         {
-            p.add(TYPE_ATTR, (value instanceof Boolean) ? "bool" : "code-string");
+            if( Color.class.isAssignableFrom( value.getClass() ) )
+            {
+                p.add(TYPE_ATTR, "color-selector");
+            }
+            else
+            {
+                p.add(TYPE_ATTR, (value instanceof Boolean) ? "bool" : "code-string");
+            }
             //todo p.add(VALUE_ATTR, value.toString());
         }
-        json.add(property.getName(), p);
+        json.add(path.get(), p);
     }
 
     private static void initEditor(Property property, PropertyEditorEx editor)
@@ -685,12 +716,6 @@ public class JsonFactory
         String name = property.getName();
         if( !property.isVisible(showMode) || !fieldMap.contains(name) )
             return;
-        JsonObjectBuilder p = Json.createObjectBuilder();
-        //p.add(NAME_ATTR, name);
-        p.add(DISPLAYNAME_ATTR, property.getDisplayName());
-        p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
-        p.add(READONLY_ATTR, property.isReadOnly());
-        json.add(name, p);
 
         JsonPath newPath = path.append(property.getName());
         if( property instanceof CompositeProperty && (!property.isHideChildren() ) )//|| property.getPropertyEditorClass() == PenEditor.class
@@ -705,7 +730,7 @@ public class JsonFactory
         }
 
         if( property instanceof SimpleProperty) {
-            fillSimplePropertyMeta((SimpleProperty) property, fieldMap, showMode, json, newPath);
+            fillSimplePropertyMeta((SimpleProperty) property, json, path);
         }
 
 //        JsonObjectBuilder json = Json.createObjectBuilder();
@@ -760,19 +785,19 @@ public class JsonFactory
             }
         }
     }
-//
-//    /**
-//     * Counterpart for parseColor
-//     * @param color color to encode
-//     * @return array of color components
-//     */
-//    static JsonArrayBuilder encodeColor(Color color)
-//    {
-//        JsonArrayBuilder json = Json.createArrayBuilder();
-//        if(color == null || color.getAlpha() == 0) return json;
-//
-//        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
-//    }
+
+    /**
+     * Counterpart for parseColor
+     * @param color color to encode
+     * @return array of color components
+     */
+    private static JsonArray encodeColor(Color color)
+    {
+        JsonArrayBuilder json = Json.createArrayBuilder();
+        if(color == null || color.getAlpha() == 0) return json.build();
+
+        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue()).build();
+    }
 
 //    /**
 //     * Convert model to JSON
