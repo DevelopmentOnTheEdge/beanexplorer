@@ -1,5 +1,6 @@
 package com.developmentontheedge.beans.json;
 
+
 public class JsonPath
 {
     private String path = "";

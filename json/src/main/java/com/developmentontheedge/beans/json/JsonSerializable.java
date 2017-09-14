@@ -1,9 +1,6 @@
 package com.developmentontheedge.beans.json;
 
-/**
- * Object which supports serializing to JSON
- * @author lan
- */
+
 public interface JsonSerializable
 {
     /**

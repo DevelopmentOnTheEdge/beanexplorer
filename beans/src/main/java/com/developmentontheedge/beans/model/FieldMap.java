@@ -5,6 +5,11 @@ import one.util.streamex.StreamEx;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Hierarchical list of bean properties
+ * @author lan
+ * copy from ru.biosoft.util.FieldMap
+ */
 public class FieldMap
 {
     public static final FieldMap ALL = new FieldMap();

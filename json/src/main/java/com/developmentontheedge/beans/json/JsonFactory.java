@@ -14,7 +14,7 @@ import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 import com.developmentontheedge.beans.model.SimpleProperty;
 
-import java.awt.*;
+import java.awt.Color;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -29,13 +29,14 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import org.eclipse.yasson.*;
+import org.eclipse.yasson.JsonBindingProvider;
 
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static java.util.Objects.requireNonNull;
 
+
 /**
- * Provides API to serialize beans and dynamic property sets to Json. 
+ * Provides API to serialize beans and dynamic property sets to Json.
  */
 public class JsonFactory
 {
@@ -44,7 +45,7 @@ public class JsonFactory
     ///////////////////////////////////////////////////////////////////////////
     // public API
     //
-    
+
     public static JsonObject dps(DynamicPropertySet dps)
     {
         requireNonNull(dps);
@@ -438,21 +439,25 @@ public class JsonFactory
         for (int i = 0; i < properties.getPropertyCount(); i++)
         {
             Property property = properties.getPropertyAt(i);
-            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
+            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) )
+            {
                 continue;
             }
 
-            if(property.getValue() == null){
+            if(property.getValue() == null)
+            {
                 json.addNull();
                 continue;
             }
 
-            if(property instanceof CompositeProperty) {
+            if(property instanceof CompositeProperty)
+            {
                 json.add(propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
 
-            if(property instanceof ArrayProperty) {
+            if(property instanceof ArrayProperty)
+            {
                 json.add(propertiesValues((ArrayProperty) property, fieldMap.get(property), showMode));
                 continue;
             }
@@ -475,21 +480,25 @@ public class JsonFactory
         for( int i = 0; i < properties.getPropertyCount(); i++ )
         {
             Property property = properties.getPropertyAt(i);
-            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
+            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) )
+            {
                 continue;
             }
             JsonPath newPath = path.append(property.getName());
 
-            if(!property.getName().equals("class")){
+            if(!property.getName().equals("class"))
+            {
                 convertSinglePropertyMeta(property, fieldMap.get(property), showMode, json, newPath);
             }
 
-            if(property instanceof CompositeProperty) {
+            if(property instanceof CompositeProperty)
+            {
                 fillCompositePropertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
 
-            if(property instanceof ArrayProperty) {
+            if(property instanceof ArrayProperty)
+            {
                 fillArrayPropertyMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
             }
         }
@@ -718,11 +727,13 @@ public class JsonFactory
             return;
 
         JsonPath newPath = path.append(property.getName());
+
         if( property instanceof CompositeProperty && (!property.isHideChildren() ) )//|| property.getPropertyEditorClass() == PenEditor.class
         {
             fillCompositePropertyMeta((CompositeProperty)property, fieldMap, showMode, json, newPath);
             return;
         }
+
         if( property instanceof ArrayProperty && !property.isHideChildren() )
         {
             fillArrayPropertyMeta((ArrayProperty)property, fieldMap, showMode, json, newPath);

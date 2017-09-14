@@ -4,6 +4,7 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 
 import java.lang.reflect.Array;
 
+
 enum JsonPropertyAttributes
 {
     type(null, Class.class),
