@@ -488,12 +488,26 @@ public class JsonFactory
 
             if(!property.getName().equals("class"))
             {
-                convertSinglePropertyMeta(property, fieldMap.get(property), showMode, json, newPath);
+                fillSimplePropertyMeta(property, json, newPath);
+                //convertSinglePropertyMeta(property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
 
             if(property instanceof CompositeProperty)
             {
+                if( property.getValue() instanceof DynamicPropertySet)
+                {
+                    JsonObjectBuilder p = Json.createObjectBuilder();
+                    p.add(DISPLAYNAME_ATTR, property.getDisplayName());
+                    p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
+                    p.add(READONLY_ATTR, property.isReadOnly());
+                    p.add(TYPE_ATTR, "DynamicPropertySet");
+                    json.add(path.get(), p);
+
+                    dpsMeta((DynamicPropertySet)property.getValue(), json, path);
+                    return;
+                }
+
                 fillCompositePropertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
@@ -546,7 +560,7 @@ public class JsonFactory
             if( element instanceof CompositeProperty )
             {
                 JsonPath newPath = path.append(property.getName());
-                getModelAsJSON((CompositeProperty)element, fieldMap.get(property), showMode, json, newPath);
+                fillCompositePropertyMeta((CompositeProperty)element, fieldMap.get(property), showMode, json, newPath);
             }
             else
             {
@@ -593,7 +607,7 @@ public class JsonFactory
 //        }
     }
 
-    private static void fillSimplePropertyMeta(SimpleProperty property, JsonObjectBuilder json, JsonPath path) throws Exception
+    private static void fillSimplePropertyMeta(Property property, JsonObjectBuilder json, JsonPath path) throws Exception
     {
         JsonObjectBuilder p = Json.createObjectBuilder();
         //p.add(NAME_ATTR, name);
@@ -716,97 +730,6 @@ public class JsonFactory
             JsonPath newPath = path.append(key);
             if(!key.equals("class"))json.add(newPath.get());
             if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, newPath);
-        }
-    }
-
-    private static void convertSinglePropertyMeta(Property property, FieldMap fieldMap, int showMode,
-                                                  JsonObjectBuilder json, JsonPath path) throws Exception
-    {
-        String name = property.getName();
-        if( !property.isVisible(showMode) || !fieldMap.contains(name) )
-            return;
-
-        JsonPath newPath = path.append(property.getName());
-
-        if( property instanceof CompositeProperty && (!property.isHideChildren() ) )//|| property.getPropertyEditorClass() == PenEditor.class
-        {
-            if( property.getValue() instanceof DynamicPropertySet)
-            {
-                JsonObjectBuilder p = Json.createObjectBuilder();
-                p.add(DISPLAYNAME_ATTR, property.getDisplayName());
-                p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
-                p.add(READONLY_ATTR, property.isReadOnly());
-                p.add(TYPE_ATTR, "DynamicPropertySet");
-                json.add(path.get(), p);
-
-                dpsMeta((DynamicPropertySet)property.getValue(), json, path);
-                return;
-            }
-
-            fillCompositePropertyMeta((CompositeProperty)property, fieldMap, showMode, json, newPath);
-            return;
-        }
-
-        if( property instanceof ArrayProperty && !property.isHideChildren() )
-        {
-            fillArrayPropertyMeta((ArrayProperty)property, fieldMap, showMode, json, newPath);
-            return;
-        }
-
-        if( property instanceof SimpleProperty) {
-            fillSimplePropertyMeta((SimpleProperty) property, json, path);
-        }
-
-//        JsonObjectBuilder json = Json.createObjectBuilder();
-
-//        json.add(type.name(), getTypeName(property.getValueClass()));
-//
-//        if(!property.getName().equals(property.getDisplayName()))
-//        {
-//            json.add(displayName.name(), property.getDisplayName());
-//        }
-//
-//        String shortDescription = property.getShortDescription().split("\n")[0];
-//        if(!property.getName().equals(shortDescription))
-//        {
-//            json.add(description.name(), property.getShortDescription().split("\n")[0]);
-//        }
-//
-//        if(property.isReadOnly())
-//        {
-//            json.add(readOnly.name(), true);
-//        }
-//
-//        return json.build();
-    }
-
-    /**
-     * Convert model to JSON
-     * @param properties model to convert
-     * @param fieldMap fieldMap of properties to include. Cannot be null. Use {@link FieldMap#ALL} to include all fields
-     * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
-     */
-    public static void getModelAsJSON(CompositeProperty properties, FieldMap fieldMap, int showMode,
-                                           JsonObjectBuilder json, JsonPath path)
-            throws Exception
-    {
-        for( int i = 0; i < properties.getPropertyCount(); i++ )
-        {
-            Property property = properties.getPropertyAt(i);
-            try
-            {
-                JsonPath newPath = path.append(property.getName());
-                //if(!property.getName().equals("class"))
-
-                convertSinglePropertyMeta( property, fieldMap.get(property), showMode, json, newPath );
-//                if(object != null)
-//                    json.add(newPath.get(), object);
-            }
-            catch( Exception e )
-            {
-                throw new RuntimeException( "Unable to convert property: #" + i + ": "
-                        + ( property == null ? null : property.getName() ), e );
-            }
         }
     }
 
