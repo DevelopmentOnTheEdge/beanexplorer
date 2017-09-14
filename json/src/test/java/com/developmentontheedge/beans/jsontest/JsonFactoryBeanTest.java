@@ -80,7 +80,6 @@ public class JsonFactoryBeanTest
     }
 
     @Test
-    @Ignore
     public void beanWithDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
@@ -91,7 +90,7 @@ public class JsonFactoryBeanTest
                 "'meta':{" +
                     "'/title':{'displayName':'title','description':'title','readOnly':false,'type':'code-string'}," +
                     "'/dps':{'displayName':'dps','description':'dps','readOnly':false,'type':'DynamicPropertySet'}," +
-                    "'/dps/name':{'displayName':'name','description':'name','readOnly':false,'type':'code-string'}}," +
+                    "'/dps/name':{'displayName':'name'}}," +
                 "'order':['/title','/dps','/dps/name']" +
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }

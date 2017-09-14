@@ -495,13 +495,6 @@ public class JsonFactory
             {
                 if( property.getValue() instanceof DynamicPropertySet)
                 {
-                    JsonObjectBuilder p = Json.createObjectBuilder();
-                    p.add(DISPLAYNAME_ATTR, property.getDisplayName());
-                    p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
-                    p.add(READONLY_ATTR, property.isReadOnly());
-                    p.add(TYPE_ATTR, "DynamicPropertySet");
-                    json.add(path.get(), p);
-
                     dpsMeta((DynamicPropertySet)property.getValue(), json, newPath);
                     continue;
                 }
@@ -566,13 +559,6 @@ public class JsonFactory
             {
                 if( property.getValue() instanceof DynamicPropertySet)
                 {
-                    JsonObjectBuilder p = Json.createObjectBuilder();
-                    p.add(DISPLAYNAME_ATTR, property.getDisplayName());
-                    p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
-                    p.add(READONLY_ATTR, property.isReadOnly());
-                    p.add(TYPE_ATTR, "DynamicPropertySet");
-                    json.add(path.get(), p);
-
                     dpsMeta((DynamicPropertySet)property.getValue(), json, newPath);
                     continue;
                 }
@@ -614,6 +600,7 @@ public class JsonFactory
         //p.add(NAME_ATTR, name);
         p.add(DISPLAYNAME_ATTR, property.getDisplayName());
         p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
+        //todo if(property.isReadOnly())
         p.add(READONLY_ATTR, property.isReadOnly());
 
         Class<?> editorClass = property.getPropertyEditorClass();
@@ -695,7 +682,11 @@ public class JsonFactory
         Object value = property.getValue();
         if( value != null )
         {
-            if(property instanceof ArrayProperty)
+            if( property.getValue() instanceof DynamicPropertySet)
+            {
+                p.add(TYPE_ATTR, "DynamicPropertySet");
+            }
+            else if(property instanceof ArrayProperty)
             {
                 p.add(TYPE_ATTR, "collection");
             }
