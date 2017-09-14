@@ -157,11 +157,11 @@ public class TestBeanWithBeanInfoEx extends TestUtils
                     "'select':'one'," +
                     "'interval':'(0,100)'}," +
                 "'meta':{" +
-                    "'/str':{'displayName':'String','description':'Test string property','readOnly':false,'type':'code-string'}," +
-                    "'/color':{'displayName':'color','description':'Color property','readOnly':false,'type':'color-selector'}," +
-                    "'/select':{'displayName':'select','description':'select','readOnly':false,'dictionary':[['one','one'],['two','two']]," +
+                    "'/str':{'displayName':'String','description':'Test string property','type':'code-string'}," +
+                    "'/color':{'displayName':'color','description':'Color property','type':'color-selector'}," +
+                    "'/select':{'displayName':'select','description':'select','dictionary':[['one','one'],['two','two']]," +
                         "'type':'code-string'}," +
-                    "'/interval':{'displayName':'interval','description':'interval','readOnly':false,'dictionary':[['(0,100)','(0,100)'],['(100,200)','(100,200)'],['(200,300)','(200,300)']]," +
+                    "'/interval':{'displayName':'interval','description':'interval','dictionary':[['(0,100)','(0,100)'],['(100,200)','(100,200)'],['(200,300)','(200,300)']]," +
                         "'type':'code-string'}}," +
                 "'order':['/str','/color','/select','/interval']" +
             "}", oneQuotes(json.toString()));

@@ -62,12 +62,12 @@ public class JsonFactoryBeanTest
     {
         TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
         assertEquals("{" +
-                "'/arr':{'displayName':'arr','description':'arr','readOnly':false,'type':'collection'}," +
-                "'/arr/[0]':{'displayName':'[0]','description':'Long','readOnly':false,'type':'code-string'}," +
-                "'/arr/[1]':{'displayName':'[1]','description':'Long','readOnly':false,'type':'code-string'}," +
-                "'/arr/[2]':{'displayName':'[2]','description':'Long','readOnly':false,'type':'code-string'}," +
-                "'/name':{'displayName':'name','description':'name','readOnly':false,'type':'code-string'}," +
-                "'/number':{'displayName':'number','description':'number','readOnly':false,'type':'code-string'}" +
+                "'/arr':{'displayName':'arr','description':'arr','type':'collection'}," +
+                "'/arr/[0]':{'displayName':'[0]','description':'Long','type':'code-string'}," +
+                "'/arr/[1]':{'displayName':'[1]','description':'Long','type':'code-string'}," +
+                "'/arr/[2]':{'displayName':'[2]','description':'Long','type':'code-string'}," +
+                "'/name':{'displayName':'name','description':'name','type':'code-string'}," +
+                "'/number':{'displayName':'number','description':'number','type':'code-string'}" +
             "}", oneQuotes(JsonFactory.beanMeta(bean).toString()));
     }
 
@@ -88,8 +88,8 @@ public class JsonFactoryBeanTest
         assertEquals("{" +
                 "'values':{'title':'TestBean','dps':{'name':'value'}}," +
                 "'meta':{" +
-                    "'/title':{'displayName':'title','description':'title','readOnly':false,'type':'code-string'}," +
-                    "'/dps':{'displayName':'dps','description':'dps','readOnly':false,'type':'DynamicPropertySet'}," +
+                    "'/title':{'displayName':'title','description':'title','type':'code-string'}," +
+                    "'/dps':{'displayName':'dps','description':'dps','type':'DynamicPropertySet'}," +
                     "'/dps/name':{'displayName':'name'}}," +
                 "'order':['/title','/dps','/dps/name']" +
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
