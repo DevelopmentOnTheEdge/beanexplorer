@@ -12,7 +12,6 @@ import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
-import com.developmentontheedge.beans.model.SimpleProperty;
 
 import java.awt.Color;
 import java.lang.reflect.Array;
@@ -486,10 +485,7 @@ public class JsonFactory
             }
             JsonPath newPath = path.append(property.getName());
 
-            if(!property.getName().equals("class"))//todo delete, after add BeadInfo to add examples
-            {
-                fillSimplePropertyMeta(property, json, newPath);
-            }
+            fillSimplePropertyMeta(property, json, newPath);
 
             if(property instanceof CompositeProperty)
             {
@@ -550,10 +546,7 @@ public class JsonFactory
             Property property = properties.getPropertyAt(j);
             JsonPath newPath = path.append(property.getName());
 
-            if(!property.getName().equals("class"))//todo delete, after add BeadInfo to add examples
-            {
-                fillSimplePropertyMeta(property, json, newPath);
-            }
+            fillSimplePropertyMeta(property, json, newPath);
 
             if(property instanceof CompositeProperty)
             {
@@ -597,7 +590,6 @@ public class JsonFactory
     private static void fillSimplePropertyMeta(Property property, JsonObjectBuilder json, JsonPath path) throws Exception
     {
         JsonObjectBuilder p = Json.createObjectBuilder();
-        //p.add(NAME_ATTR, name);
         p.add(DISPLAYNAME_ATTR, property.getDisplayName());
         p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
         if(property.isReadOnly())p.add(READONLY_ATTR, property.isReadOnly());
@@ -761,12 +753,10 @@ public class JsonFactory
         return values;
     }
 
-    private static final String NAME_ATTR = "name";
     private static final String DISPLAYNAME_ATTR = "displayName";
     private static final String DESCRIPTION_ATTR = "description";
     private static final String TYPE_ATTR = "type";
     private static final String READONLY_ATTR = "readOnly";
-    private static final String VALUE_ATTR = "value";
     private static final String CHILDREN_ATTR = "children";
     private static final String DICTIONARY_ATTR = "dictionary";
 }
