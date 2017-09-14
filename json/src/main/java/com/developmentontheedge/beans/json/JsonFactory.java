@@ -609,7 +609,7 @@ public class JsonFactory
                 if( editor instanceof PropertyEditorEx )
                 {
                     initEditor( property, (PropertyEditorEx)editor );
-//todo                    JSONObject p1 = editor.toJSON();
+//todo                    JSONObject p1 = editor.toJson();
 //                    if( p1 != null )
 //                    {
 //                        Iterator<?> iterator = p1.keys();

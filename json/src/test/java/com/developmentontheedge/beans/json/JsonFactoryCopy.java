@@ -197,7 +197,7 @@ public class JsonFactoryCopy
                 if( editor instanceof PropertyEditorEx )
                 {
                     initEditor( property, (PropertyEditorEx)editor );
-//                    JsonObjectBuilder p1 = editor.toJSON();
+//                    JsonObjectBuilder p1 = editor.toJson();
 //                    if( p1 != null )
 //                    {
 //                        Iterator<?> iterator = p1.keys();
