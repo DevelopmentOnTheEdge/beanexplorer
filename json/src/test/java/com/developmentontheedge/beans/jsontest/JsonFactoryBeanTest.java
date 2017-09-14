@@ -100,16 +100,15 @@ public class JsonFactoryBeanTest
     public void beanWithDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps.add(new DynamicProperty("name", String.class, ""));
+        dps.add(new DynamicProperty("name", String.class, "value"));
         TestBeans.FormPresentation bean = new TestBeans.FormPresentation("TestBean", dps);
         assertEquals("{" +
-                        "'values':{" +
-                            "'dps':{'name':''},'title':'TestBean'}," +
-                        "'meta':{" +
-                            "'/dps':{'type':'DynamicPropertySetSupport'}," +
-                            "'/dps/name':{'type':'String'}," +
-                            "'/title':{'type':'String','readOnly':true}}," +
-                        "'order':['/dps','/dps/name','/title']" +
+                "'values':{'title':'TestBean','dps':{'name':'value'}}," +
+                "'meta':{" +
+                    "'/title':{'displayName':'title','description':'title','readOnly':false,'type':'code-string'}," +
+                    "'/dps':{'displayName':'dps','description':'dps','readOnly':false,'type':'DynamicPropertySet'}," +
+                    "'/dps/name':{'displayName':'name','description':'name','readOnly':false,'type':'code-string'}}," +
+                "'order':['/title','/dps','/dps/name']" +
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 

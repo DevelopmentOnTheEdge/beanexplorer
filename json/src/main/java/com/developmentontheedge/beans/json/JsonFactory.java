@@ -489,6 +489,7 @@ public class JsonFactory
             if(!property.getName().equals("class"))
             {
                 convertSinglePropertyMeta(property, fieldMap.get(property), showMode, json, newPath);
+                continue;
             }
 
             if(property instanceof CompositeProperty)
@@ -687,7 +688,6 @@ public class JsonFactory
             {
                 p.add(TYPE_ATTR, (value instanceof Boolean) ? "bool" : "code-string");
             }
-            //todo p.add(VALUE_ATTR, value.toString());
         }
         json.add(path.get(), p);
     }
@@ -730,6 +730,19 @@ public class JsonFactory
 
         if( property instanceof CompositeProperty && (!property.isHideChildren() ) )//|| property.getPropertyEditorClass() == PenEditor.class
         {
+            if( property.getValue() instanceof DynamicPropertySet)
+            {
+                JsonObjectBuilder p = Json.createObjectBuilder();
+                p.add(DISPLAYNAME_ATTR, property.getDisplayName());
+                p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
+                p.add(READONLY_ATTR, property.isReadOnly());
+                p.add(TYPE_ATTR, "DynamicPropertySet");
+                json.add(path.get(), p);
+
+                dpsMeta((DynamicPropertySet)property.getValue(), json, path);
+                return;
+            }
+
             fillCompositePropertyMeta((CompositeProperty)property, fieldMap, showMode, json, newPath);
             return;
         }

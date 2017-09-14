@@ -140,8 +140,6 @@ public class TestJsonUtilsCopy extends TestUtils
     @Test
     public void testGetModelAsJSONCopy() throws Exception
     {
-        new TestBeanBeanInfo();
-
         TestBean bean = new TestBean();
         bean.setStr("string value");
 //        bean.setInput(DataElementPath.create("test/path"));

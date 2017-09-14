@@ -1,5 +1,6 @@
 package com.developmentontheedge.beans.jsontest;
 
+import com.developmentontheedge.beans.BeanInfoEx;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
@@ -11,8 +12,8 @@ class TestBeans
 {
     public static class FormPresentation
     {
-        final String title;
-        final DynamicPropertySet dps;
+        String title;
+        DynamicPropertySet dps;
 
         FormPresentation(String title, DynamicPropertySet dps)
         {
@@ -28,6 +29,31 @@ class TestBeans
         public DynamicPropertySet getDps()
         {
             return dps;
+        }
+
+        public void setTitle(String title)
+        {
+            this.title = title;
+        }
+
+        public void setDps(DynamicPropertySet dps)
+        {
+            this.dps = dps;
+        }
+    }
+
+    public static class FormPresentationBeanInfo extends BeanInfoEx
+    {
+        public FormPresentationBeanInfo()
+        {
+            super(TestBeans.FormPresentation.class);
+        }
+
+        @Override
+        public void initProperties() throws Exception
+        {
+            add("title");
+            add("dps");
         }
     }
 
@@ -95,6 +121,22 @@ class TestBeans
             result = 31 * result + (name != null ? name.hashCode() : 0);
             result = 31 * result + number;
             return result;
+        }
+    }
+
+    public static class SimpleBeanBeanInfo extends BeanInfoEx
+    {
+        public SimpleBeanBeanInfo()
+        {
+            super(TestBeans.SimpleBean.class);
+        }
+
+        @Override
+        public void initProperties() throws Exception
+        {
+            add("arr");
+            add("name");
+            add("number");
         }
     }
 
