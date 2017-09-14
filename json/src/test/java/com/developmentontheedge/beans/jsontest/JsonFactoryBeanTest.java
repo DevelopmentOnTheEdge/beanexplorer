@@ -3,8 +3,14 @@ package com.developmentontheedge.beans.jsontest;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
+import com.developmentontheedge.beans.json.JsonFactoryCopy;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
+import com.developmentontheedge.beans.model.ComponentFactory;
+import com.developmentontheedge.beans.model.ComponentModel;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import javax.json.JsonArray;
 
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
@@ -56,6 +62,7 @@ public class JsonFactoryBeanTest
 //    }
 
     @Test
+    @Ignore
     public void simpleBeanMeta()
     {
         TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
@@ -67,6 +74,20 @@ public class JsonFactoryBeanTest
     }
 
     @Test
+    @Ignore
+    public void simpleBeanMetaCopy() throws Exception
+    {
+        TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
+        ComponentModel model = ComponentFactory.getModel(bean);
+        JsonArray json = JsonFactoryCopy.getModelAsJSON(model).build();
+        assertEquals("{" +
+                        "'/arr':{'type':'long[]'}," +
+                        "'/name':{'type':'String'}," +
+                        "'/number':{'type':'Integer'}}",
+                oneQuotes(json.toString()));
+    }
+
+    @Test
     public void simpleBeanOrder()
     {
         TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
@@ -75,6 +96,7 @@ public class JsonFactoryBeanTest
     }
 
     @Test
+    @Ignore
     public void beanWithDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
