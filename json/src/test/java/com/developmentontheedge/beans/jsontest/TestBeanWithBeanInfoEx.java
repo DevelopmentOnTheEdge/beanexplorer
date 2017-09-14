@@ -136,8 +136,6 @@ public class TestBeanWithBeanInfoEx extends TestUtils
     @Test
     public void testGetModelAsJSON()
     {
-        new TestBeanBeanInfo();
-
         TestBean bean = new TestBean();
         bean.setStr("string value");
 //        bean.setInput(DataElementPath.create("test/path"));
