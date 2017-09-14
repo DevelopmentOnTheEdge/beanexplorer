@@ -654,18 +654,12 @@ public class JsonFactory
                 //TODO: support or correctly process some editors
                 //Some editors like biouml.model.util.ReactionEditor, biouml.model.util.FormulaEditor
                 //use Application.getApplicationFrame(), so we got a NullPointerException here
-                try
+                editor = (CustomEditorSupport)editorClass.newInstance();
+                initEditor( property, editor );
+                String[] tags = editor.getTags();
+                if( tags != null )
                 {
-                    editor = (CustomEditorSupport)editorClass.newInstance();
-                    initEditor( property, editor );
-                    String[] tags = editor.getTags();
-                    if( tags != null )
-                    {
-                        p.add(DICTIONARY_ATTR, createDictionary(tags, false));
-                    }
-                }
-                catch( Exception e )
-                {
+                    p.add(DICTIONARY_ATTR, createDictionary(tags, false));
                 }
             }
         }
