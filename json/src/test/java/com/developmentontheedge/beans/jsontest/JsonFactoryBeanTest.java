@@ -3,17 +3,13 @@ package com.developmentontheedge.beans.jsontest;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.developmentontheedge.beans.json.JsonFactoryCopy;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
-import com.developmentontheedge.beans.model.ComponentFactory;
-import com.developmentontheedge.beans.model.ComponentModel;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.json.JsonArray;
-
 import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
 import static org.junit.Assert.*;
+
 
 public class JsonFactoryBeanTest
 {
@@ -62,29 +58,17 @@ public class JsonFactoryBeanTest
 //    }
 
     @Test
-    @Ignore
     public void simpleBeanMeta()
     {
         TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
         assertEquals("{" +
-                        "'/arr':{'type':'long[]'}," +
-                        "'/name':{'type':'String'}," +
-                        "'/number':{'type':'Integer'}}",
-                oneQuotes(JsonFactory.beanMeta(bean).toString()));
-    }
-
-    @Test
-    @Ignore
-    public void simpleBeanMetaCopy() throws Exception
-    {
-        TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
-        ComponentModel model = ComponentFactory.getModel(bean);
-        JsonArray json = JsonFactoryCopy.getModelAsJSON(model).build();
-        assertEquals("{" +
-                        "'/arr':{'type':'long[]'}," +
-                        "'/name':{'type':'String'}," +
-                        "'/number':{'type':'Integer'}}",
-                oneQuotes(json.toString()));
+                "'/arr':{'displayName':'arr','description':'arr','readOnly':false,'type':'collection'}," +
+                "'/arr/[0]':{'displayName':'[0]','description':'Long','readOnly':false,'type':'code-string'}," +
+                "'/arr/[1]':{'displayName':'[1]','description':'Long','readOnly':false,'type':'code-string'}," +
+                "'/arr/[2]':{'displayName':'[2]','description':'Long','readOnly':false,'type':'code-string'}," +
+                "'/name':{'displayName':'name','description':'name','readOnly':false,'type':'code-string'}," +
+                "'/number':{'displayName':'number','description':'number','readOnly':false,'type':'code-string'}" +
+            "}", oneQuotes(JsonFactory.beanMeta(bean).toString()));
     }
 
     @Test

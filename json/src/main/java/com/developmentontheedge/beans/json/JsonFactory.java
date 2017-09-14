@@ -486,11 +486,9 @@ public class JsonFactory
             }
             JsonPath newPath = path.append(property.getName());
 
-            if(!property.getName().equals("class"))
+            if(!property.getName().equals("class"))//todo delete, after add BeadInfo to add examples
             {
                 fillSimplePropertyMeta(property, json, newPath);
-                //convertSinglePropertyMeta(property, fieldMap.get(property), showMode, json, newPath);
-                continue;
             }
 
             if(property instanceof CompositeProperty)
@@ -504,8 +502,8 @@ public class JsonFactory
                     p.add(TYPE_ATTR, "DynamicPropertySet");
                     json.add(path.get(), p);
 
-                    dpsMeta((DynamicPropertySet)property.getValue(), json, path);
-                    return;
+                    dpsMeta((DynamicPropertySet)property.getValue(), json, newPath);
+                    continue;
                 }
 
                 fillCompositePropertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
@@ -519,22 +517,22 @@ public class JsonFactory
         }
     }
 
-    private static void fillArrayPropertyMeta(ArrayProperty property, FieldMap fieldMap, int showMode,
+    private static void fillArrayPropertyMeta(ArrayProperty properties, FieldMap fieldMap, int showMode,
                                               JsonObjectBuilder json, JsonPath path) throws Exception
     {
-        Class<?> c = property.getPropertyEditorClass();
+        Class<?> c = properties.getPropertyEditorClass();
         if( c != null )
         {
             if( CustomEditorSupport.class.isAssignableFrom(c) )
             {
                 CustomEditorSupport editor = (CustomEditorSupport)c.newInstance();
-                initEditor( property, editor );
+                initEditor( properties, editor );
                 String[] tags = editor.getTags();
                 if( tags != null )
                 {
                     json.add(dictionary.name(), createDictionary(tags, false));
                     json.add(type.name(), "multi-select");
-                    Object[] vals = (Object[])property.getValue();
+                    Object[] vals = (Object[])properties.getValue();
                     JsonArrayBuilder value = Json.createArrayBuilder();
                     if( vals != null )
                     {
@@ -553,39 +551,42 @@ public class JsonFactory
 //                }
             }
         }
-        /*JsonArrayBuilder value = Json.createArrayBuilder();*/
-        for( int j = 0; j < property.getPropertyCount(); j++ )
+
+        for( int j = 0; j < properties.getPropertyCount(); j++ )
         {
-            Property element = property.getPropertyAt(j);
-            if( element instanceof CompositeProperty )
+            Property property = properties.getPropertyAt(j);
+            JsonPath newPath = path.append(property.getName());
+
+            if(!property.getName().equals("class"))//todo delete, after add BeadInfo to add examples
             {
-                JsonPath newPath = path.append(property.getName());
-                fillCompositePropertyMeta((CompositeProperty)element, fieldMap.get(property), showMode, json, newPath);
+                fillSimplePropertyMeta(property, json, newPath);
             }
-            else
+
+            if(property instanceof CompositeProperty)
             {
-                JsonObjectBuilder pCh = Json.createObjectBuilder();
-                Object val = element.getValue();
-                if( val != null )
+                if( property.getValue() instanceof DynamicPropertySet)
                 {
-                    if( Color.class.isAssignableFrom( val.getClass() ) )
-                    {
-                        pCh.add(TYPE_ATTR, "color-selector");
-                    }
-                    else
-                    {
-                        pCh.add(type.name(), (val instanceof Boolean) ? "bool" : "code-string");
-                    }
-                    pCh.add(NAME_ATTR, element.getName());
-                    pCh.add(displayName.name(), element.getName());
-                    pCh.add(VALUE_ATTR, val.toString());
-                    pCh.add(readOnly.name(), element.isReadOnly());
-                    /*value.add(Json.createArrayBuilder().add(pCh).build());*/
+                    JsonObjectBuilder p = Json.createObjectBuilder();
+                    p.add(DISPLAYNAME_ATTR, property.getDisplayName());
+                    p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
+                    p.add(READONLY_ATTR, property.isReadOnly());
+                    p.add(TYPE_ATTR, "DynamicPropertySet");
+                    json.add(path.get(), p);
+
+                    dpsMeta((DynamicPropertySet)property.getValue(), json, newPath);
+                    continue;
                 }
+
+                fillCompositePropertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
+                continue;
+            }
+
+            if(property instanceof ArrayProperty)
+            {
+                fillArrayPropertyMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
             }
         }
-        //json.add(type.name(), "collection");
-        /*json.add(VALUE_ATTR, value);*/
+
 
 //        for( int i = 0; i < properties.getPropertyCount(); i++ )
 //        {
@@ -694,7 +695,11 @@ public class JsonFactory
         Object value = property.getValue();
         if( value != null )
         {
-            if( Color.class.isAssignableFrom( value.getClass() ) )
+            if(property instanceof ArrayProperty)
+            {
+                p.add(TYPE_ATTR, "collection");
+            }
+            else if( Color.class.isAssignableFrom( value.getClass() ) )
             {
                 p.add(TYPE_ATTR, "color-selector");
             }
@@ -703,6 +708,7 @@ public class JsonFactory
                 p.add(TYPE_ATTR, (value instanceof Boolean) ? "bool" : "code-string");
             }
         }
+
         json.add(path.get(), p);
     }
 
