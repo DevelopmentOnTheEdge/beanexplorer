@@ -24,7 +24,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 
-public class TestBeanWithBeanInfoEx extends TestUtils
+public class BeanInfoExTest extends TestUtils
 {
     public static class TestBean
     {
@@ -157,12 +157,11 @@ public class TestBeanWithBeanInfoEx extends TestUtils
                     "'select':'one'," +
                     "'interval':'(0,100)'}," +
                 "'meta':{" +
-                    "'/str':{'displayName':'String','description':'Test string property','type':'code-string'}," +
-                    "'/color':{'displayName':'color','description':'Color property','type':'color-selector'}," +
-                    "'/select':{'displayName':'select','description':'select','dictionary':[['one','one'],['two','two']]," +
-                        "'type':'code-string'}," +
-                    "'/interval':{'displayName':'interval','description':'interval','dictionary':[['(0,100)','(0,100)'],['(100,200)','(100,200)'],['(200,300)','(200,300)']]," +
-                        "'type':'code-string'}}," +
+                    "'/str':{'displayName':'String','description':'Test string property'}," +
+                    "'/color':{'displayName':'color','description':'Color property','type':'Color'}," +
+                    "'/select':{'displayName':'select','description':'select','dictionary':[['one','one'],['two','two']]}," +
+                    "'/interval':{'displayName':'interval','description':'interval','type':'Interval'," +
+                        "'dictionary':[['(0,100)','(0,100)'],['(100,200)','(100,200)'],['(200,300)','(200,300)']]}}," +
                 "'order':['/str','/color','/select','/interval']" +
             "}", oneQuotes(json.toString()));
 

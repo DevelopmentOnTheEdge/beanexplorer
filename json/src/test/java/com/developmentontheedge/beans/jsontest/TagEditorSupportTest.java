@@ -49,7 +49,7 @@ public class TagEditorSupportTest extends TestUtils
         assertEquals("{" +
                 "'values':{'orientation':'Horizontal'}," +
                 "'meta':{'/orientation':{'displayName':'orientation','description':'orientation'," +
-                "'dictionary':[[0,'Vertical'],[1,'Horizontal']],'type':'code-string'}}," +
+                "'dictionary':[[0,'Vertical'],[1,'Horizontal']]}}," +
                 "'order':['/orientation']" +
             "}", oneQuotes(JsonFactory.bean(new SimpleBeanWithTags(OrientationEditor.Horizontal)).toString()));
     }

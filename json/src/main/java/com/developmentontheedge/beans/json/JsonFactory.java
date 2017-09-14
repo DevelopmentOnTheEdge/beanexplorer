@@ -28,6 +28,8 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+
+import com.developmentontheedge.beans.model.SimpleProperty;
 import org.eclipse.yasson.JsonBindingProvider;
 
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
@@ -479,10 +481,9 @@ public class JsonFactory
         for( int i = 0; i < properties.getPropertyCount(); i++ )
         {
             Property property = properties.getPropertyAt(i);
-            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) )
-            {
-                continue;
-            }
+
+            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) )continue;
+
             JsonPath newPath = path.append(property.getName());
 
             fillSimplePropertyMeta(property, json, newPath);
@@ -509,41 +510,12 @@ public class JsonFactory
     private static void fillArrayPropertyMeta(ArrayProperty properties, FieldMap fieldMap, int showMode,
                                               JsonObjectBuilder json, JsonPath path) throws Exception
     {
-        Class<?> c = properties.getPropertyEditorClass();
-        if( c != null )
-        {
-            if( CustomEditorSupport.class.isAssignableFrom(c) )
-            {
-                CustomEditorSupport editor = (CustomEditorSupport)c.newInstance();
-                initEditor( properties, editor );
-                String[] tags = editor.getTags();
-                if( tags != null )
-                {
-                    json.add(dictionary.name(), createDictionary(tags, false));
-                    json.add(type.name(), "multi-select");
-                    Object[] vals = (Object[])properties.getValue();
-                    JsonArrayBuilder value = Json.createArrayBuilder();
-                    if( vals != null )
-                    {
-                        for( Object val : vals )
-                        {
-                            value.add(val.toString());
-                        }
-                    }
-                    /*json.add(VALUE_ATTR, value);*/
-                    return;
-                }
-//                if( editor instanceof JSONCompatibleEditor )
-//                {
-//                    ( (JSONCompatibleEditor)editor ).addAsJSON(property, p, fieldMap, showMode);
-//                    return p;
-//                }
-            }
-        }
-
         for( int j = 0; j < properties.getPropertyCount(); j++ )
         {
             Property property = properties.getPropertyAt(j);
+
+            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) continue;
+
             JsonPath newPath = path.append(property.getName());
 
             fillSimplePropertyMeta(property, json, newPath);
@@ -565,36 +537,36 @@ public class JsonFactory
                 fillArrayPropertyMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
             }
         }
-
-
-//        for( int i = 0; i < properties.getPropertyCount(); i++ )
-//        {
-//            Property property = properties.getPropertyAt(i);
-//            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
-//                continue;
-//            }
-//            JsonPath newPath = path.append(property.getName());
-//            //if(!property.getName().equals("class"))json.add(newPath.get(), convertSinglePropertyMeta(property));
-//
-//            if(property instanceof CompositeProperty) {
-//                fillCompositePropertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
-//                continue;
-//            }
-//
-//            if(property instanceof ArrayProperty) {
-//                fillArrayPropertyMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
-//            }
-//        }
     }
 
-    private static void fillSimplePropertyMeta(Property property, JsonObjectBuilder json, JsonPath path) throws Exception
+    private static boolean fillSimplePropertyMeta(Property property, JsonObjectBuilder json, JsonPath path) throws Exception
     {
         JsonObjectBuilder p = Json.createObjectBuilder();
-        p.add(DISPLAYNAME_ATTR, property.getDisplayName());
-        p.add(DESCRIPTION_ATTR, property.getShortDescription().split("\n")[0]);
-        if(property.isReadOnly())p.add(READONLY_ATTR, property.isReadOnly());
+        p.add(displayName.name(), property.getDisplayName());
+        p.add(description.name(), property.getShortDescription().split("\n")[0]);
+        if(property.isReadOnly())p.add(readOnly.name(), property.isReadOnly());
+
+        Class<?> clazz;
+        if(property instanceof SimpleProperty){
+            clazz = ((SimpleProperty) property).getValueClass();
+        }else if(property instanceof ArrayProperty){
+            clazz = ((ArrayProperty) property).getItemClass();
+        }else{
+            clazz = property.getClass();
+        }
+
+        if(clazz != String.class)
+        {
+            p.add(type.name(), getTypeName(clazz) );
+        }
+
+        if(property instanceof ArrayProperty)
+        {
+            p.add(COLLECTION, true);
+        }
 
         Class<?> editorClass = property.getPropertyEditorClass();
+
         if( editorClass != null )
         {
             if( JsonSerializable.class.isAssignableFrom(editorClass) )
@@ -636,7 +608,7 @@ public class JsonFactory
                 String[] tags = editor.getTags();
                 if( tags != null )
                 {
-                    p.add(DICTIONARY_ATTR, createDictionary(tags, true));
+                    p.add(dictionary.name(), createDictionary(tags, true));
                 }
             }
             else if( StringTagEditorSupport.class.isAssignableFrom(editorClass) )
@@ -645,47 +617,33 @@ public class JsonFactory
                 String[] tags = editor.getTags();
                 if( tags != null )
                 {
-                    p.add(DICTIONARY_ATTR, createDictionary(tags, false));
+                    p.add(dictionary.name(), createDictionary(tags, false));
                 }
             }
             else if( CustomEditorSupport.class.isAssignableFrom(editorClass) )
             {
-                CustomEditorSupport editor = null;
                 //TODO: support or correctly process some editors
                 //Some editors like biouml.model.util.ReactionEditor, biouml.model.util.FormulaEditor
                 //use Application.getApplicationFrame(), so we got a NullPointerException here
-                editor = (CustomEditorSupport)editorClass.newInstance();
+                CustomEditorSupport editor = (CustomEditorSupport)editorClass.newInstance();
                 initEditor( property, editor );
                 String[] tags = editor.getTags();
                 if( tags != null )
                 {
-                    p.add(DICTIONARY_ATTR, createDictionary(tags, false));
+                    p.add(dictionary.name(), createDictionary(tags, false));
+                }
+                if(property instanceof ArrayProperty)
+                {
+                    p.add(multipleSelectionList.name(), true);
                 }
             }
-        }
 
-        Object value = property.getValue();
-        if( value != null )
-        {
-            if( property.getValue() instanceof DynamicPropertySet)
-            {
-                p.add(TYPE_ATTR, "DynamicPropertySet");
-            }
-            else if(property instanceof ArrayProperty)
-            {
-                p.add(TYPE_ATTR, "collection");
-            }
-            else if( Color.class.isAssignableFrom( value.getClass() ) )
-            {
-                p.add(TYPE_ATTR, "color-selector");
-            }
-            else
-            {
-                p.add(TYPE_ATTR, (value instanceof Boolean) ? "bool" : "code-string");
-            }
+            json.add(path.get(), p);
+            return false;
         }
 
         json.add(path.get(), p);
+        return true;
     }
 
     private static void initEditor(Property property, PropertyEditorEx editor)
@@ -747,10 +705,5 @@ public class JsonFactory
         return values;
     }
 
-    private static final String DISPLAYNAME_ATTR = "displayName";
-    private static final String DESCRIPTION_ATTR = "description";
-    private static final String TYPE_ATTR = "type";
-    private static final String READONLY_ATTR = "readOnly";
-    private static final String CHILDREN_ATTR = "children";
-    private static final String DICTIONARY_ATTR = "dictionary";
+    private static final String COLLECTION = "collection";
 }
