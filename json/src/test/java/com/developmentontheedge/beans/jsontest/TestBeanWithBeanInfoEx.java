@@ -187,4 +187,22 @@ public class TestBeanWithBeanInfoEx extends TestUtils
 //
         // TODO: test more types
     }
+
+    @Test
+    public void testShowUsual()
+    {
+        TestBean bean = new TestBean();
+        bean.setStr("string value");
+        bean.setColor(Color.BLACK);
+        bean.setSelect("one");
+        bean.setInterval(new Interval(0, 100));
+
+        JsonObject json = JsonFactory.bean(bean);
+
+        assertEquals("['/color','/select','/interval']",
+                oneQuotes(json.getJsonArray("order").toString()));
+
+        assertEquals("['/color','/select','/interval']",
+                oneQuotes(JsonFactory.beanOrder(bean, FieldMap.ALL, Property.SHOW_USUAL).toString()));
+    }
 }
