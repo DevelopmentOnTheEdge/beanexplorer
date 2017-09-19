@@ -321,6 +321,7 @@ public class JsonFactory
         addAttr(json, property, columnSize);
         addAttr(json, property, status);
         addAttr(json, property, message);
+        addAttr(json, property, defaultValue);
 
         if(!property.getBooleanAttribute( BeanInfoConstants.NO_TAG_LIST ))
         {
