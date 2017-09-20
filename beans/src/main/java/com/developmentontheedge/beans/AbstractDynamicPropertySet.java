@@ -9,7 +9,6 @@ import java.util.StringTokenizer;
 
 /**
  * Helper abstract class implementing common functionality for DPS
- * @author lan
  */
 public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
 {
