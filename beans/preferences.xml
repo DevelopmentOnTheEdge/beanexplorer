@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<dynamicPropertySet> 
+    <property name="bool" type="java.lang.Boolean" value="true" display-name="Boolean prop" short-description="Boolean description"/> 
+    <property name="child" type="com.developmentontheedge.beans.Preferences" display-name="child prop" short-description="Child description">
+        <dynamicPropertySet> 
+            <property name="bool" type="java.lang.Boolean" value="true" display-name="Boolean2 prop" short-description="Boolean description"/> 
+            <property name="child" type="com.developmentontheedge.beans.Preferences" display-name="child3 prop" short-description="Child description">
+                <dynamicPropertySet> 
+                    <property name="bool" type="java.lang.Boolean" value="true" display-name="Boolean3 prop" short-description="Boolean description"/> 
+                    <property name="string" type="java.lang.String" value="aaa" display-name="String3 prop" short-description="String description"/> 
+                </dynamicPropertySet> 
+            </property> 
+            <property name="double" type="java.lang.Double" value="0.05" display-name="Double2 prop" short-description="Double description"/> 
+            <property name="float" type="java.lang.Float" value="rO0ABXNyAA9qYXZhLmxhbmcuRmxvYXTa7cmi2zzw7AIAAUYABXZhbHVleHIAEGphdmEubGFuZy5OdW1iZXKGrJUdC5TgiwIAAHhwPCPXCg==" display-name="Float2 prop" short-description="Float description"/> 
+            <property name="int" type="java.lang.Integer" value="1" display-name="Integer2 prop" short-description="Integer description"/> 
+            <property name="long" type="java.lang.Long" value="rO0ABXNyAA5qYXZhLmxhbmcuTG9uZzuL5JDMjyPfAgABSgAFdmFsdWV4cgAQamF2YS5sYW5nLk51bWJlcoaslR0LlOCLAgAAeHAAAAAAAAAAAQ==" display-name="Long2 prop" short-description="Long description"/> 
+            <property name="string" type="java.lang.String" value="aaa" display-name="String2 prop" short-description="String description"/> 
+        </dynamicPropertySet> 
+    </property> 
+    <property name="double" type="java.lang.Double" value="0.05" display-name="Double prop" short-description="Double description"/> 
+    <property name="expert" type="java.lang.String" value="it is expert" display-name="expert" short-description="expert" expert="true"/> 
+    <property name="float" type="java.lang.Float" value="rO0ABXNyAA9qYXZhLmxhbmcuRmxvYXTa7cmi2zzw7AIAAUYABXZhbHVleHIAEGphdmEubGFuZy5OdW1iZXKGrJUdC5TgiwIAAHhwPCPXCg==" display-name="Float prop" short-description="Float description"/> 
+    <property name="hidden" type="java.lang.String" value="it is hide" display-name="hidden" short-description="hidden" hidden="true"/> 
+    <property name="int" type="java.lang.Integer" value="1" display-name="Integer prop" short-description="Integer description"/> 
+    <property name="long" type="java.lang.Long" value="rO0ABXNyAA5qYXZhLmxhbmcuTG9uZzuL5JDMjyPfAgABSgAFdmFsdWV4cgAQamF2YS5sYW5nLk51bWJlcoaslR0LlOCLAgAAeHAAAAAAAAAAAg==" display-name="Long prop" short-description="Long description"/> 
+    <property name="read only" type="java.lang.String" value="it is read only" display-name="read only" short-description="read only" read-only="true"/> 
+    <property name="string" type="java.lang.String" value="aaa" display-name="String prop" short-description="String description"/> 
+</dynamicPropertySet> 
