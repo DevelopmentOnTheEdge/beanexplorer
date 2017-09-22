@@ -14,9 +14,13 @@ import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 
 import java.awt.Color;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +29,8 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -113,7 +119,7 @@ public class JsonFactory
         requireNonNull(fieldMap);
 //for beanValuesInt, beanValuesString
 //        JsonArrayBuilder test = Json.createArrayBuilder();
-//        if(addValueToArray(test, bean)){
+//        if(addValueToJsonArray(test, bean)){
 //            return Json.createValue()
 //        }
 
@@ -196,7 +202,7 @@ public class JsonFactory
         }
     }
 
-    private static boolean addValueToObject(JsonObjectBuilder json, String name, Object value)
+    private static boolean addValueToJsonObject(JsonObjectBuilder json, String name, Object value)
     {
         if( value == null ){return true;}
 
@@ -231,7 +237,7 @@ public class JsonFactory
         if( value instanceof Object[])
         {
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            for (Object aValueArr : (Object[]) value)addValueToArray(arrayBuilder, aValueArr);
+            for (Object aValueArr : (Object[]) value) addValueToJsonArray(arrayBuilder, aValueArr);
             json.add(name, arrayBuilder.build());
             return true;
         }
@@ -240,7 +246,7 @@ public class JsonFactory
         return true;
     }
 
-    static boolean addValueToArray(JsonArrayBuilder json, Object value)
+    static boolean addValueToJsonArray(JsonArrayBuilder json, Object value)
     {
         if( value == null ){return true; }
 
@@ -281,7 +287,7 @@ public class JsonFactory
         JsonObjectBuilder json = Json.createObjectBuilder();
         for(DynamicProperty property : dps)
         {
-            addValueToObject(json, property.getName(), property.getValue());
+            addValueToJsonObject(json, property.getName(), property.getValue());
         }
         return json;
     }
@@ -428,7 +434,7 @@ public class JsonFactory
                 continue;
             }
 
-            addValueToObject(json, property.getName(), property.getValue());
+            addValueToJsonObject(json, property.getName(), property.getValue());
         }
 
         return json;
@@ -464,7 +470,7 @@ public class JsonFactory
                 continue;
             }
 
-            addValueToArray(json, properties.getPropertyAt(i).getValue());
+            addValueToJsonArray(json, properties.getPropertyAt(i).getValue());
         }
         return json;
     }
@@ -704,6 +710,130 @@ public class JsonFactory
             position++;
         }
         return values;
+    }
+
+    public static void setBeanValues(Object bean, String json)
+    {
+        CompositeProperty properties = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+
+        //JsonObject object = getJsonObject(json);
+
+        //Set<Map.Entry<String, JsonValue>> entries = object.entrySet();
+        //return jsonb.fromJson(json, clazz);
+
+        for( int i = 0; i < properties.getPropertyCount(); i++ )
+        {
+            Property property = properties.getPropertyAt(i);
+
+
+//            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
+//                continue;
+//            }
+
+//            if(property.getValue() == null){
+//                json.addNull(property.getName());
+//                continue;
+//            }
+//
+//            if(property instanceof CompositeProperty) {
+//                json.add(property.getName(), propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
+//                continue;
+//            }
+//
+//            if(property instanceof ArrayProperty) {
+//                json.add(property.getName(), propertiesValues((ArrayProperty) property, fieldMap.get(property), showMode));
+//                continue;
+//            }
+//
+//            if("class".equals(property.getName())){
+//                continue;
+//            }
+//
+//            addValueToJsonObject(json, property.getName(), property.getValue());
+        }
+    }
+
+    private static Object parseJsonValue(String value, Class<?> klass)
+    {
+        if( klass == String.class ){    return value.substring(1,value.length()-1); }
+        if( klass == Double.class ){    return Double.parseDouble(value); }
+        if( klass == Float.class ){     return Float.parseFloat(value); }
+        if( klass == Long.class ){      return Long.parseLong(value); }
+        if( klass == Integer.class ){   return Integer.parseInt(value); }
+        if( klass == BigInteger.class ){return new BigInteger(value); }
+        if( klass == BigDecimal.class ){return new BigDecimal(value); }
+
+//        if( klass == Date.class ||
+//                klass == java.util.Date.class ){return new Date(new java.sql.Date(json.getString(name)).getTime()); }
+
+//        if( klass == Long.class ){      json.add(name, (long)value ); return true;}
+//        if( klass == Integer.class ){   json.add(name, (int)value ); return true;}
+//        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return true;}
+//        if( klass == Float.class ){     json.add(name, (float)value ); return true;}
+//        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return true;}
+//        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return true;}
+//
+//        if( klass == Date.class ){json.add(name, value.toString() ); return true;}
+//        if( klass == java.util.Date.class ){json.add(name, new java.sql.Date(((java.util.Date)value).getTime()).toString() ); return true;}
+//
+//        if( value instanceof JsonValue )
+//        {
+//            json.add(name, (JsonValue)value); return true;
+//        }
+//
+//        if( value instanceof DynamicPropertySet)
+//        {
+//            json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return true;
+//        }
+//
+//        if( Color.class.isAssignableFrom( value.getClass() ) )
+//        {
+//            json.add(name, encodeColor((Color)value));return true;
+//        }
+//
+//        if( value instanceof Object[])
+//        {
+//            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+//            for (Object aValueArr : (Object[]) value) addValueToJsonArray(arrayBuilder, aValueArr);
+//            json.add(name, arrayBuilder.build());
+//            return true;
+//        }
+//
+//        json.add(name, value.toString());
+//        return true;
+        throw new RuntimeException("todo");
+    }
+
+    public static void setDpsValues(Object bean, String json)
+    {
+        InputStream stream;
+        try {
+            stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        JsonReader reader = Json.createReader(stream);
+        JsonStructure jsonst = reader.read();
+
+        if(bean instanceof DynamicPropertySet)
+        {
+            setDpsValues((DynamicPropertySet)bean, jsonst, new JsonPath());
+        }
+    }
+
+    private static void setDpsValues(DynamicPropertySet dps, JsonStructure jsonst, JsonPath path)
+    {
+        for (DynamicProperty property: dps)
+        {
+            JsonPath newPath = path.append(property.getName());
+
+            property.setValue(parseJsonValue(jsonst.getValue(newPath.get()).toString(), property.getType()));
+
+
+
+
+            //if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, newPath);
+        }
     }
 
     private static final String COLLECTION = "collection";

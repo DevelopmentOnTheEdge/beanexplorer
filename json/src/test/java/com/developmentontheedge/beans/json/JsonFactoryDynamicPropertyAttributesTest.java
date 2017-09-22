@@ -7,14 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
-import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
+import static com.developmentontheedge.beans.jsontest.DpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
 public class JsonFactoryDynamicPropertyAttributesTest

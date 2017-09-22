@@ -7,6 +7,7 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.test.TestUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Date;
@@ -15,7 +16,7 @@ import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.assertEquals;
 
-public class JsonFactoryDpsTest extends TestUtils
+public class DpsTest extends TestUtils
 {
     private DynamicPropertySet dps;
 
@@ -25,6 +26,15 @@ public class JsonFactoryDpsTest extends TestUtils
         dps = new DynamicPropertySetSupport();
         dps.add(new DynamicProperty("number", "Number", Long.class, 1L));
         dps.add(new DynamicProperty("name", "Name", String.class, "testName"));
+    }
+
+    @Test
+    public void test() throws Exception
+    {
+        JsonFactory.setDpsValues(dps, doubleQuotes("{'number':2,'name':'testName2'}"));
+
+        assertEquals(2L, dps.getValue("number"));
+        assertEquals("testName2", dps.getValue("name"));
     }
 
     @Test

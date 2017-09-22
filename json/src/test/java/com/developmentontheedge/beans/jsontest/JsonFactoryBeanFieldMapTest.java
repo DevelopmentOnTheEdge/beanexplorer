@@ -5,7 +5,7 @@ import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 import org.junit.Test;
 
-import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
+import static com.developmentontheedge.beans.jsontest.DpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
 public class JsonFactoryBeanFieldMapTest

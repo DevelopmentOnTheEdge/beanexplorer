@@ -2,9 +2,14 @@ package com.developmentontheedge.beans.test;
 
 public class TestUtils
 {
-    public static String oneQuotes(String s)
+    public static String oneQuotes(Object s)
     {
-        return s.replace("\"", "'");
+        return s.toString().replace("\"", "'");
+    }
+
+    public static String doubleQuotes(String s)
+    {
+        return s.replace("'", "\"");
     }
 
 }

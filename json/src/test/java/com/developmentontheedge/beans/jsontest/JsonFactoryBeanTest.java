@@ -4,10 +4,9 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
+import static com.developmentontheedge.beans.jsontest.DpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
 
