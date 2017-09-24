@@ -25,6 +25,7 @@ public interface DynamicPropertySet extends Serializable, Cloneable, Iterable<Dy
      */
     Object getValue( String name );
     String getValueAsString( String name );
+    Long getValueAsLong(String name);
 
     /**
      * @param name Name of the property
@@ -186,6 +187,8 @@ public interface DynamicPropertySet extends Serializable, Cloneable, Iterable<Dy
 
     /** Checks if DPS contains any element */
     boolean isEmpty();
+
+    DynamicPropertyBuilder getAsBuilder(String name);
 
     Object clone();
 }

@@ -5,7 +5,9 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
+import com.developmentontheedge.beans.test.TestUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Date;
@@ -14,7 +16,7 @@ import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.assertEquals;
 
-public class JsonFactoryDpsTest
+public class DpsTest extends TestUtils
 {
     private DynamicPropertySet dps;
 
@@ -24,6 +26,15 @@ public class JsonFactoryDpsTest
         dps = new DynamicPropertySetSupport();
         dps.add(new DynamicProperty("number", "Number", Long.class, 1L));
         dps.add(new DynamicProperty("name", "Name", String.class, "testName"));
+    }
+
+    @Test
+    public void test() throws Exception
+    {
+        JsonFactory.setDpsValues(dps, doubleQuotes("{'number':2,'name':'testName2'}"));
+
+        assertEquals(2L, dps.getValue("number"));
+        assertEquals("testName2", dps.getValue("name"));
     }
 
     @Test
@@ -73,6 +84,19 @@ public class JsonFactoryDpsTest
         dps.getProperty("a").setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
 
         assertEquals("{'a':['vacation','sick']}",
+                oneQuotes(JsonFactory.dpsValues(dps).toString()));
+    }
+
+    @Test
+    public void testDpsDate() throws Exception
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+
+        java.util.Date utilDate = new java.util.Date();
+        dps.add(new DynamicProperty("a", "a", java.util.Date.class, utilDate));
+
+        Date date = new Date(utilDate.getTime());
+        assertEquals("{'a':'" + date.toString() + "'}",
                 oneQuotes(JsonFactory.dpsValues(dps).toString()));
     }
 
@@ -150,9 +174,5 @@ public class JsonFactoryDpsTest
                 "}", oneQuotes(JsonFactory.dps(dps).toString()));
     }
 
-    public static String oneQuotes(String s)
-    {
-        return s.replace("\"", "'");
-    }
 
 }

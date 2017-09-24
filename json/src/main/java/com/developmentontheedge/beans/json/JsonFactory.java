@@ -3,40 +3,56 @@ package com.developmentontheedge.beans.json;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.editors.CustomEditorSupport;
+import com.developmentontheedge.beans.editors.PropertyEditorEx;
+import com.developmentontheedge.beans.editors.StringTagEditorSupport;
+import com.developmentontheedge.beans.editors.TagEditorSupport;
 import com.developmentontheedge.beans.model.ArrayProperty;
 import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 
+import java.awt.Color;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 
+import com.developmentontheedge.beans.model.SimpleProperty;
+import org.eclipse.yasson.JsonBindingProvider;
+
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
 import static java.util.Objects.requireNonNull;
 
+
 /**
- * Provides API to serialize beans and dynamic property sets to Json. 
+ * Provides API to serialize beans and dynamic property sets to Json.
  */
 public class JsonFactory
 {
     public static final Jsonb jsonb = JsonbBuilder.create();
-
+    private JsonBindingProvider jsonBindingProvider = new JsonBindingProvider();//for manifest
     ///////////////////////////////////////////////////////////////////////////
     // public API
     //
-    
+
     public static JsonObject dps(DynamicPropertySet dps)
     {
         requireNonNull(dps);
@@ -76,43 +92,49 @@ public class JsonFactory
 
     public static JsonObject bean(Object bean)
     {
-        return bean(bean, FieldMap.ALL);
+        return bean(bean, FieldMap.ALL, Property.SHOW_USUAL);
     }
 
-    public static JsonObject bean(Object bean, FieldMap fieldMap)
+    public static JsonObject bean(Object bean, FieldMap fieldMap, int showMode)
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
         if (bean instanceof DynamicPropertySet)return dps((DynamicPropertySet) bean);
 
         return Json.createObjectBuilder()
-                .add("values", beanValues(bean, fieldMap))
-                .add("meta", beanMeta(bean, fieldMap))
-                .add("order", beanOrder(bean, fieldMap))
+                .add("values", beanValues(bean, fieldMap, showMode))
+                .add("meta", beanMeta(bean, fieldMap, showMode))
+                .add("order", beanOrder(bean, fieldMap, showMode))
                 .build();
     }
 
     public static JsonObject beanValues(Object bean)
     {
-        return beanValues(bean, FieldMap.ALL);
+        return beanValues(bean, FieldMap.ALL, Property.SHOW_USUAL);
     }
 
-    public static JsonObject beanValues(Object bean, FieldMap fieldMap)
+    public static JsonObject beanValues(Object bean, FieldMap fieldMap, int showMode)
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
+//for beanValuesInt, beanValuesString
+//        JsonArrayBuilder test = Json.createArrayBuilder();
+//        if(addValueToJsonArray(test, bean)){
+//            return Json.createValue()
+//        }
+
         if (bean instanceof DynamicPropertySet)return dpsValues((DynamicPropertySet) bean);
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
-        return propertiesValues(property, fieldMap, Property.SHOW_USUAL).build();
+        return propertiesValues(property, fieldMap, showMode).build();
     }
 
     public static JsonObject beanMeta(Object bean)
     {
-        return beanMeta(bean, FieldMap.ALL);
+        return beanMeta(bean, FieldMap.ALL, Property.SHOW_USUAL);
     }
 
-    public static JsonObject beanMeta(Object bean, FieldMap fieldMap)
+    public static JsonObject beanMeta(Object bean, FieldMap fieldMap, int showMode)
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
@@ -120,17 +142,24 @@ public class JsonFactory
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         JsonObjectBuilder json = Json.createObjectBuilder();
-        propertiesMeta(property, fieldMap, Property.SHOW_USUAL, json, new JsonPath());
+        try
+        {
+            fillCompositePropertyMeta(property, fieldMap, showMode, json, new JsonPath());
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);//todo new error
+        }
 
         return json.build();
     }
 
     public static JsonArray beanOrder(Object bean)
     {
-        return beanOrder(bean, FieldMap.ALL);
+        return beanOrder(bean, FieldMap.ALL, Property.SHOW_USUAL);
     }
 
-    public static JsonArray beanOrder(Object bean, FieldMap fieldMap)
+    public static JsonArray beanOrder(Object bean, FieldMap fieldMap, int showMode)
     {
         requireNonNull(bean);
         requireNonNull(fieldMap);
@@ -138,7 +167,7 @@ public class JsonFactory
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
         JsonArrayBuilder json = Json.createArrayBuilder();
-        beanOrder(property, fieldMap, Property.SHOW_USUAL, json, new JsonPath());
+        beanOrder(property, fieldMap, showMode, json, new JsonPath());
 
         return json.build();
     }
@@ -173,72 +202,84 @@ public class JsonFactory
         }
     }
 
-    private static void addValueToObject(JsonObjectBuilder json, String name, Object value)
+    private static boolean addValueToJsonObject(JsonObjectBuilder json, String name, Object value)
     {
-        if( value == null ){ json.addNull(name);return;}
+        if( value == null ){return true;}
 
         Class<?> klass = value.getClass();
-        if( klass == String.class ){    json.add(name, (String) value); return;}
-        if( klass == Double.class ){    json.add(name, (double)value ); return;}
-        if( klass == Long.class ){      json.add(name, (long)value ); return;}
-        if( klass == Integer.class ){   json.add(name, (int)value ); return;}
-        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return;}
-        if( klass == Float.class ){     json.add(name, (float)value ); return;}
-        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return;}
-        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return;}
+        if( klass == String.class ){    json.add(name, (String) value); return true;}
+        if( klass == Double.class ){    json.add(name, (double)value ); return true;}
+        if( klass == Long.class ){      json.add(name, (long)value ); return true;}
+        if( klass == Integer.class ){   json.add(name, (int)value ); return true;}
+        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return true;}
+        if( klass == Float.class ){     json.add(name, (float)value ); return true;}
+        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return true;}
+        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return true;}
 
-        if( klass == Date.class ){json.add(name, value.toString() ); return;}
+        if( klass == Date.class ){json.add(name, value.toString() ); return true;}
+        if( klass == java.util.Date.class ){json.add(name, new java.sql.Date(((java.util.Date)value).getTime()).toString() ); return true;}
 
         if( value instanceof JsonValue )
         {
-            json.add(name, (JsonValue)value); return;
+            json.add(name, (JsonValue)value); return true;
         }
 
         if( value instanceof DynamicPropertySet)
         {
-            json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return;
+            json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return true;
+        }
+
+        if( Color.class.isAssignableFrom( value.getClass() ) )
+        {
+            json.add(name, encodeColor((Color)value));return true;
         }
 
         if( value instanceof Object[])
         {
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            for (Object aValueArr : (Object[]) value)addValueToArray(arrayBuilder, aValueArr);
+            for (Object aValueArr : (Object[]) value) addValueToJsonArray(arrayBuilder, aValueArr);
             json.add(name, arrayBuilder.build());
-            return;
+            return true;
         }
 
-        CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
-        json.add(name, propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
+        json.add(name, value.toString());
+        return true;
     }
 
-    static void addValueToArray(JsonArrayBuilder json, Object value)
+    static boolean addValueToJsonArray(JsonArrayBuilder json, Object value)
     {
-        if( value == null ){ json.addNull(); return; }
+        if( value == null ){return true; }
 
         Class<?> klass = value.getClass();
-        if( klass == String.class ){    json.add((String) value); return;}
-        if( klass == Double.class ){    json.add((double)value ); return;}
-        if( klass == Long.class ){      json.add((long)value ); return;}
-        if( klass == Integer.class ){   json.add((int)value ); return;}
-        if( klass == Boolean.class ){   json.add((boolean)value ); return;}
-        if( klass == Float.class ){     json.add((float)value ); return;}
-        if( klass == BigInteger.class ){json.add((BigInteger) value ); return;}
-        if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return;}
+        if( klass == String.class ){    json.add((String) value); return true;}
+        if( klass == Double.class ){    json.add((double)value ); return true;}
+        if( klass == Long.class ){      json.add((long)value ); return true;}
+        if( klass == Integer.class ){   json.add((int)value ); return true;}
+        if( klass == Boolean.class ){   json.add((boolean)value ); return true;}
+        if( klass == Float.class ){     json.add((float)value ); return true;}
+        if( klass == BigInteger.class ){json.add((BigInteger) value ); return true;}
+        if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return true;}
 
-        if( klass == Date.class ){json.add(value.toString() ); return;}
+        if( klass == Date.class ){json.add(value.toString() ); return true;}
+        if( klass == java.util.Date.class ){json.add(new java.sql.Date(((java.util.Date)value).getTime()).toString() ); return true;}
 
         if( value instanceof JsonValue )
         {
-            json.add((JsonValue)value); return;
+            json.add((JsonValue)value); return true;
         }
 
         if( value instanceof DynamicPropertySet)
         {
-            json.add(dpsValuesBuilder((DynamicPropertySet)value));return;
+            json.add(dpsValuesBuilder((DynamicPropertySet)value));return true;
         }
 
-        CompositeProperty property = ComponentFactory.getModel(value, ComponentFactory.Policy.DEFAULT);
-        json.add(propertiesValues(property, FieldMap.ALL, Property.SHOW_USUAL).build());
+        if( Color.class.isAssignableFrom( value.getClass() ) )
+        {
+            json.add(encodeColor((Color)value));return true;
+        }
+
+        json.add(value.toString());
+        return true;
     }
 
     private static JsonObjectBuilder dpsValuesBuilder(DynamicPropertySet dps)
@@ -246,7 +287,7 @@ public class JsonFactory
         JsonObjectBuilder json = Json.createObjectBuilder();
         for(DynamicProperty property : dps)
         {
-            addValueToObject(json, property.getName(), property.getValue());
+            addValueToJsonObject(json, property.getName(), property.getValue());
         }
         return json;
     }
@@ -273,6 +314,7 @@ public class JsonFactory
         }
 
         addAttr(json, property, reloadOnChange);
+        addAttr(json, property, reloadOnFocusOut);
         addAttr(json, property, rawValue);
         addAttr(json, property, groupName);
         addAttr(json, property, groupId);
@@ -285,6 +327,7 @@ public class JsonFactory
         addAttr(json, property, columnSize);
         addAttr(json, property, status);
         addAttr(json, property, message);
+        addAttr(json, property, defaultValue);
 
         if(!property.getBooleanAttribute( BeanInfoConstants.NO_TAG_LIST ))
         {
@@ -334,6 +377,21 @@ public class JsonFactory
                     json.add(attr.name(), arrayBuilder.build());
                 }
             }
+            else if(attr.attrType == JsonPropertyAttributes.POJOorListOfPOJO.class)
+            {
+                Object value = property.getAttribute(attr.beanInfoConstant);
+
+                if(value instanceof List){
+                    List list = (List)value;
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                    for (Object valueItem : list){
+                        if(valueItem != null)arrayBuilder.add(beanValues(valueItem));
+                    }
+                    json.add(attr.name(), arrayBuilder.build());
+                }else{
+                    if(value != null)json.add(attr.name(), beanValues(value));
+                }
+            }
             else if(property.getAttribute(attr.beanInfoConstant) != null)
             {
                 json.add(attr.name(), property.getAttribute(attr.beanInfoConstant).toString() );
@@ -376,7 +434,7 @@ public class JsonFactory
                 continue;
             }
 
-            addValueToObject(json, property.getName(), property.getValue());
+            addValueToJsonObject(json, property.getName(), property.getValue());
         }
 
         return json;
@@ -389,26 +447,30 @@ public class JsonFactory
         for (int i = 0; i < properties.getPropertyCount(); i++)
         {
             Property property = properties.getPropertyAt(i);
-            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
+            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) )
+            {
                 continue;
             }
 
-            if(property.getValue() == null){
+            if(property.getValue() == null)
+            {
                 json.addNull();
                 continue;
             }
 
-            if(property instanceof CompositeProperty) {
+            if(property instanceof CompositeProperty)
+            {
                 json.add(propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
                 continue;
             }
 
-            if(property instanceof ArrayProperty) {
+            if(property instanceof ArrayProperty)
+            {
                 json.add(propertiesValues((ArrayProperty) property, fieldMap.get(property), showMode));
                 continue;
             }
 
-            addValueToArray(json, properties.getPropertyAt(i).getValue());
+            addValueToJsonArray(json, properties.getPropertyAt(i).getValue());
         }
         return json;
     }
@@ -419,51 +481,186 @@ public class JsonFactory
      * @param fieldMap fieldMap of properties to include. Cannot be null. Use {@link FieldMap#ALL} to include all fields
      * @param showMode mode like {@link Property#SHOW_USUAL} which may filter some fields additionally
      */
-    private static void propertiesMeta(CompositeProperty properties, FieldMap fieldMap, int showMode,
-                                       JsonObjectBuilder json, JsonPath path)
+    private static void fillCompositePropertyMeta(CompositeProperty properties, FieldMap fieldMap, int showMode,
+                                                  JsonObjectBuilder json, JsonPath path) throws Exception
     {
 
         for( int i = 0; i < properties.getPropertyCount(); i++ )
         {
             Property property = properties.getPropertyAt(i);
-            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
-                continue;
-            }
+
+            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) )continue;
+
             JsonPath newPath = path.append(property.getName());
-            if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
 
-            if(property instanceof CompositeProperty) {
-                propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
+            fillSimplePropertyMeta(property, json, newPath);
+
+            if(property instanceof CompositeProperty)
+            {
+                if( property.getValue() instanceof DynamicPropertySet)
+                {
+                    dpsMeta((DynamicPropertySet)property.getValue(), json, newPath);
+                    continue;
+                }
+
+                fillCompositePropertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
 
-            if(property instanceof ArrayProperty) {
-                propertiesMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
+            if(property instanceof ArrayProperty)
+            {
+                fillArrayPropertyMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
             }
         }
     }
 
-    private static void propertiesMeta(ArrayProperty properties, FieldMap fieldMap, int showMode,
-                                       JsonObjectBuilder json, JsonPath path)
+    private static void fillArrayPropertyMeta(ArrayProperty properties, FieldMap fieldMap, int showMode,
+                                              JsonObjectBuilder json, JsonPath path) throws Exception
     {
-        for( int i = 0; i < properties.getPropertyCount(); i++ )
+        for( int j = 0; j < properties.getPropertyCount(); j++ )
         {
-            Property property = properties.getPropertyAt(i);
-            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
-                continue;
-            }
+            Property property = properties.getPropertyAt(j);
+
+            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) continue;
+
             JsonPath newPath = path.append(property.getName());
-            //if(!property.getName().equals("class"))json.add(newPath.get(), propertyMeta(property));
 
-            if(property instanceof CompositeProperty) {
-                propertiesMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
+            fillSimplePropertyMeta(property, json, newPath);
+
+            if(property instanceof CompositeProperty)
+            {
+                if( property.getValue() instanceof DynamicPropertySet)
+                {
+                    dpsMeta((DynamicPropertySet)property.getValue(), json, newPath);
+                    continue;
+                }
+
+                fillCompositePropertyMeta((CompositeProperty) property, fieldMap.get(property), showMode, json, newPath);
                 continue;
             }
 
-            if(property instanceof ArrayProperty) {
-                propertiesMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
+            if(property instanceof ArrayProperty)
+            {
+                fillArrayPropertyMeta((ArrayProperty) property, fieldMap.get(property), showMode, json, newPath);
             }
         }
+    }
+
+    private static boolean fillSimplePropertyMeta(Property property, JsonObjectBuilder json, JsonPath path) throws Exception
+    {
+        JsonObjectBuilder p = Json.createObjectBuilder();
+        p.add(displayName.name(), property.getDisplayName());
+        p.add(description.name(), property.getShortDescription().split("\n")[0]);
+        if(property.isReadOnly())p.add(readOnly.name(), property.isReadOnly());
+
+        Class<?> clazz;
+        if(property instanceof SimpleProperty){
+            clazz = ((SimpleProperty) property).getValueClass();
+        }else if(property instanceof ArrayProperty){
+            clazz = ((ArrayProperty) property).getItemClass();
+        }else{
+            clazz = property.getClass();
+        }
+
+        if(clazz != String.class)
+        {
+            p.add(type.name(), getTypeName(clazz) );
+        }
+
+        if(property instanceof ArrayProperty)
+        {
+            p.add(COLLECTION, true);
+        }
+
+        Class<?> editorClass = property.getPropertyEditorClass();
+
+        if( editorClass != null )
+        {
+            if( JsonSerializable.class.isAssignableFrom(editorClass) )
+            {
+                JsonSerializable editor = (JsonSerializable)editorClass.newInstance();
+                if( editor instanceof PropertyEditorEx )
+                {
+                    initEditor( property, (PropertyEditorEx)editor );
+//todo                    JSONObject p1 = editor.toJson();
+//                    if( p1 != null )
+//                    {
+//                        Iterator<?> iterator = p1.keys();
+//                        while( iterator.hasNext() )
+//                        {
+//                            String key = iterator.next().toString();
+//                            if( key.equals("dictionary") )
+//                            {
+//                                JSONArray array = p1.optJSONArray("dictionary");
+//                                if( array != null )
+//                                {
+//                                    String[] elements = new String[array.length()];
+//                                    for( int index = 0; index < array.length(); index++ )
+//                                        elements[index] = array.optString(index);
+//                                    p.put(DICTIONARY_ATTR, createDictionary(elements, false));
+//                                }
+//                            }
+//                            else
+//                            {
+//                                p.put(key, p1.get(key));
+//                            }
+//                        }
+//                        return p;
+//                    }
+                }
+            }
+            else if( TagEditorSupport.class.isAssignableFrom(editorClass) )
+            {
+                TagEditorSupport editor = (TagEditorSupport)editorClass.newInstance();
+                String[] tags = editor.getTags();
+                if( tags != null )
+                {
+                    p.add(dictionary.name(), createDictionary(tags, true));
+                }
+            }
+            else if( StringTagEditorSupport.class.isAssignableFrom(editorClass) )
+            {
+                StringTagEditorSupport editor = (StringTagEditorSupport)editorClass.newInstance();
+                String[] tags = editor.getTags();
+                if( tags != null )
+                {
+                    p.add(dictionary.name(), createDictionary(tags, false));
+                }
+            }
+            else if( CustomEditorSupport.class.isAssignableFrom(editorClass) )
+            {
+                //TODO: support or correctly process some editors
+                //Some editors like biouml.model.util.ReactionEditor, biouml.model.util.FormulaEditor
+                //use Application.getApplicationFrame(), so we got a NullPointerException here
+                CustomEditorSupport editor = (CustomEditorSupport)editorClass.newInstance();
+                initEditor( property, editor );
+                String[] tags = editor.getTags();
+                if( tags != null )
+                {
+                    p.add(dictionary.name(), createDictionary(tags, false));
+                }
+                if(property instanceof ArrayProperty)
+                {
+                    p.add(multipleSelectionList.name(), true);
+                }
+            }
+
+            json.add(path.get(), p);
+            return false;
+        }
+
+        json.add(path.get(), p);
+        return true;
+    }
+
+    private static void initEditor(Property property, PropertyEditorEx editor)
+    {
+        Object owner = property.getOwner();
+        if( owner instanceof Property.PropWrapper )
+            owner = ( (Property.PropWrapper)owner ).getOwner();
+        editor.setValue(property.getValue());
+        editor.setBean(owner);
+        editor.setDescriptor(property.getDescriptor());
     }
 
     private static void beanOrder(CompositeProperty properties, FieldMap fieldMap, int showMode, JsonArrayBuilder json, JsonPath path)
@@ -483,42 +680,161 @@ public class JsonFactory
         }
     }
 
-    private static JsonObject propertyMeta(Property property)
+    /**
+     * Counterpart for parseColor
+     * @param color color to encode
+     * @return array of color components
+     */
+    private static JsonArray encodeColor(Color color)
     {
-        JsonObjectBuilder json = Json.createObjectBuilder();
+        JsonArrayBuilder json = Json.createArrayBuilder();
+        if(color == null || color.getAlpha() == 0) return json.build();
 
-        json.add(type.name(), getTypeName(property.getValueClass()));
-
-        if(!property.getName().equals(property.getDisplayName()))
-        {
-            json.add(displayName.name(), property.getDisplayName());
-        }
-
-        String shortDescription = property.getShortDescription().split("\n")[0];
-        if(!property.getName().equals(shortDescription))
-        {
-            json.add(description.name(), property.getShortDescription().split("\n")[0]);
-        }
-
-        if(property.isReadOnly())
-        {
-            json.add(readOnly.name(), true);
-        }
-
-        return json.build();
+        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue()).build();
     }
-//
-//    /**
-//     * Counterpart for parseColor
-//     * @param color color to encode
-//     * @return array of color components
-//     */
-//    static JsonArrayBuilder encodeColor(Color color)
-//    {
-//        JsonArrayBuilder json = Json.createArrayBuilder();
-//        if(color == null || color.getAlpha() == 0) return json;
-//
-//        return json.add(color.getRed()).add(color.getGreen()).add(color.getBlue());
-//    }
 
+    private static JsonArrayBuilder createDictionary(Object[] strings, boolean byPosition)
+    {
+        if( strings == null )
+            strings = new Object[] {};
+        int position = 0;
+        JsonArrayBuilder values = Json.createArrayBuilder();
+        JsonArrayBuilder pair = Json.createArrayBuilder();
+        for( Object tagObj : strings )
+        {
+            String tag = tagObj.toString();
+            if( byPosition )
+                values.add(pair.add(position).add(tag).build());
+            else
+                values.add(pair.add(tag).add(tag).build());
+            position++;
+        }
+        return values;
+    }
+
+    public static void setBeanValues(Object bean, String json)
+    {
+        CompositeProperty properties = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+
+        //JsonObject object = getJsonObject(json);
+
+        //Set<Map.Entry<String, JsonValue>> entries = object.entrySet();
+        //return jsonb.fromJson(json, clazz);
+
+        for( int i = 0; i < properties.getPropertyCount(); i++ )
+        {
+            Property property = properties.getPropertyAt(i);
+
+
+//            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
+//                continue;
+//            }
+
+//            if(property.getValue() == null){
+//                json.addNull(property.getName());
+//                continue;
+//            }
+//
+//            if(property instanceof CompositeProperty) {
+//                json.add(property.getName(), propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
+//                continue;
+//            }
+//
+//            if(property instanceof ArrayProperty) {
+//                json.add(property.getName(), propertiesValues((ArrayProperty) property, fieldMap.get(property), showMode));
+//                continue;
+//            }
+//
+//            if("class".equals(property.getName())){
+//                continue;
+//            }
+//
+//            addValueToJsonObject(json, property.getName(), property.getValue());
+        }
+    }
+
+    private static Object parseJsonValue(String value, Class<?> klass)
+    {
+        if( klass == String.class ){    return value.substring(1,value.length()-1); }
+        if( klass == Double.class ){    return Double.parseDouble(value); }
+        if( klass == Float.class ){     return Float.parseFloat(value); }
+        if( klass == Long.class ){      return Long.parseLong(value); }
+        if( klass == Integer.class ){   return Integer.parseInt(value); }
+        if( klass == BigInteger.class ){return new BigInteger(value); }
+        if( klass == BigDecimal.class ){return new BigDecimal(value); }
+
+//        if( klass == Date.class ||
+//                klass == java.util.Date.class ){return new Date(new java.sql.Date(json.getString(name)).getTime()); }
+
+//        if( klass == Long.class ){      json.add(name, (long)value ); return true;}
+//        if( klass == Integer.class ){   json.add(name, (int)value ); return true;}
+//        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return true;}
+//        if( klass == Float.class ){     json.add(name, (float)value ); return true;}
+//        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return true;}
+//        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return true;}
+//
+//        if( klass == Date.class ){json.add(name, value.toString() ); return true;}
+//        if( klass == java.util.Date.class ){json.add(name, new java.sql.Date(((java.util.Date)value).getTime()).toString() ); return true;}
+//
+//        if( value instanceof JsonValue )
+//        {
+//            json.add(name, (JsonValue)value); return true;
+//        }
+//
+//        if( value instanceof DynamicPropertySet)
+//        {
+//            json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return true;
+//        }
+//
+//        if( Color.class.isAssignableFrom( value.getClass() ) )
+//        {
+//            json.add(name, encodeColor((Color)value));return true;
+//        }
+//
+//        if( value instanceof Object[])
+//        {
+//            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+//            for (Object aValueArr : (Object[]) value) addValueToJsonArray(arrayBuilder, aValueArr);
+//            json.add(name, arrayBuilder.build());
+//            return true;
+//        }
+//
+//        json.add(name, value.toString());
+//        return true;
+        throw new RuntimeException("todo");
+    }
+
+    public static void setDpsValues(Object bean, String json)
+    {
+        InputStream stream;
+        try {
+            stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        JsonReader reader = Json.createReader(stream);
+        JsonStructure jsonst = reader.read();
+
+        if(bean instanceof DynamicPropertySet)
+        {
+            setDpsValues((DynamicPropertySet)bean, jsonst, new JsonPath());
+        }
+    }
+
+    private static void setDpsValues(DynamicPropertySet dps, JsonStructure jsonst, JsonPath path)
+    {
+        for (DynamicProperty property: dps)
+        {
+            JsonPath newPath = path.append(property.getName());
+
+            property.setValue(parseJsonValue(jsonst.getValue(newPath.get()).toString(), property.getType()));
+
+
+
+
+            //if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, newPath);
+        }
+    }
+
+    private static final String COLLECTION = "collection";
 }

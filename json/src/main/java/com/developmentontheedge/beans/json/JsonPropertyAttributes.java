@@ -4,6 +4,7 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 
 import java.lang.reflect.Array;
 
+
 enum JsonPropertyAttributes
 {
     type(null, Class.class),
@@ -15,6 +16,7 @@ enum JsonPropertyAttributes
     rawValue(BeanInfoConstants.RAW_VALUE, Boolean.class),
     readOnly(BeanInfoConstants.READ_ONLY, Boolean.class),
     reloadOnChange(BeanInfoConstants.RELOAD_ON_CHANGE, Boolean.class),
+    reloadOnFocusOut(BeanInfoConstants.RELOAD_ON_FOCUS_OUT, Boolean.class),
     tagList(BeanInfoConstants.TAG_LIST_ATTR, Array.class),
     extraAttrs(BeanInfoConstants.EXTRA_ATTRS, Array.class),
     groupName(BeanInfoConstants.GROUP_NAME, String.class),
@@ -27,10 +29,13 @@ enum JsonPropertyAttributes
     columnSize(BeanInfoConstants.COLUMN_SIZE_ATTR, Object.class),
     cssClasses(BeanInfoConstants.CSS_CLASSES, String.class),
 
-    validationRules(BeanInfoConstants.VALIDATION_RULES, Array.class),
+    defaultValue(BeanInfoConstants.DEFAULT_VALUE, Object.class),
+    validationRules(BeanInfoConstants.VALIDATION_RULES, POJOorListOfPOJO.class),
     status(BeanInfoConstants.STATUS, String.class),
-    message(BeanInfoConstants.MESSAGE, String.class);
+    message(BeanInfoConstants.MESSAGE, String.class),
 
+    children(null, null),
+    dictionary(null, null);
 
     public String beanInfoConstant;
     public Class<?> attrType;
@@ -48,5 +53,9 @@ enum JsonPropertyAttributes
                 "beanInfoConstant='" + beanInfoConstant + '\'' +
                 ", name='" + name() + '\'' +
                 '}';
+    }
+
+    class POJOorListOfPOJO {
+
     }
 }

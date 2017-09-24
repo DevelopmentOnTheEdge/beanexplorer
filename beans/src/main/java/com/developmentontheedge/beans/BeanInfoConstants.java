@@ -266,6 +266,7 @@ public interface BeanInfoConstants
     // HTML Form Property Inspector
     String EXTRA_ATTRS = "extra-attrs-attr";
     String RELOAD_ON_CHANGE = "reload-on-change";
+    String RELOAD_ON_FOCUS_OUT = "reload-on-focus-out";
     String RELOAD_ON_CLICK = "reload-on-click";
 
     String VALIDATION_RULES = "validation-rules";

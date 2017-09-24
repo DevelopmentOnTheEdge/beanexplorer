@@ -8,28 +8,42 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 
-import java.awt.*;
-
-import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
+import static com.developmentontheedge.beans.jsontest.DpsTest.oneQuotes;
 import static org.junit.Assert.*;
 
 public class JsonFactoryTest
 {
 
     @Test
-    public void testAddToJsonArray(){
+    public void testAddToJsonArrayNullValue(){
         JsonArrayBuilder json = Json.createArrayBuilder();
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         dps.add(new DynamicProperty("name", String.class));
 
-        JsonFactory.addValueToArray(json, dps);
+        JsonFactory.addValueToJsonArray(json, dps);
 
-        //JsonFactory.addValueToArray(json, new JsonFactoryTest());
+        //JsonFactory.addValueToJsonArray(json, new JsonFactoryTest());
 
         JsonArray buildJson = json.build();
         assertEquals(1, buildJson.size());
 
-        assertEquals("[{'name':null}]", oneQuotes(buildJson.toString()));
+        assertEquals("[{}]", oneQuotes(buildJson.toString()));
+    }
+
+    @Test
+    public void testAddToJsonArray(){
+        JsonArrayBuilder json = Json.createArrayBuilder();
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicProperty("name", String.class, "test"));
+
+        JsonFactory.addValueToJsonArray(json, dps);
+
+        //JsonFactory.addValueToJsonArray(json, new JsonFactoryTest());
+
+        JsonArray buildJson = json.build();
+        assertEquals(1, buildJson.size());
+
+        assertEquals("[{'name':'test'}]", oneQuotes(buildJson.toString()));
     }
 
 //    @Test

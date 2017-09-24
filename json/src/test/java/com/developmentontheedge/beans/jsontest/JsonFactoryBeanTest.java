@@ -6,8 +6,9 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
 import org.junit.Test;
 
-import static com.developmentontheedge.beans.jsontest.JsonFactoryDpsTest.oneQuotes;
+import static com.developmentontheedge.beans.jsontest.DpsTest.oneQuotes;
 import static org.junit.Assert.*;
+
 
 public class JsonFactoryBeanTest
 {
@@ -36,16 +37,37 @@ public class JsonFactoryBeanTest
                 "'field1':{'name':'foo'}}",
             oneQuotes(JsonFactory.beanValues(bean).toString()));
     }
+//
+//    @Test
+//    public void beanWithInnerClassAll() throws Exception
+//    {
+//        BeanWithInnerClass bean = new BeanWithInnerClass(
+//                new TestBeans.InnerBeanClass("foo"),
+//                new TestBeans.InnerBeanClass[]{new TestBeans.InnerBeanClass("foo1"),new TestBeans.InnerBeanClass("foo2")}
+//        );
+//        assertEquals("{'values':{'arr':[{'name':'foo1'},{'name':'foo2'}],'field1':{'name':'foo'}}," +
+//                        "'meta':{" +
+//                            "'/arr':{'type':'InnerBeanClass[]','readOnly':true}," +
+//                            "'/arr/[0]/name':{'type':'String'}," +
+//                            "'/arr/[1]/name':{'type':'String'}," +
+//                            "'/field1':{'type':'InnerBeanClass','readOnly':true}," +
+//                            "'/field1/name':{'type':'String','readOnly':true}}," +
+//                        "'order':['/arr','/field1']}",
+//                oneQuotes(JsonFactory.bean(bean).toString()));
+//    }
 
     @Test
     public void simpleBeanMeta()
     {
         TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
         assertEquals("{" +
-                        "'/arr':{'type':'long[]'}," +
-                        "'/name':{'type':'String'}," +
-                        "'/number':{'type':'Integer'}}",
-                oneQuotes(JsonFactory.beanMeta(bean).toString()));
+                "'/arr':{'displayName':'arr','description':'arr','type':'long','collection':true}," +
+                "'/arr/[0]':{'displayName':'[0]','description':'Long','type':'Long'}," +
+                "'/arr/[1]':{'displayName':'[1]','description':'Long','type':'Long'}," +
+                "'/arr/[2]':{'displayName':'[2]','description':'Long','type':'Long'}," +
+                "'/name':{'displayName':'name','description':'name'}," +
+                "'/number':{'displayName':'number','description':'number','type':'Integer'}" +
+            "}", oneQuotes(JsonFactory.beanMeta(bean).toString()));
     }
 
     @Test
@@ -60,16 +82,15 @@ public class JsonFactoryBeanTest
     public void beanWithDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps.add(new DynamicProperty("name", String.class, ""));
+        dps.add(new DynamicProperty("name", String.class, "value"));
         TestBeans.FormPresentation bean = new TestBeans.FormPresentation("TestBean", dps);
         assertEquals("{" +
-                        "'values':{" +
-                            "'dps':{'name':''},'title':'TestBean'}," +
-                        "'meta':{" +
-                            "'/dps':{'type':'DynamicPropertySetSupport'}," +
-                            "'/dps/name':{'type':'String'}," +
-                            "'/title':{'type':'String','readOnly':true}}," +
-                        "'order':['/dps','/dps/name','/title']" +
+                "'values':{'title':'TestBean','dps':{'name':'value'}}," +
+                "'meta':{" +
+                    "'/title':{'displayName':'title','description':'title'}," +
+                    "'/dps':{'displayName':'dps','description':'dps','type':'DynamicSetProperty'}," +
+                    "'/dps/name':{'displayName':'name'}}," +
+                "'order':['/title','/dps','/dps/name']" +
             "}", oneQuotes(JsonFactory.bean(bean).toString()));
     }
 

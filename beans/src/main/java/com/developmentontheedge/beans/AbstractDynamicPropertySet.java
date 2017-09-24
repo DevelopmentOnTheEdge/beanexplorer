@@ -9,7 +9,6 @@ import java.util.StringTokenizer;
 
 /**
  * Helper abstract class implementing common functionality for DPS
- * @author lan
  */
 public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
 {
@@ -39,6 +38,15 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
         if( val == null )
             return null;
         return val.toString(); 
+    }
+
+    @Override
+    public Long getValueAsLong(String name)
+    {
+        Object val = getValue( name );
+        if( val == null )
+            return null;
+        return Long.parseLong(val.toString());
     }
 
     @Override
@@ -89,10 +97,10 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
         return prop.getValue().toString();
     }
 
-    public DynamicPropertyBuilder getAsBuilder( String name )
+    @Override
+    public DynamicPropertyBuilder getAsBuilder(String name)
     {
-        DynamicPropertyBuilder builder = new DynamicPropertyBuilder( findProperty( name ) );
-        return builder;
+        return new DynamicPropertyBuilder( findProperty( name ) );
     }
 
     @Override
