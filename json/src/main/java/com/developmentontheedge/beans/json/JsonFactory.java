@@ -27,9 +27,11 @@ import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
+import javax.json.JsonString;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
@@ -170,6 +172,36 @@ public class JsonFactory
         beanOrder(property, fieldMap, showMode, json, new JsonPath());
 
         return json.build();
+    }
+
+    public static void setDpsValues(DynamicPropertySet dps, String json)
+    {
+        InputStream stream;
+        try {
+            stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        JsonReader reader = Json.createReader(stream);
+        JsonStructure jsonst = reader.read();
+
+        setDpsValues(dps, jsonst, new JsonPath());
+    }
+
+    public static void setBeanValues(Object bean, String json)
+    {
+        InputStream stream;
+        try {
+            stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        JsonReader reader = Json.createReader(stream);
+        JsonStructure jsonst = reader.read();
+
+        CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+
+        setBeanValues(property, jsonst, new JsonPath());
     }
 
     //public static JsonObject dictionaryValues(Object obj){return null;}
@@ -712,22 +744,6 @@ public class JsonFactory
         return values;
     }
 
-    public static void setBeanValues(Object bean, String json)
-    {
-        InputStream stream;
-        try {
-            stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-        JsonReader reader = Json.createReader(stream);
-        JsonStructure jsonst = reader.read();
-
-        CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
-
-        setBeanValues(property, jsonst, new JsonPath());
-    }
-
     private static void setBeanValues(CompositeProperty properties, JsonStructure jsonst, JsonPath path)
     {
         //JsonObject object = getJsonObject(json);
@@ -758,7 +774,7 @@ public class JsonFactory
 //                continue;
 //            }
 //
-            Object value = parseJsonValue(jsonst.getValue(newPath.get()).toString(), property.getValueClass());
+            Object value = getSimpleValueFromJson(jsonst.getValue(newPath.get()), property.getValueClass());
             try {
                 property.setValue(value);
             } catch (NoSuchMethodException e) {
@@ -768,26 +784,52 @@ public class JsonFactory
         }
     }
 
-    private static Object parseJsonValue(String value, Class<?> klass)
+    private static void setDpsValues(DynamicPropertySet dps, JsonStructure jsonst, JsonPath path)
     {
-        if( klass == String.class ){    return value.substring(1,value.length()-1); }
-        if( klass == Double.class ){    return Double.parseDouble(value); }
-        if( klass == Float.class ){     return Float.parseFloat(value); }
-        if( klass == Long.class ){      return Long.parseLong(value); }
-        if( klass == Integer.class ){   return Integer.parseInt(value); }
-        if( klass == BigInteger.class ){return new BigInteger(value); }
-        if( klass == BigDecimal.class ){return new BigDecimal(value); }
+        for (DynamicProperty property: dps)
+        {
+            JsonPath newPath = path.append(property.getName());
 
-//        if( klass == Date.class ||
-//                klass == java.util.Date.class ){return new Date(new java.sql.Date(json.getString(name)).getTime()); }
+            property.setValue(getSimpleValueFromJson(jsonst.getValue(newPath.get()), property.getType()));
+        }
+    }
 
-//        if( klass == Long.class ){      json.add(name, (long)value ); return true;}
-//        if( klass == Integer.class ){   json.add(name, (int)value ); return true;}
-//        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return true;}
-//        if( klass == Float.class ){     json.add(name, (float)value ); return true;}
-//        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return true;}
-//        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return true;}
-//
+    private static Object getSimpleValueFromJson(JsonValue value, Class<?> klass)
+    {
+        if(value.getValueType() == JsonValue.ValueType.STRING)
+        {
+            if (klass == String.class) {
+                return ((JsonString) value).getString();
+            }
+        }
+        if(value.getValueType() == JsonValue.ValueType.NUMBER)
+        {
+            if (klass == Double.class) {
+                return ((JsonNumber) value).doubleValue();
+            }
+            if (klass == Float.class) {
+                return ((JsonNumber) value).doubleValue();
+            }
+            if (klass == Long.class) {
+                return ((JsonNumber) value).longValue();
+            }
+            if (klass == Integer.class) {
+                return ((JsonNumber) value).intValue();
+            }
+            if (klass == BigInteger.class) {
+                return ((JsonNumber) value).bigIntegerValue();
+            }
+            if (klass == BigDecimal.class) {
+                return ((JsonNumber) value).bigDecimalValue();
+            }
+        }
+        if(value.getValueType() == JsonValue.ValueType.FALSE || value.getValueType() == JsonValue.ValueType.TRUE)
+        {
+            return value.getValueType() == JsonValue.ValueType.TRUE;
+        }
+
+        //if( klass == Boolean.class ){return ((Json)value); }
+
 //        if( klass == Date.class ){json.add(name, value.toString() ); return true;}
 //        if( klass == java.util.Date.class ){json.add(name, new java.sql.Date(((java.util.Date)value).getTime()).toString() ); return true;}
 //
@@ -817,30 +859,6 @@ public class JsonFactory
 //        json.add(name, value.toString());
 //        return true;
         throw new RuntimeException("todo");
-    }
-
-    public static void setDpsValues(DynamicPropertySet dps, String json)
-    {
-        InputStream stream;
-        try {
-            stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-        JsonReader reader = Json.createReader(stream);
-        JsonStructure jsonst = reader.read();
-
-        setDpsValues(dps, jsonst, new JsonPath());
-    }
-
-    private static void setDpsValues(DynamicPropertySet dps, JsonStructure jsonst, JsonPath path)
-    {
-        for (DynamicProperty property: dps)
-        {
-            JsonPath newPath = path.append(property.getName());
-
-            property.setValue(parseJsonValue(jsonst.getValue(newPath.get()).toString(), property.getType()));
-        }
     }
 
     private static final String COLLECTION = "collection";

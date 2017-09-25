@@ -1,26 +1,13 @@
 package com.developmentontheedge.beans.jsontest;
 
 import com.developmentontheedge.beans.BeanInfoEx;
-import com.developmentontheedge.beans.annot.PropertyDescription;
-import com.developmentontheedge.beans.annot.PropertyName;
-import com.developmentontheedge.beans.editors.ColorEditor;
-import com.developmentontheedge.beans.editors.GenericComboBoxEditor;
 import com.developmentontheedge.beans.editors.StringTagEditor;
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.developmentontheedge.beans.jsontest.testbeans.Interval;
-import com.developmentontheedge.beans.model.ComponentFactory;
-import com.developmentontheedge.beans.model.ComponentModel;
-import com.developmentontheedge.beans.model.FieldMap;
-import com.developmentontheedge.beans.model.Property;
 import com.developmentontheedge.beans.test.TestUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.json.JsonObject;
-import java.awt.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 
 public class BeanTest extends TestUtils
@@ -29,11 +16,13 @@ public class BeanTest extends TestUtils
     {
         private long count;
         private String select;
+        private boolean status;
 
-        public TestBean(long count, String select)
+        public TestBean(long count, String select, boolean status)
         {
             this.count = count;
             this.select = select;
+            this.status = status;
         }
 
         public long getCount()
@@ -54,6 +43,16 @@ public class BeanTest extends TestUtils
         public void setSelect(String select)
         {
             this.select = select;
+        }
+
+        public boolean isStatus()
+        {
+            return status;
+        }
+
+        public void setStatus(boolean status)
+        {
+            this.status = status;
         }
     }
 
@@ -78,35 +77,35 @@ public class BeanTest extends TestUtils
         {
             add("count");
             add("select", TestSelector.class);
+            add("status");
         }
     }
 
     @Test
     public void testGetModelAsJSON()
     {
-        TestBean bean = new TestBean(100L, "one");
+        TestBean bean = new TestBean(100L, "one", true);
 
         assertEquals("{" +
-                "'values':{'count':100,'select':'one'}," +
+                "'values':{'count':100,'select':'one','status':true}," +
                 "'meta':{" +
                     "'/count':{'displayName':'count','description':'count','type':'Long'}," +
-                    "'/select':{'displayName':'select','description':'select','dictionary':[['one','one'],['two','two']]}}," +
-                "'order':['/count','/select']" +
+                    "'/select':{'displayName':'select','description':'select','dictionary':[['one','one'],['two','two']]}," +
+                    "'/status':{'displayName':'status','description':'status','type':'Boolean'}}," +
+                "'order':['/count','/select','/status']" +
             "}", oneQuotes(JsonFactory.bean(bean)));
-
-        //
-        //TestBean o = JsonFactory.setBeanValues(TestBean.class, "{'count':200,'select':'two'}");
     }
 
     @Test
     public void test() throws Exception
     {
-        TestBean bean = new TestBean(100L, "one");
+        TestBean bean = new TestBean(100L, "one", true);
 
-        JsonFactory.setBeanValues(bean, doubleQuotes("{'count':200,'select':'two'}"));
+        JsonFactory.setBeanValues(bean, doubleQuotes("{'count':200,'select':'two','status':false}"));
 
         assertEquals(200L, bean.getCount());
         assertEquals("two", bean.getSelect());
+        assertEquals(false, bean.isStatus());
     }
 
 }
