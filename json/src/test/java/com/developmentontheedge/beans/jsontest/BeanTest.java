@@ -3,6 +3,8 @@ package com.developmentontheedge.beans.jsontest;
 import com.developmentontheedge.beans.BeanInfoEx;
 import com.developmentontheedge.beans.editors.StringTagEditor;
 import com.developmentontheedge.beans.json.JsonFactory;
+import com.developmentontheedge.beans.model.FieldMap;
+import com.developmentontheedge.beans.model.Property;
 import com.developmentontheedge.beans.test.TestUtils;
 import org.junit.Test;
 
@@ -77,7 +79,7 @@ public class BeanTest extends TestUtils
         {
             add("count");
             add("select", TestSelector.class);
-            add("status");
+            addExpert("status");
         }
     }
 
@@ -97,15 +99,27 @@ public class BeanTest extends TestUtils
     }
 
     @Test
-    public void test() throws Exception
+    public void testExpert() throws Exception
     {
         TestBean bean = new TestBean(100L, "one", true);
 
-        JsonFactory.setBeanValues(bean, doubleQuotes("{'count':200,'select':'two','status':false}"));
+        JsonFactory.setBeanValues(bean, doubleQuotes("{'count':200,'select':'two','status':false}"), FieldMap.ALL, Property.SHOW_EXPERT);
 
         assertEquals(200L, bean.getCount());
         assertEquals("two", bean.getSelect());
         assertEquals(false, bean.isStatus());
+    }
+
+    @Test
+    public void testUsual() throws Exception
+    {
+        TestBean bean = new TestBean(100L, "one", true);
+
+        JsonFactory.setBeanValues(bean, doubleQuotes("{'count':200,'select':'two','status':false}"), FieldMap.ALL, Property.SHOW_USUAL);
+
+        assertEquals(200L, bean.getCount());
+        assertEquals("two", bean.getSelect());
+        assertEquals(true, bean.isStatus());
     }
 
 }

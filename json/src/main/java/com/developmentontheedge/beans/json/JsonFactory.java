@@ -190,6 +190,11 @@ public class JsonFactory
 
     public static void setBeanValues(Object bean, String json)
     {
+        setBeanValues(bean, json, FieldMap.ALL, Property.SHOW_USUAL);
+    }
+
+    public static void setBeanValues(Object bean, String json, FieldMap fieldMap, int showMode)
+    {
         InputStream stream;
         try {
             stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()));
@@ -201,7 +206,7 @@ public class JsonFactory
 
         CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
 
-        setBeanValues(property, jsonst, new JsonPath());
+        setBeanValues(property, jsonst, new JsonPath(), fieldMap, showMode);
     }
 
     //public static JsonObject dictionaryValues(Object obj){return null;}
@@ -744,7 +749,7 @@ public class JsonFactory
         return values;
     }
 
-    private static void setBeanValues(CompositeProperty properties, JsonStructure jsonst, JsonPath path)
+    private static void setBeanValues(CompositeProperty properties, JsonStructure jsonst, JsonPath path, FieldMap fieldMap, int showMode)
     {
         //JsonObject object = getJsonObject(json);
 
@@ -756,14 +761,15 @@ public class JsonFactory
             Property property = properties.getPropertyAt(i);
             JsonPath newPath = path.append(property.getName());
 
-//            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
-//                continue;
-//            }
+            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
+                continue;
+            }
 
 //            if(property instanceof CompositeProperty) {
-//                json.add(property.getName(), propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
+//                setBeanValues((CompositeProperty)property, jsonst, newPath, fieldMap.get(property), showMode);
 //                continue;
 //            }
+//
 //
 //            if(property instanceof ArrayProperty) {
 //                json.add(property.getName(), propertiesValues((ArrayProperty) property, fieldMap.get(property), showMode));
@@ -796,12 +802,17 @@ public class JsonFactory
 
     private static Object getSimpleValueFromJson(JsonValue value, Class<?> klass)
     {
+        if(value.getValueType() == JsonValue.ValueType.NULL){
+            return null;
+        }
+
         if(value.getValueType() == JsonValue.ValueType.STRING)
         {
             if (klass == String.class) {
                 return ((JsonString) value).getString();
             }
         }
+
         if(value.getValueType() == JsonValue.ValueType.NUMBER)
         {
             if (klass == Double.class) {
@@ -823,6 +834,7 @@ public class JsonFactory
                 return ((JsonNumber) value).bigDecimalValue();
             }
         }
+
         if(value.getValueType() == JsonValue.ValueType.FALSE || value.getValueType() == JsonValue.ValueType.TRUE)
         {
             return value.getValueType() == JsonValue.ValueType.TRUE;
