@@ -13,6 +13,7 @@ import com.developmentontheedge.beans.model.ComponentModel;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
 import com.developmentontheedge.beans.test.TestUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.json.JsonObject;
@@ -22,25 +23,25 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-public class BaenTest extends TestUtils
+public class BeanTest extends TestUtils
 {
     public static class TestBean
     {
-        private Long count;
+        private long count;
         private String select;
 
-        public TestBean(Long count, String select)
+        public TestBean(long count, String select)
         {
             this.count = count;
             this.select = select;
         }
 
-        public Long getCount()
+        public long getCount()
         {
             return count;
         }
 
-        public void setCount(Long count)
+        public void setCount(long count)
         {
             this.count = count;
         }
@@ -95,6 +96,17 @@ public class BaenTest extends TestUtils
 
         //
         //TestBean o = JsonFactory.setBeanValues(TestBean.class, "{'count':200,'select':'two'}");
+    }
+
+    @Test
+    public void test() throws Exception
+    {
+        TestBean bean = new TestBean(100L, "one");
+
+        JsonFactory.setBeanValues(bean, doubleQuotes("{'count':200,'select':'two'}"));
+
+        assertEquals(200L, bean.getCount());
+        assertEquals("two", bean.getSelect());
     }
 
 }

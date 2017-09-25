@@ -415,10 +415,10 @@ public class JsonFactory
                 continue;
             }
 
-            if(property.getValue() == null){
-                json.addNull(property.getName());
-                continue;
-            }
+//            if(property.getValue() == null){
+//                json.addNull(property.getName());
+//                continue;
+//            }
 
             if(property instanceof CompositeProperty) {
                 json.add(property.getName(), propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
@@ -452,11 +452,11 @@ public class JsonFactory
                 continue;
             }
 
-            if(property.getValue() == null)
-            {
-                json.addNull();
-                continue;
-            }
+//            if(property.getValue() == null)
+//            {
+//                json.addNull();
+//                continue;
+//            }
 
             if(property instanceof CompositeProperty)
             {
@@ -714,8 +714,22 @@ public class JsonFactory
 
     public static void setBeanValues(Object bean, String json)
     {
-        CompositeProperty properties = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+        InputStream stream;
+        try {
+            stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        JsonReader reader = Json.createReader(stream);
+        JsonStructure jsonst = reader.read();
 
+        CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+
+        setBeanValues(property, jsonst, new JsonPath());
+    }
+
+    private static void setBeanValues(CompositeProperty properties, JsonStructure jsonst, JsonPath path)
+    {
         //JsonObject object = getJsonObject(json);
 
         //Set<Map.Entry<String, JsonValue>> entries = object.entrySet();
@@ -724,17 +738,12 @@ public class JsonFactory
         for( int i = 0; i < properties.getPropertyCount(); i++ )
         {
             Property property = properties.getPropertyAt(i);
-
+            JsonPath newPath = path.append(property.getName());
 
 //            if( !property.isVisible(showMode) || !fieldMap.contains(property.getName()) ) {
 //                continue;
 //            }
 
-//            if(property.getValue() == null){
-//                json.addNull(property.getName());
-//                continue;
-//            }
-//
 //            if(property instanceof CompositeProperty) {
 //                json.add(property.getName(), propertiesValues((CompositeProperty)property, fieldMap.get(property), showMode) );
 //                continue;
@@ -749,7 +758,13 @@ public class JsonFactory
 //                continue;
 //            }
 //
-//            addValueToJsonObject(json, property.getName(), property.getValue());
+            Object value = parseJsonValue(jsonst.getValue(newPath.get()).toString(), property.getValueClass());
+            try {
+                property.setValue(value);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+            //addValueToJsonObject(json, property.getName(), property.getValue());
         }
     }
 
@@ -804,7 +819,7 @@ public class JsonFactory
         throw new RuntimeException("todo");
     }
 
-    public static void setDpsValues(Object bean, String json)
+    public static void setDpsValues(DynamicPropertySet dps, String json)
     {
         InputStream stream;
         try {
@@ -815,10 +830,7 @@ public class JsonFactory
         JsonReader reader = Json.createReader(stream);
         JsonStructure jsonst = reader.read();
 
-        if(bean instanceof DynamicPropertySet)
-        {
-            setDpsValues((DynamicPropertySet)bean, jsonst, new JsonPath());
-        }
+        setDpsValues(dps, jsonst, new JsonPath());
     }
 
     private static void setDpsValues(DynamicPropertySet dps, JsonStructure jsonst, JsonPath path)
@@ -828,11 +840,6 @@ public class JsonFactory
             JsonPath newPath = path.append(property.getName());
 
             property.setValue(parseJsonValue(jsonst.getValue(newPath.get()).toString(), property.getType()));
-
-
-
-
-            //if( value instanceof DynamicPropertySet)dpsOrder((DynamicPropertySet)value, json, newPath);
         }
     }
 
