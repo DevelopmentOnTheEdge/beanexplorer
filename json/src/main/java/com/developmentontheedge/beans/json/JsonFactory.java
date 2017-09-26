@@ -1,9 +1,11 @@
 package com.developmentontheedge.beans.json;
 
 import com.developmentontheedge.beans.BeanInfoConstants;
+import com.developmentontheedge.beans.BeanInfoEx;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.editors.CustomEditorSupport;
+import com.developmentontheedge.beans.editors.GenericMultiSelectEditor;
 import com.developmentontheedge.beans.editors.PropertyEditorEx;
 import com.developmentontheedge.beans.editors.StringTagEditorSupport;
 import com.developmentontheedge.beans.editors.TagEditorSupport;
@@ -24,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -204,9 +207,13 @@ public class JsonFactory
         JsonReader reader = Json.createReader(stream);
         JsonStructure jsonst = reader.read();
 
-        CompositeProperty property = ComponentFactory.getModel(bean, ComponentFactory.Policy.DEFAULT);
+        CompositeProperty property = resolveModel(bean);
 
-        setBeanValues(property, jsonst, new JsonPath(), fieldMap, showMode);
+        try {
+            setBeanValues(property, jsonst, new JsonPath(), fieldMap, showMode);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //public static JsonObject dictionaryValues(Object obj){return null;}
@@ -436,6 +443,20 @@ public class JsonFactory
         }
     }
 
+    private static CompositeProperty resolveModel(Object bean)
+    {
+        CompositeProperty model;
+        if( bean instanceof CompositeProperty )
+        {
+            model = (CompositeProperty)bean;
+        }
+        else
+        {
+            model = ComponentFactory.getModel(bean, ComponentFactory.Policy.UI, true);
+        }
+        return model;
+    }
+
     private static String getTypeName(Class<?> klass)
     {
         return klass.getSimpleName();
@@ -628,7 +649,7 @@ public class JsonFactory
 //                            String key = iterator.next().toString();
 //                            if( key.equals("dictionary") )
 //                            {
-//                                JSONArray array = p1.optJSONArray("dictionary");
+//                                JsonArray array = p1.optJsonArray("dictionary");
 //                                if( array != null )
 //                                {
 //                                    String[] elements = new String[array.length()];
@@ -749,7 +770,7 @@ public class JsonFactory
         return values;
     }
 
-    private static void setBeanValues(CompositeProperty properties, JsonStructure jsonst, JsonPath path, FieldMap fieldMap, int showMode)
+    private static void setBeanValues(CompositeProperty properties, JsonStructure jsonst, JsonPath path, FieldMap fieldMap, int showMode) throws Exception
     {
         //JsonObject object = getJsonObject(json);
 
@@ -771,16 +792,12 @@ public class JsonFactory
 //            }
 //
 //
-//            if(property instanceof ArrayProperty) {
-//                json.add(property.getName(), propertiesValues((ArrayProperty) property, fieldMap.get(property), showMode));
-//                continue;
-//            }
-//
-//            if("class".equals(property.getName())){
-//                continue;
-//            }
-//
-            Object value = getSimpleValueFromJson(jsonst.getValue(newPath.get()), property.getValueClass());
+            if(property instanceof ArrayProperty) {
+                setBeanValues((ArrayProperty) property, jsonst, path, fieldMap.get(property), showMode);
+                continue;
+            }
+
+            Object value = getSimpleValueFromJson(property.getValueClass(), jsonst.getValue(newPath.get()));
             try {
                 property.setValue(value);
             } catch (NoSuchMethodException e) {
@@ -790,17 +807,118 @@ public class JsonFactory
         }
     }
 
+    private static void setBeanValues(ArrayProperty property, JsonStructure jsonst, JsonPath path, FieldMap fieldMap, int showMode) throws Exception
+    {
+//        Class<?> c = property.getPropertyEditorClass();
+//        if( c != null )
+//        {
+//            if( GenericMultiSelectEditor.class.isAssignableFrom(c) )
+//            {
+//                GenericMultiSelectEditor editor = (GenericMultiSelectEditor)c.newInstance();
+//                initEditor( property, editor );
+//
+//                JsonArray jsonArray = (JsonArray)jsonst.getValue( path.get() );
+//                String[] val = jsonArray.stream()
+//                        .map(x -> ((JsonString) x).getString())
+//                        .collect(Collectors.toList()).toArray(new String[jsonArray.size()]);
+//                editor.setStringValue(val);
+//                property.setValue(editor.getValue());//setValue(property, editor.getValue());
+//                return;
+//            }
+////            else if( JSONCompatibleEditor.class.isAssignableFrom(c) )
+////            {
+////                JSONCompatibleEditor editor = (JSONCompatibleEditor)c.newInstance();
+////                editor.fillWithJSON(property, jsonObject);
+////                return;
+////            }
+//        }
+//
+//        JsonArray jsonArray = (JsonArray)jsonst.getValue( path.get() );
+//        //process array actions
+//        if( !property.isReadOnly() )
+//        {
+//            while( jsonArray.size() > property.getPropertyCount() )
+//            {
+//                property.insertItem(property.getPropertyCount(), null);
+//            }
+//            while( jsonArray.size() < property.getPropertyCount() )
+//            {
+//                property.removeItem(property.getPropertyCount() - 1);
+//            }
+//        }
+//        Object oldValue = property.getValue();
+//        if( oldValue != null && oldValue.getClass().isArray() )
+//        {
+//            Property element = property.getPropertyAt(0);
+//            if( element instanceof SimpleProperty ) //Simple Properties processing
+//            {
+//                for( int k = 0; k < property.getPropertyCount(); k++ )
+//                {
+//                    Property oldElement = property.getPropertyAt(k);
+//                    String elemName = oldElement.getName();
+//                    for( int m = 0; m < jsonArray.size(); m++ )
+//                    {
+//                        JsonArray jsonBean = jsonArray.getJsonArray(m);
+//                        for( int ind = 0; ind < jsonBean.size(); ind++ )
+//                        {
+//                            JsonObject jsonProperty = jsonBean.getJsonObject(ind);
+//                            if( jsonProperty.getString("name").equals(elemName) )
+//                            {
+//                                Object value = getSimpleValueFromJson( oldElement.getValueClass(), jsonProperty);
+//                                oldElement.setValue(value);//setValue( oldElement, value );
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            else
+//            {
+//                Object[] oldArray = (Object[])oldValue;
+//
+//                int index = 0;
+//                for( Object oldObject : oldArray )
+//                {
+//                    CompositeProperty elementModel = resolveModel( oldObject );
+//                    if( jsonArray.size() > index )
+//                    {
+//                        JsonValue jsonValue = jsonArray.get(index);
+//                        //setBeanValues(elementModel, jsonst, path.append( ?? ), fieldMap, showMode);//correctBeanOptions(elementModel, jsonBean);
+//                        throw new RuntimeException("todo");
+//                    }
+//                    index++;
+//                }
+//            }
+//        }
+//        if( jsonObject.has("action") && !property.isReadOnly() )
+//        {
+//            String actionName = jsonObject.getString("action");
+//            if( actionName.equals("item-add") )
+//            {
+//                property.insertItem( property.getPropertyCount(), null);
+//            }
+//            else if( actionName.equals("item-remove") )
+//            {
+//                int size = property.getPropertyCount();
+//                if( size > 0 )
+//                {
+//                    property.removeItem(size - 1);
+//                }
+//            }
+//        }
+    }
+
     private static void setDpsValues(DynamicPropertySet dps, JsonStructure jsonst, JsonPath path)
     {
         for (DynamicProperty property: dps)
         {
             JsonPath newPath = path.append(property.getName());
 
-            property.setValue(getSimpleValueFromJson(jsonst.getValue(newPath.get()), property.getType()));
+            property.setValue(getSimpleValueFromJson(property.getType(), jsonst.getValue(newPath.get())));
         }
     }
 
-    private static Object getSimpleValueFromJson(JsonValue value, Class<?> klass)
+    private static Object getSimpleValueFromJson(Class<?> klass, JsonValue value)
     {
         if(value.getValueType() == JsonValue.ValueType.NULL){
             return null;

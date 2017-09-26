@@ -4,16 +4,18 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.developmentontheedge.beans.jsontest.TestBeans.BeanWithInnerClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.developmentontheedge.beans.jsontest.DpsTest.oneQuotes;
+import static com.developmentontheedge.beans.test.TestUtils.doubleQuotes;
 import static org.junit.Assert.*;
 
 
 public class JsonFactoryBeanTest
 {
     @Test
-    public void simpleBeanValues() throws Exception
+    public void beanValuesWithArray() throws Exception
     {
         TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
         assertEquals("{" +
@@ -21,6 +23,16 @@ public class JsonFactoryBeanTest
                         "'name':'bean'," +
                         "'number':5" +
                 "}", oneQuotes(JsonFactory.beanValues(bean).toString()));
+    }
+
+    @Test
+    @Ignore
+    public void setBeanValuesWithArray() throws Exception
+    {
+        TestBeans.SimpleBean bean = new TestBeans.SimpleBean("bean", 5, new long[]{1,2,3});
+        JsonFactory.setBeanValues(bean, doubleQuotes("{'arr':[1,2,3],'name':'bean','number':5}"));
+
+        assertArrayEquals(new long[]{1,2,3}, bean.getArr());
     }
 
     @Test
