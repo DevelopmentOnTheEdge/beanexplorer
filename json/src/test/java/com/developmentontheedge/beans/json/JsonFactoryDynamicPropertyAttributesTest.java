@@ -110,6 +110,11 @@ public class JsonFactoryDynamicPropertyAttributesTest
 
         dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, null);
         assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(tagList.name()));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, new String[][]{});
+
+        assertEquals("[]",
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(tagList.name())));
     }
 
     @Test
