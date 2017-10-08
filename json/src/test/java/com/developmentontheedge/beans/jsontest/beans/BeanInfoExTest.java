@@ -1,4 +1,4 @@
-package com.developmentontheedge.beans.jsontest;
+package com.developmentontheedge.beans.jsontest.beans;
 
 import com.developmentontheedge.beans.BeanInfoEx;
 import com.developmentontheedge.beans.annot.PropertyDescription;

@@ -4,6 +4,7 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -110,6 +111,11 @@ public class JsonFactoryDynamicPropertyAttributesTest
 
         dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, null);
         assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(tagList.name()));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, new String[][]{});
+
+        assertEquals("[]",
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(tagList.name())));
     }
 
     @Test
@@ -175,6 +181,25 @@ public class JsonFactoryDynamicPropertyAttributesTest
         dynamicProperty.setAttribute(BeanInfoConstants.GROUP_ID, 1);
 
         assertEquals("{'displayName':'Name','groupId':'1'}",
+                oneQuotes( JsonFactory.dynamicPropertyMeta(dynamicProperty).toString()));
+    }
+
+    @Test
+    public void testDefaultValue()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.DEFAULT_VALUE, "test");
+
+        assertEquals("{'displayName':'Name','defaultValue':'test'}",
+                oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).toString()));
+    }
+
+    @Test
+    @Ignore
+    public void testDefaultValueArray()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.DEFAULT_VALUE, new String[]{"test", "test2"});
+
+        assertEquals("{'displayName':'Name','defaultValue':'test'}",
                 oneQuotes( JsonFactory.dynamicPropertyMeta(dynamicProperty).toString()));
     }
 
