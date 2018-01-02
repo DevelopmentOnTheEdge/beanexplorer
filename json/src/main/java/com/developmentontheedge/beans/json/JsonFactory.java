@@ -403,11 +403,11 @@ public class JsonFactory
                 {
                     JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
                     JsonArrayBuilder arrayBuilder2 = Json.createArrayBuilder();
-                    if (tagsObject instanceof String[][])
+                    if (tagsObject instanceof Object[][])
                     {
-                        for (String[] tag : ((String[][]) tagsObject))
+                        for (Object[] tag : ((Object[][]) tagsObject))
                         {
-                            arrayBuilder.add(arrayBuilder2.add(tag[0]).add(tag[1]).build());
+                            arrayBuilder.add(arrayBuilder2.add(tag[0].toString()).add(tag[1].toString()).build());
                         }
                     }
                     else if (tagsObject instanceof Map<?,?>)
