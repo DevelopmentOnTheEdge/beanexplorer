@@ -369,6 +369,8 @@ public class JsonFactory
         addAttr(json, property, labelField);
         addAttr(json, property, cssClasses);
         addAttr(json, property, columnSize);
+        addAttr(json, property, inputSize);
+        addAttr(json, property, placeholder);
         addAttr(json, property, status);
         addAttr(json, property, message);
         addAttr(json, property, defaultValue);

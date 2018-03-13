@@ -27,7 +27,9 @@ enum JsonPropertyAttributes
     labelField(BeanInfoConstants.LABEL_FIELD, Boolean.class),
 
     columnSize(BeanInfoConstants.COLUMN_SIZE_ATTR, Object.class),
+    inputSize(BeanInfoConstants.INPUT_SIZE_ATTR, Object.class),
     cssClasses(BeanInfoConstants.CSS_CLASSES, String.class),
+    placeholder(BeanInfoConstants.PLACEHOLDER, String.class),
 
     defaultValue(BeanInfoConstants.DEFAULT_VALUE, Object.class),
     validationRules(BeanInfoConstants.VALIDATION_RULES, POJOorListOfPOJO.class),

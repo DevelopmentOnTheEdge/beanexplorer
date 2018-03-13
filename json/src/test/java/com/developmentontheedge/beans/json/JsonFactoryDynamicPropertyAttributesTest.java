@@ -100,6 +100,30 @@ public class JsonFactoryDynamicPropertyAttributesTest
     }
 
     @Test
+    public void testInputSize()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.INPUT_SIZE_ATTR, 30);
+        assertEquals("'30'", oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(inputSize.name())));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.INPUT_SIZE_ATTR, "30");
+        assertEquals("'30'", oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(inputSize.name())));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.INPUT_SIZE_ATTR, null);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(inputSize.name()));
+    }
+
+    @Test
+    public void testPlaceholder()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.PLACEHOLDER, "foo");
+        assertEquals("'foo'", oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).get(placeholder.name()).toString()));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.PLACEHOLDER, null);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(placeholder.name()));
+    }
+
+
+    @Test
     public void testTagList()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, new String[][]{
