@@ -271,7 +271,7 @@ public interface BeanInfoConstants
 
     String VALIDATION_RULES = "validation-rules";
 
-    String PLACE_HOLDER = "place-holder";
+    String PLACEHOLDER = "placeholder";
 }
 
 
