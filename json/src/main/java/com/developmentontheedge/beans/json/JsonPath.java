@@ -5,9 +5,9 @@ public class JsonPath
 {
     private String path = "";
 
-    public JsonPath(){}
+    JsonPath(){}
 
-    public JsonPath(String path){
+    private JsonPath(String path){
         this.path = path;
     }
 
