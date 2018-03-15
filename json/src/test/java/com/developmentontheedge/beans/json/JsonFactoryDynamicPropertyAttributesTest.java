@@ -237,8 +237,8 @@ public class JsonFactoryDynamicPropertyAttributesTest
         assertEquals("{" +
                         "'displayName':'Name'," +
                         "'reloadOnChange':true," +
-                        "'groupName':'foo'," +
-                        "'groupId':'1'" +
+                        "'groupId':'1'," +
+                        "'groupName':'foo'" +
             "}",oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).toString()));
     }
 }

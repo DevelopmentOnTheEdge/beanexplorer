@@ -19,8 +19,10 @@ enum JsonPropertyAttributes
     reloadOnFocusOut(BeanInfoConstants.RELOAD_ON_FOCUS_OUT, Boolean.class),
     tagList(BeanInfoConstants.TAG_LIST_ATTR, Array.class),
     extraAttrs(BeanInfoConstants.EXTRA_ATTRS, Array.class),
-    groupName(BeanInfoConstants.GROUP_NAME, String.class),
+
     groupId(BeanInfoConstants.GROUP_ID, Object.class),
+    groupName(BeanInfoConstants.GROUP_NAME, String.class),
+    groupClasses(BeanInfoConstants.GROUP_CLASSES, String.class),
 
     multipleSelectionList(BeanInfoConstants.MULTIPLE_SELECTION_LIST, Boolean.class),
     passwordField(BeanInfoConstants.PASSWORD_FIELD, Boolean.class),

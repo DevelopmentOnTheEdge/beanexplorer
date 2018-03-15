@@ -214,6 +214,9 @@ public interface BeanInfoConstants
     /** Specifies name of group to which the property belongs. */
     String GROUP_NAME = "group-name";
 
+    /** Specifies css classes of group to which the property belongs. */
+    String GROUP_CLASSES = "group-classes";
+
     /** Specifies that grouped properties must be initially cosed. */
     String GROUP_INITIALLY_CLOSED = "group-initially-closed";
 
