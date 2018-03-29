@@ -13,7 +13,6 @@
     <groupId>com.developmentontheedge</groupId>
     <artifactId>BeanExplorer</artifactId>
     <version>0.0.1</version>
-    <relativePath>..</relativePath>
   </parent>
 
   <properties>

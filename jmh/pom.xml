@@ -11,8 +11,7 @@
   <parent>
     <groupId>com.developmentontheedge</groupId>
     <artifactId>BeanExplorer</artifactId>
-    <version>0.0.1</version>
-    <relativePath>..</relativePath>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
 
   <properties>
