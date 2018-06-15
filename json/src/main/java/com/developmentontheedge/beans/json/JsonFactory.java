@@ -413,6 +413,13 @@ public class JsonFactory
                             arrayBuilder.add(arrayBuilder2.add(tag[0].toString()).add(tag[1].toString()).build());
                         }
                     }
+                    else if (tagsObject instanceof Object[])
+                    {
+                        for (Object tag : ((Object[]) tagsObject))
+                        {
+                            arrayBuilder.add(arrayBuilder2.add(tag.toString()).add(tag.toString()).build());
+                        }
+                    }
                     else if (tagsObject instanceof Map<?,?>)
                     {
                         for (Map.Entry tag : ((Map<?,?>) tagsObject).entrySet())

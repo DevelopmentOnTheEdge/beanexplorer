@@ -143,6 +143,16 @@ public class JsonFactoryDynamicPropertyAttributesTest
     }
 
     @Test
+    public void testTagFromOneDimensionalArray()
+    {
+        String[] courtesies = new String[] {"Mr.", "Dr.", "Ms.", "Mrs.", "Miss", "Prof.", "Sir"};
+        dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, courtesies);
+
+        assertEquals("[['Mr.','Mr.'],['Dr.','Dr.'],['Ms.','Ms.'],['Mrs.','Mrs.'],['Miss','Miss'],['Prof.','Prof.'],['Sir','Sir']]",
+                oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(tagList.name())));
+    }
+
+    @Test
     public void testExtraAttributes()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.EXTRA_ATTRS, new String[][]{
