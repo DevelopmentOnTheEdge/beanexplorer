@@ -39,7 +39,6 @@ public class ColorEditor extends CustomEditorSupport
      * Paint a representation of the value into a given area of screen
      * real estate.  Note that the propertyEditor is responsible for doing
      * its own clipping so that it fits into the given rectangle.
-     * <p>
      * If the PropertyEditor doesn't honor paint requests (see isPaintable)
      * this method should be a silent noop.
      * @param gfx  Graphics object to paint into.

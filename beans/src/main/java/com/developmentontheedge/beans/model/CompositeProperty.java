@@ -48,7 +48,6 @@ public class CompositeProperty extends Property
 
     /**
      * Creates new CompositeProperty for the specified component.
-     * <p>
      * In general, this function should be called by ComponentFactory only.
      */
     protected CompositeProperty(Property parent, Object owner, PropertyDescriptor descriptor, BeanInfo beanInfo, ComponentFactory.Policy policy)
