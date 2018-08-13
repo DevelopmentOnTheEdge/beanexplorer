@@ -247,43 +247,43 @@ public class JsonFactory
         }
     }
 
-    private static boolean addValueToJsonObject(JsonObjectBuilder json, String name, Object value)
+    private static void addValueToJsonObject(JsonObjectBuilder json, String name, Object value)
     {
-        if( value == null ){return true;}
+        if( value == null ){return;}
 
         Class<?> klass = value.getClass();
-        if( klass == String.class ){    json.add(name, (String) value); return true;}
-        if( klass == Double.class ){    json.add(name, (double)value ); return true;}
-        if( klass == Long.class ){      json.add(name, (long)value ); return true;}
-        if( klass == Integer.class ){   json.add(name, (int)value ); return true;}
-        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return true;}
-        if( klass == Float.class ){     json.add(name, (float)value ); return true;}
-        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return true;}
-        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return true;}
+        if( klass == String.class ){    json.add(name, (String) value); return;}
+        if( klass == Double.class ){    json.add(name, (double)value ); return;}
+        if( klass == Long.class ){      json.add(name, (long)value ); return;}
+        if( klass == Integer.class ){   json.add(name, (int)value ); return;}
+        if( klass == Boolean.class ){   json.add(name, (boolean)value ); return;}
+        if( klass == Float.class ){     json.add(name, (float)value ); return;}
+        if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return;}
+        if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return;}
 
         if( klass == Date.class || klass == Timestamp.class )
         {
-            json.add(name, value.toString() ); return true;
+            json.add(name, value.toString() ); return;
         }
 
         if( klass == java.util.Date.class )
         {
-            json.add(name, new Date(((java.util.Date)value).getTime()).toString() ); return true;
+            json.add(name, new Date(((java.util.Date)value).getTime()).toString() ); return;
         }
 
         if( value instanceof JsonValue )
         {
-            json.add(name, (JsonValue)value); return true;
+            json.add(name, (JsonValue)value); return;
         }
 
         if( value instanceof DynamicPropertySet)
         {
-            json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return true;
+            json.add(name, dpsValuesBuilder((DynamicPropertySet)value));return;
         }
 
         if( Color.class.isAssignableFrom( value.getClass() ) )
         {
-            json.add(name, encodeColor((Color)value));return true;
+            json.add(name, encodeColor((Color)value));return;
         }
 
         if( value instanceof Object[])
@@ -291,54 +291,52 @@ public class JsonFactory
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             for (Object aValueArr : (Object[]) value) addValueToJsonArray(arrayBuilder, aValueArr);
             json.add(name, arrayBuilder.build());
-            return true;
+            return;
         }
 
         json.add(name, value.toString());
-        return true;
     }
 
-    static boolean addValueToJsonArray(JsonArrayBuilder json, Object value)
+    static void addValueToJsonArray(JsonArrayBuilder json, Object value)
     {
-        if( value == null ){return true; }
+        if( value == null ){return; }
 
         Class<?> klass = value.getClass();
-        if( klass == String.class ){    json.add((String) value); return true;}
-        if( klass == Double.class ){    json.add((double)value ); return true;}
-        if( klass == Long.class ){      json.add((long)value ); return true;}
-        if( klass == Integer.class ){   json.add((int)value ); return true;}
-        if( klass == Boolean.class ){   json.add((boolean)value ); return true;}
-        if( klass == Float.class ){     json.add((float)value ); return true;}
-        if( klass == BigInteger.class ){json.add((BigInteger) value ); return true;}
-        if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return true;}
+        if( klass == String.class ){    json.add((String) value); return;}
+        if( klass == Double.class ){    json.add((double)value ); return;}
+        if( klass == Long.class ){      json.add((long)value ); return;}
+        if( klass == Integer.class ){   json.add((int)value ); return;}
+        if( klass == Boolean.class ){   json.add((boolean)value ); return;}
+        if( klass == Float.class ){     json.add((float)value ); return;}
+        if( klass == BigInteger.class ){json.add((BigInteger) value ); return;}
+        if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return;}
 
         if( klass == Date.class || klass == Timestamp.class )
         {
-            json.add( value.toString() ); return true;
+            json.add( value.toString() ); return;
         }
 
         if( klass == java.util.Date.class )
         {
-            json.add(new Date(((java.util.Date)value).getTime()).toString() ); return true;
+            json.add(new Date(((java.util.Date)value).getTime()).toString() ); return;
         }
 
         if( value instanceof JsonValue )
         {
-            json.add((JsonValue)value); return true;
+            json.add((JsonValue)value); return;
         }
 
         if( value instanceof DynamicPropertySet)
         {
-            json.add(dpsValuesBuilder((DynamicPropertySet)value));return true;
+            json.add(dpsValuesBuilder((DynamicPropertySet)value));return;
         }
 
         if( Color.class.isAssignableFrom( value.getClass() ) )
         {
-            json.add(encodeColor((Color)value));return true;
+            json.add(encodeColor((Color)value));return;
         }
 
         json.add(value.toString());
-        return true;
     }
 
     private static JsonObjectBuilder dpsValuesBuilder(DynamicPropertySet dps)
