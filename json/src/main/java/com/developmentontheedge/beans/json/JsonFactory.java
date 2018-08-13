@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -260,8 +261,15 @@ public class JsonFactory
         if( klass == BigInteger.class ){json.add(name, (BigInteger) value ); return true;}
         if( klass == BigDecimal.class ){json.add(name, (BigDecimal) value ); return true;}
 
-        if( klass == Date.class ){json.add(name, value.toString() ); return true;}
-        if( klass == java.util.Date.class ){json.add(name, new java.sql.Date(((java.util.Date)value).getTime()).toString() ); return true;}
+        if( klass == Date.class || klass == Timestamp.class )
+        {
+            json.add(name, value.toString() ); return true;
+        }
+
+        if( klass == java.util.Date.class )
+        {
+            json.add(name, new Date(((java.util.Date)value).getTime()).toString() ); return true;
+        }
 
         if( value instanceof JsonValue )
         {
@@ -304,8 +312,15 @@ public class JsonFactory
         if( klass == BigInteger.class ){json.add((BigInteger) value ); return true;}
         if( klass == BigDecimal.class ){json.add((BigDecimal) value ); return true;}
 
-        if( klass == Date.class ){json.add(value.toString() ); return true;}
-        if( klass == java.util.Date.class ){json.add(new java.sql.Date(((java.util.Date)value).getTime()).toString() ); return true;}
+        if( klass == Date.class || klass == Timestamp.class )
+        {
+            json.add( value.toString() ); return true;
+        }
+
+        if( klass == java.util.Date.class )
+        {
+            json.add(new Date(((java.util.Date)value).getTime()).toString() ); return true;
+        }
 
         if( value instanceof JsonValue )
         {
