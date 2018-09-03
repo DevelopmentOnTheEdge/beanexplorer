@@ -132,6 +132,11 @@ public class DynamicPropertySetDecorator implements DynamicPropertySet
         return delegateDps.iterator();
     }
 
+    public Map<String, Object> asModifiableMap()
+    {
+        return delegateDps.asModifiableMap();
+    }
+
     public Map<String, Object> asMap()
     {
         return delegateDps.asMap();

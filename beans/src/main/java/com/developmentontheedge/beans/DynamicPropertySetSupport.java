@@ -479,7 +479,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public Map<String, Object> asMap()
+    public Map<String, Object> asModifiableMap()
     {
         LinkedHashMap<String, Object> viewMap = new LinkedHashMap<>( properties.size() );
         for( DynamicProperty prop : properties )
@@ -487,7 +487,13 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
             viewMap.put( prop.getName(), prop.getValue() );
         }
 
-        return Collections.unmodifiableMap( viewMap );
+        return viewMap;
+    }
+
+    @Override
+	public Map<String, Object> asMap()
+    {
+        return Collections.unmodifiableMap( asModifiableMap() );
     }
 
     public void setAttributeToAllChildren( String attrName, Object attrValue )

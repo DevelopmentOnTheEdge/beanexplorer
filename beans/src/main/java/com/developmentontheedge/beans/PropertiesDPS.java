@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -185,13 +186,21 @@ public class PropertiesDPS extends Option implements DynamicPropertySet
     }
 
     @Override
-    public Map<String, Object> asMap()
+    public Map<String, Object> asModifiableMap()
     {
         @SuppressWarnings ( "unchecked" )
         Map<String, Object> map = (Map<String, Object>)(Map<?,?>)properties;
         if(readOnly)
             map = Collections.unmodifiableMap( map );
         return map;
+    }
+
+    @Override
+    public Map<String, Object> asMap()
+    {
+        if(readOnly)
+            return Collections.unmodifiableMap( asModifiableMap() );
+        return asModifiableMap();
     }
 
     @Override

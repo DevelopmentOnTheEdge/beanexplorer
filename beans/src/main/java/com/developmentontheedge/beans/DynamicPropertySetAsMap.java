@@ -113,7 +113,7 @@ public class DynamicPropertySetAsMap extends AbstractDynamicPropertySet
     }
 
     @Override
-    public Map<String, Object> asMap()
+    public Map<String, Object> asModifiableMap()
     {
         HashMap<String, Object> viewMap = new HashMap<>( propertiesMap.size() );
         for (Map.Entry<String, DynamicProperty> entry : propertiesMap.entrySet()) {
@@ -121,7 +121,13 @@ public class DynamicPropertySetAsMap extends AbstractDynamicPropertySet
             viewMap.put(entry.getKey(), prop.getValue());
         }
 
-        return Collections.unmodifiableMap( viewMap );
+        return viewMap;
+    }
+
+    @Override
+    public Map<String, Object> asMap()
+    {
+        return Collections.unmodifiableMap( asModifiableMap() );
     }
 
     /** Adds the specified property. */

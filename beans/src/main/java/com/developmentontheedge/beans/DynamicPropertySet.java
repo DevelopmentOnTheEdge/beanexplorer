@@ -117,6 +117,8 @@ public interface DynamicPropertySet extends Serializable, Cloneable, Iterable<Dy
 
     Iterator<DynamicProperty> iterator();
 
+    Map<String, Object> asModifiableMap();
+
     /**
      * Returns an unmodifiable view of this set as a map.
      */
