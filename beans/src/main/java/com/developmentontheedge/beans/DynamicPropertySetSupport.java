@@ -1,23 +1,21 @@
 package com.developmentontheedge.beans;
 
+import com.developmentontheedge.beans.log.Logger;
+
 import java.beans.PropertyDescriptor;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-
-import com.developmentontheedge.beans.log.Logger;
 
 /**
  * Default implementation of DynamicPropertySet
@@ -483,12 +481,10 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     @Override
 	public Map<String, Object> asMap()
     {
-        HashMap<String, Object> viewMap = new HashMap<>( properties.size() );
-        for( Iterator<Map.Entry<String, DynamicProperty>> entries = propHash.entrySet().iterator(); entries.hasNext(); )
+        LinkedHashMap<String, Object> viewMap = new LinkedHashMap<>( properties.size() );
+        for( DynamicProperty prop : properties )
         {
-            Map.Entry<String, DynamicProperty> entry = entries.next();
-            DynamicProperty prop = entry.getValue();
-            viewMap.put( entry.getKey(), prop.getValue() );
+            viewMap.put( prop.getName(), prop.getValue() );
         }
 
         return Collections.unmodifiableMap( viewMap );
