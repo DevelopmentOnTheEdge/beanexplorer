@@ -16,7 +16,6 @@ enum JsonPropertyAttributes
     rawValue(BeanInfoConstants.RAW_VALUE, Boolean.class),
     readOnly(BeanInfoConstants.READ_ONLY, Boolean.class),
     reloadOnChange(BeanInfoConstants.RELOAD_ON_CHANGE, Boolean.class),
-    reloadOnFocusOut(BeanInfoConstants.RELOAD_ON_FOCUS_OUT, Boolean.class),
     tagList(BeanInfoConstants.TAG_LIST_ATTR, Array.class),
     extraAttrs(BeanInfoConstants.EXTRA_ATTRS, Array.class),
 
