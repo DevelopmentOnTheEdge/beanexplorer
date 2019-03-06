@@ -18,6 +18,7 @@ public class DPBuilder
     public Boolean reloadOnChange = null;
     public Boolean rawValue = null;
     public Boolean multiple = null;
+    public Boolean passwordField = null;
 
     public String groupID = null;
     public String groupName = null;
@@ -26,6 +27,7 @@ public class DPBuilder
     public String cssClasses = null;
     public String status = null;
     public String message = null;
+    public String placeholder = null;
 
     public int size = -1;
     public int columnSize = -1;
@@ -64,6 +66,7 @@ public class DPBuilder
         if (reloadOnChange != null) attr(BeanInfoConstants.RELOAD_ON_CHANGE, reloadOnChange);
         if (rawValue != null) attr(BeanInfoConstants.RAW_VALUE, rawValue);
         if (multiple != null) attr(BeanInfoConstants.MULTIPLE_SELECTION_LIST, multiple);
+        if (passwordField != null) attr(BeanInfoConstants.PASSWORD_FIELD, passwordField);
 
         if (groupID != null) attr(BeanInfoConstants.GROUP_ID, groupID);
         if (groupName != null) attr(BeanInfoConstants.GROUP_NAME, groupName);
@@ -72,6 +75,7 @@ public class DPBuilder
         if (cssClasses != null) attr(BeanInfoConstants.CSS_CLASSES, cssClasses);
         if (status != null) attr(BeanInfoConstants.STATUS, status);
         if (message != null) attr(BeanInfoConstants.MESSAGE, message);
+        if (placeholder != null) attr(BeanInfoConstants.PLACEHOLDER, placeholder);
 
         if (size != -1) attr(BeanInfoConstants.INPUT_SIZE_ATTR, size);
         if (columnSize != -1) attr(BeanInfoConstants.COLUMN_SIZE_ATTR, columnSize);
