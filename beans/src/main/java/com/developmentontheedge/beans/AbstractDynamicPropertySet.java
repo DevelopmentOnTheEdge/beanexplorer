@@ -5,7 +5,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyDescriptor;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
