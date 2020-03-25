@@ -13,26 +13,26 @@ import java.util.StringTokenizer;
 public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
 {
     private static final long serialVersionUID = 1L;
-	protected PropertyChangeSupport pcSupport = null;
+    protected PropertyChangeSupport pcSupport = null;
     
     abstract protected DynamicProperty findProperty( String name );
 
     @Override
-	public Iterator<DynamicProperty> iterator()
+    public Iterator<DynamicProperty> iterator()
     {
         return propertyIterator();
     }
 
     /** @return value for the property with specified name. */
     @Override
-	public Object getValue(String name)
+    public Object getValue(String name)
     {
         DynamicProperty property = findProperty(name);
         return property != null ? property.getValue() : null;
     }
 
     @Override
-	public String getValueAsString(String name)
+    public String getValueAsString(String name)
     {
         Object val = getValue( name ); 
         if( val == null )
@@ -49,8 +49,13 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
         return Long.parseLong(val.toString());
     }
 
+    public <T> T cast( String name, Class<T> clazz )
+    {
+        return clazz.cast( getValue( name ) ); 
+    }
+
     @Override
-	public DynamicProperty getProperty(String name)
+    public DynamicProperty getProperty(String name)
     {
         return findProperty( name );
     }
@@ -67,7 +72,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
                 String propName = st.nextToken();
                 if( ret != null )
                 {
-                    bean = ( DynamicPropertySet )ret.getValue();
+                    bean = ret.getValue() instanceof DynamicPropertySet ? ( DynamicPropertySet )ret.getValue() : null;
                 } 
                 if( bean != null )
                 {
@@ -104,7 +109,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
     }
 
     @Override
-	public Object clone()
+    public Object clone()
     {
         try
         {
@@ -119,7 +124,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
     //// Listeners
     
     @Override
-	public void addPropertyChangeListener(PropertyChangeListener listener)
+    public void addPropertyChangeListener(PropertyChangeListener listener)
     {
         if(pcSupport == null)
             pcSupport = new PropertyChangeSupport(this);
@@ -128,7 +133,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
     }
 
     @Override
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
     {
         if(pcSupport == null)
             pcSupport = new PropertyChangeSupport(this);
@@ -137,28 +142,28 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
     }
 
     @Override
-	public void removePropertyChangeListener(PropertyChangeListener listener)
+    public void removePropertyChangeListener(PropertyChangeListener listener)
     {
         if(pcSupport != null)
             pcSupport.removePropertyChangeListener(listener);
     }
 
     @Override
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
     {
         if(pcSupport != null)
             pcSupport.removePropertyChangeListener(propertyName, listener);
     }
 
     @Override
-	public void firePropertyChange(String propertyName, Object oldValue, Object newValue)
+    public void firePropertyChange(String propertyName, Object oldValue, Object newValue)
     {
         if(pcSupport != null)
             pcSupport.firePropertyChange(propertyName, oldValue, newValue);
     }
 
     @Override
-	public void firePropertyChange(PropertyChangeEvent evt)
+    public void firePropertyChange(PropertyChangeEvent evt)
     {
         if(pcSupport != null)
             pcSupport.firePropertyChange(evt);
@@ -170,7 +175,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
      * @return true if there are ore or more listeners for the given property
      */
     @Override
-	public boolean hasListeners(String propertyName)
+    public boolean hasListeners(String propertyName)
     {
         if(pcSupport == null)
             return false;
@@ -182,7 +187,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
      * @return type for the property with specified name. 
      */
     @Override
-	public Class<?> getType(String name)
+    public Class<?> getType(String name)
     {
         DynamicProperty property = findProperty(name);
         return property != null ? property.getType() : null;
@@ -192,7 +197,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
      * @return descriptor for the property with specified name. 
      */
     @Override
-	public PropertyDescriptor getPropertyDescriptor(String name)
+    public PropertyDescriptor getPropertyDescriptor(String name)
     {
         DynamicProperty property = findProperty(name);
         if(property != null)
@@ -202,7 +207,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
     }
 
     @Override
-	public void setPropertyAttribute( String propName, String attrName, Object attrValue )
+    public void setPropertyAttribute( String propName, String attrName, Object attrValue )
     {
         DynamicProperty property = findProperty( propName );
         if( property != null )
@@ -215,7 +220,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
      * @return true if DynamicPropertySet is empty
      */
     @Override
-	public boolean isEmpty()
+    public boolean isEmpty()
     {
         return size() == 0;
     }
@@ -228,7 +233,7 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
      * @pending firePropertyChange
      */
     @Override
-	public void setValue( String name, Object value )
+    public void setValue( String name, Object value )
     {
         DynamicProperty property = findProperty( name );
         if( property == null )
@@ -241,5 +246,120 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
         {
             firePropertyChange( new PropertyChangeEvent( this, name, oldValue, value ) );
         }
+    }
+
+    protected static String makeJSONPropName( String name )
+    {
+        return "\"" + name + "\"";
+    }
+
+/*
+    protected static String makeJSONStringValue( String value )
+    {
+        if( value == null )
+        {
+            return value;
+        }
+        value = value.replace( "\\", "\\\\" );
+        value = value.replace( "\"", "\\\"" );
+        value = value.replace( "\n", "\\n" );
+        value = value.replace( "\r", "\\r" );
+        value = value.replace( "\t", "\\t" );
+        value = value.replace( "\b", "\\b" );
+        value = value.replace( "\f", "\\f" );
+        value = value.replace( "/", "\\/" );
+        return makeJSONPropName( value );
+    }
+*/
+
+    public static String makeJSONStringValue( String string ) 
+    {
+        if( string == null )
+        {
+            return null;
+        }
+        if( string.length() == 0 ) 
+        {
+            return "\"\"";
+        }
+
+        char b;
+        char c = 0;
+        int i;
+        int len = string.length();
+        StringBuffer sb = new StringBuffer( len * 2 );
+        String t;
+        char[] chars = string.toCharArray();
+        char[] buffer = new char[1030];
+        int bufferIndex = 0;
+        sb.append( '"' );
+        for( i = 0; i < len; i += 1 ) 
+        {
+           if( bufferIndex > 1024 ) 
+           {
+              sb.append( buffer, 0, bufferIndex );
+              bufferIndex = 0;
+           }
+           b = c;
+           c = chars[i];
+           switch( c ) 
+           {
+              case '\\':
+              case '"':
+                 buffer[bufferIndex++] = '\\';
+                 buffer[bufferIndex++] = c;
+                 break;
+              case '/':
+                 if( b == '<' ) 
+                 {
+                    buffer[bufferIndex++] = '\\';
+                 }
+                 buffer[bufferIndex++] = c;
+                 break;
+              default:
+                 if( c < ' ' ) 
+                 {
+                    switch( c ) 
+                    {
+                       case '\b':
+                          buffer[bufferIndex++] = '\\';
+                          buffer[bufferIndex++] = 'b';
+                          break;
+                       case '\t':
+                          buffer[bufferIndex++] = '\\';
+                          buffer[bufferIndex++] = 't';
+                          break;
+                       case '\n':
+                          buffer[bufferIndex++] = '\\';
+                          buffer[bufferIndex++] = 'n';
+                          break;
+                       case '\f':
+                          buffer[bufferIndex++] = '\\';
+                          buffer[bufferIndex++] = 'f';
+                          break;
+                       case '\r':
+                          buffer[bufferIndex++] = '\\';
+                          buffer[bufferIndex++] = 'r';
+                          break;
+                       default:
+                          t = "000" + Integer.toHexString( c );
+                          int tLength = t.length();
+                          buffer[bufferIndex++] = '\\';
+                          buffer[bufferIndex++] = 'u';
+                          buffer[bufferIndex++] = t.charAt( tLength - 4 );
+                          buffer[bufferIndex++] = t.charAt( tLength - 3 );
+                          buffer[bufferIndex++] = t.charAt( tLength - 2 );
+                          buffer[bufferIndex++] = t.charAt( tLength - 1 );
+                    }
+                 } 
+                 else 
+                 {
+                    buffer[bufferIndex++] = c;
+                 }
+           }
+        }
+        sb.append( buffer, 0, bufferIndex );
+        sb.append( '"' );
+        return sb.toString();
     }
 }
