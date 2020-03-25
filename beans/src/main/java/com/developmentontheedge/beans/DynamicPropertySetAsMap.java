@@ -25,7 +25,7 @@ import com.developmentontheedge.beans.log.Logger;
 public class DynamicPropertySetAsMap extends AbstractDynamicPropertySet
 {
     private static final long serialVersionUID = 1L;
-	protected Map<String, DynamicProperty> propertiesMap;
+    protected Map<String, DynamicProperty> propertiesMap;
 
     public DynamicPropertySetAsMap()
     {
@@ -108,7 +108,8 @@ public class DynamicPropertySetAsMap extends AbstractDynamicPropertySet
     }
 
     @Override
-    public Spliterator<DynamicProperty> spliterator() {
+    public Spliterator<DynamicProperty> spliterator()
+    {
         return propertiesMap.values().spliterator();
     }
 
@@ -116,9 +117,10 @@ public class DynamicPropertySetAsMap extends AbstractDynamicPropertySet
     public Map<String, Object> asMap()
     {
         HashMap<String, Object> viewMap = new HashMap<>( propertiesMap.size() );
-        for (Map.Entry<String, DynamicProperty> entry : propertiesMap.entrySet()) {
+        for (Map.Entry<String, DynamicProperty> entry : propertiesMap.entrySet())
+        {
             DynamicProperty prop = entry.getValue();
-            viewMap.put(entry.getKey(), prop.getValue());
+            viewMap.put( entry.getKey(), prop.getValue() );
         }
 
         return Collections.unmodifiableMap( viewMap );
