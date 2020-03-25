@@ -25,7 +25,7 @@ import java.util.TreeMap;
 public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
 {
     private static final long serialVersionUID = 1L;
-	/**
+    /**
      * Vector of properties.
      */
     protected ArrayList<DynamicProperty> properties = new ArrayList<>();
@@ -89,7 +89,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
      * NOTE!!!! findProperty MUST only use hashes - no other actions!
      */
     @Override
-	protected DynamicProperty findProperty( String name )
+    protected DynamicProperty findProperty( String name )
     {
         DynamicProperty ret = propHash.get( name );
         if( ret == null && useAddIndexes )
@@ -100,7 +100,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public void renameProperty( String from, String to )
+    public void renameProperty( String from, String to )
     {
         DynamicProperty property = findProperty( from );
         if( property == null )
@@ -139,7 +139,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
      * Adds the specified property.
      */
     @Override
-	public void add( DynamicProperty property )
+    public void add( DynamicProperty property )
     {
         addProperty( property );
     }
@@ -153,7 +153,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public boolean addBefore( String propName, DynamicProperty property )
+    public boolean addBefore( String propName, DynamicProperty property )
     {
         DynamicProperty beforeProperty = findProperty( propName );
         int ind = properties.indexOf( beforeProperty );
@@ -170,7 +170,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public boolean addAfter( String propName, DynamicProperty property )
+    public boolean addAfter( String propName, DynamicProperty property )
     {
         DynamicProperty afterProperty = findProperty( propName );
         int ind = properties.indexOf( afterProperty );
@@ -197,13 +197,13 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
      * Checks if property does exist in this set
      */
     @Override
-	public boolean contains( DynamicProperty property )
+    public boolean contains( DynamicProperty property )
     {
         return properties.contains( property );
     }
 
     @Override
-	public Object remove( String name )
+    public Object remove( String name )
     {
         DynamicProperty property = findProperty( name );
         if( properties.remove( property ) )
@@ -221,7 +221,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public boolean moveTo( String name, int index )
+    public boolean moveTo( String name, int index )
     {
         if( index > properties.size() - 1 )
         {
@@ -267,7 +267,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public boolean replaceWith( String name, DynamicProperty prop )
+    public boolean replaceWith( String name, DynamicProperty prop )
     {
         DynamicProperty old = findProperty( name );
         if( old == null )
@@ -412,7 +412,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public Object clone()
+    public Object clone()
     {
         DynamicPropertySetSupport retVal = (DynamicPropertySetSupport)super.clone();
         retVal.pcSupport = null;
@@ -439,26 +439,26 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public Iterator<String> nameIterator()
+    public Iterator<String> nameIterator()
     {
         return new Iterator<String>()
         {
             int current = 0;
 
             @Override
-			public boolean hasNext()
+            public boolean hasNext()
             {
                 return current < properties.size();
             }
 
             @Override
-			public String next()
+            public String next()
             {
                 return ( properties.get( current++ ) ).getName();
             }
 
             @Override
-			public void remove()
+            public void remove()
             {
                 throw new UnsupportedOperationException(
                         "DynamicPropertySetSupport.nameItearator() does not support remove()" );
@@ -467,7 +467,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public Iterator<DynamicProperty> propertyIterator()
+    public Iterator<DynamicProperty> propertyIterator()
     {
         return properties.iterator();
     }
@@ -479,7 +479,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public Map<String, Object> asMap()
+    public Map<String, Object> asMap()
     {
         LinkedHashMap<String, Object> viewMap = new LinkedHashMap<>( properties.size() );
         for( DynamicProperty prop : properties )
@@ -497,6 +497,22 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         {
             prop.setAttribute( attrName, attrValue );
             prop.setAttributeToAllChildren( attrName, attrValue );
+        } 
+    }
+
+
+    public void setAttributeToAllChildrenIfEmpty( String attrName, Object attrValue )
+        throws Exception
+    {
+        for( DynamicProperty prop : this )
+        {
+            //System.out.println( "prop.getAttribute( " + attrName + " ) = '" + prop.getAttribute( attrName ) + "'" );
+            if( prop.getAttribute( attrName ) == null )
+            {            
+                prop.setAttribute( attrName, attrValue );
+            }
+
+            prop.setAttributeToAllChildrenIfEmpty( attrName, attrValue );
         } 
     }
 
@@ -569,7 +585,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public String toString()
+    public String toString()
     {
         StringWriter out = new StringWriter();
         printProperties( out, "" );
@@ -640,7 +656,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     @Override
-	public int size()
+    public int size()
     {
         return properties.size();
     }

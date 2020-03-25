@@ -18,7 +18,45 @@ import java.util.Set;
 public class DynamicProperty implements Serializable
 {
     private static final long serialVersionUID = 1L;
-	private DynamicPropertySet parent;
+    private DynamicPropertySet parent;
+
+    public static final String XML_ATTRIBUTES = "xml-attributes";
+    public static final String XML_ATTRIBUTES_ARRAY = "xml-attributes-array";
+
+    private final static String[] digits = new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+    public static Object reuseValue( Object value )
+    {
+        if( !( value instanceof String ) )
+        {
+            return value;
+        }
+
+        String vals = ( String )value;
+        if( vals.length() == 1 && Character.isDigit( vals.charAt( 0 ) ) )
+        {
+            return digits[ vals.charAt( 0 ) - 48 ];
+        } 
+    
+        for( String sval : new String[]{ 
+             DbStrings.NO, DbStrings.YES, 
+             DbStrings.JS_CLASS, DbStrings.CSS_CLASS, 
+             DbStrings.FILTER,
+             DbStrings.OP_TYPE_JAVA, DbStrings.OP_TYPE_JAVA_DOTNET, 
+             DbStrings.QUERY_TYPE_1D, DbStrings.QUERY_TYPE_1D_UNKNOWN, 
+             DbStrings.ALL_RECORDS_VIEW, DbStrings.SELECTION_VIEW,
+             DbStrings.INSERT, DbStrings.EDIT, DbStrings.CLONE, DbStrings.DELETE, 
+             DbStrings.MALE, DbStrings.FEMALE 
+            } )
+        {
+            if( sval.equals( value ) )
+            {
+                return sval;
+            }
+        } 
+
+        return value;
+    }
 
     /**
      * Constructs the dynamic property with empty value
@@ -105,7 +143,7 @@ public class DynamicProperty implements Serializable
     {
         localName = name;  
         this.type = type;  
-        this.value = value;  
+        this.value = reuseValue( value );  
         setDisplayName( displayName );
         setShortDescription( shortDesc );
     }
@@ -121,7 +159,7 @@ public class DynamicProperty implements Serializable
     {
         this.descriptor = descriptor;
         this.type = type;
-        this.value = value;
+        this.value = reuseValue( value );
     }
 
     /**
@@ -277,10 +315,10 @@ public class DynamicProperty implements Serializable
     public void setValue( Object value )
     {
         Object oldValue = this.value;
-        this.value = value;
+        this.value = reuseValue( value );
         if( parent != null )
         {
-            parent.firePropertyChange( getName(), oldValue, value );
+            parent.firePropertyChange( getName(), oldValue, this.value );
         }
     }
 
@@ -321,6 +359,7 @@ public class DynamicProperty implements Serializable
 
     public void setAttribute( String attrName, Object attrValue )
     {
+        attrValue = reuseValue( attrValue );
         if( descriptor != null )
         {
             descriptor.setValue( attrName, attrValue );
@@ -329,7 +368,7 @@ public class DynamicProperty implements Serializable
 
         if( localAttrs == null )
         {
-            localAttrs = new HashMap<>();
+            localAttrs = new HashMap<String,Object>();
         }
 
         localAttrs.put( attrName, attrValue );
@@ -494,32 +533,41 @@ public class DynamicProperty implements Serializable
     }
 
     public void setAttributeToAllChildren( String attrName, Object attrValue )
-            throws Exception
+        throws Exception
     {
         Object value = this.getValue();
         if( value instanceof DynamicPropertySetSupport )
         {
-            for( DynamicProperty prop: ( DynamicPropertySetSupport )value )
-            {
-                prop.setAttribute( attrName, attrValue );
-            }
             ( ( DynamicPropertySetSupport )value ).setAttributeToAllChildren( attrName, attrValue );
         }
         else if( value instanceof DynamicPropertySetSupport[] )
         {
             for( DynamicPropertySetSupport propBean : ( DynamicPropertySetSupport[] )value )
             {
-                for( DynamicProperty prop: propBean )
-                {
-                    prop.setAttribute( attrName, attrValue );
-                }
                 propBean.setAttributeToAllChildren( attrName, attrValue );
             }
         }
     }
 
+    public void setAttributeToAllChildrenIfEmpty( String attrName, Object attrValue )
+            throws Exception
+    {
+        Object value = this.getValue();
+        if( value instanceof DynamicPropertySetSupport )
+        {
+            ( ( DynamicPropertySetSupport )value ).setAttributeToAllChildrenIfEmpty( attrName, attrValue );
+        }
+        else if( value instanceof DynamicPropertySetSupport[] )
+        {
+            for( DynamicPropertySetSupport propBean : ( DynamicPropertySetSupport[] )value )
+            {
+                propBean.setAttributeToAllChildrenIfEmpty( attrName, attrValue );
+            }
+        }
+    }
+
     @Override
-	public String toString()
+    public String toString()
     {
         return "name: " + getName() + ", type:" + this.type + ", value: " + this.value;
     }
