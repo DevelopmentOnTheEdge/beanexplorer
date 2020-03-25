@@ -1,5 +1,7 @@
 package com.developmentontheedge.beans;
 
+import java.lang.reflect.Array;
+
 import com.developmentontheedge.beans.log.Logger;
 
 import java.beans.PropertyDescriptor;
@@ -339,8 +341,10 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     public static DynamicProperty cloneProperty( DynamicProperty prop )
-        throws java.beans.IntrospectionException
+        throws java.beans.IntrospectionException, java.lang.reflect.InvocationTargetException, 
+               InstantiationException, NoSuchMethodException, IllegalAccessException
     {
+        Class propClass = prop.getClass();
         if( prop.hasDescriptor() )
         { 
             PropertyDescriptor propertyDescriptor = prop.getDescriptor();
@@ -368,18 +372,84 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
             while ( e.hasMoreElements() )
             {
                 String atr = e.nextElement();
-                result.setValue( atr, propertyDescriptor.getValue( atr ) );
+                Object attrVal = propertyDescriptor.getValue( atr );
+                if( attrVal instanceof DynamicPropertySetSupport )
+                {
+                    result.setValue( atr, ( ( DynamicPropertySetSupport )attrVal ).clone() );
+                }
+                else if( attrVal instanceof DynamicPropertySetSupport[] )
+                {
+                    DynamicPropertySetSupport[] origArr = ( DynamicPropertySetSupport[] )attrVal;
+                    DynamicPropertySetSupport[] newArr = ( DynamicPropertySetSupport[] )Array.newInstance( 
+                        attrVal.getClass().getComponentType(), origArr.length );
+                    for( int i = 0; i < origArr.length; i++ )
+                    {
+                        if( origArr[ i ] != null )
+                        {
+                            newArr[ i ] = ( DynamicPropertySetSupport )origArr[ i ].clone();
+                        }
+                    }  
+                    result.setValue( atr, newArr );
+                }
+                else
+                { 
+                    result.setValue( atr, attrVal );
+                }
             }
 
             if( prop.getValue() instanceof DynamicPropertySetSupport )
             {
-                DynamicProperty newProp = new DynamicProperty( result, prop.getType(), 
+                DynamicProperty newProp = ( DynamicProperty )propClass.getConstructor( PropertyDescriptor.class, Class.class, Object.class )
+                    .newInstance( result, prop.getType(), 
                    ( ( DynamicPropertySetSupport )prop.getValue() ).clone() );
+
+                //DynamicProperty newProp = new DynamicProperty( result, prop.getType(), 
+                //   ( ( DynamicPropertySetSupport )prop.getValue() ).clone() );
+                return newProp;  
+            }
+            else if( prop.getValue() instanceof DynamicPropertySetSupport[] )
+            {
+                //System.out.println( "1 hasDesc: " + prop.getName() );
+                DynamicPropertySetSupport[] oarr = ( DynamicPropertySetSupport[] )prop.getValue();
+                DynamicPropertySetSupport[] narr = ( DynamicPropertySetSupport[] )Array.newInstance( 
+                    prop.getValue().getClass().getComponentType(), oarr.length );
+                for( int i = 0; i < oarr.length; i++ )
+                {
+                    if( oarr[ i ] == null )
+                    {
+                        continue;
+                    }
+                    narr[ i ] = ( DynamicPropertySetSupport )oarr[ i ].clone();
+                }
+                DynamicProperty newProp = ( DynamicProperty )propClass.getConstructor( PropertyDescriptor.class, Class.class, Object.class )
+                    .newInstance( result, prop.getType(), narr );
+                return newProp;  
+            }
+            else if( prop.getValue() instanceof DynamicPropertySet[] )
+            {
+                //System.out.println( "2 hasDesc: " + prop.getName() );
+                DynamicPropertySet[] oarr = ( DynamicPropertySet[] )prop.getValue();
+                DynamicPropertySet[] narr = ( DynamicPropertySet[] )Array.newInstance( 
+                    prop.getValue().getClass().getComponentType(), oarr.length );
+                for( int i = 0; i < oarr.length; i++ )
+                {
+                    if( oarr[ i ] == null )
+                    {
+                        continue;
+                    }
+                    //System.out.println( "oarr[ i ] = " + oarr[ i ] );
+                    narr[ i ] = ( DynamicPropertySet )oarr[ i ].clone();
+                    //System.out.println( "narr[ i ] = " + narr[ i ] );
+                }
+                DynamicProperty newProp = ( DynamicProperty )propClass.getConstructor( PropertyDescriptor.class, Class.class, Object.class )
+                    .newInstance( result, prop.getType(), narr );
                 return newProp;  
             }
             else
             {
-                DynamicProperty newProp = new DynamicProperty( result, prop.getType(), prop.getValue() );
+                DynamicProperty newProp = ( DynamicProperty )propClass.getConstructor( PropertyDescriptor.class, Class.class, Object.class )
+                    .newInstance( result, prop.getType(), prop.getValue() );
+                //DynamicProperty newProp = new DynamicProperty( result, prop.getType(), prop.getValue() );
                 return newProp;  
             }
         }
@@ -388,12 +458,55 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
             DynamicProperty newProp = null; 
             if( prop.getValue() instanceof DynamicPropertySetSupport )
             {
-                newProp = new DynamicProperty( prop.getName(), prop.getType(), 
+                newProp = ( DynamicProperty )propClass.getConstructor( String.class, Class.class, Object.class )
+                    .newInstance( prop.getName(), prop.getType(), 
                    ( ( DynamicPropertySetSupport )prop.getValue() ).clone() );
+                //newProp = new DynamicProperty( prop.getName(), prop.getType(), 
+                //   ( ( DynamicPropertySetSupport )prop.getValue() ).clone() );
+            }
+            else if( prop.getValue() instanceof DynamicPropertySetSupport[] )
+            {
+                //System.out.println( "1 noDesc: " + prop.getName() );
+                DynamicPropertySetSupport[] oarr = ( DynamicPropertySetSupport[] )prop.getValue();
+                //DynamicPropertySetSupport[] narr = new DynamicPropertySetSupport[ oarr.length ];
+                DynamicPropertySetSupport[] narr = ( DynamicPropertySetSupport[] )Array.newInstance( 
+                    prop.getValue().getClass().getComponentType(), oarr.length );
+
+                for( int i = 0; i < oarr.length; i++ )
+                {
+                    if( oarr[ i ] == null )
+                    {
+                        continue;
+                    }
+                    narr[ i ] = ( DynamicPropertySetSupport )oarr[ i ].clone();
+                }
+                newProp = ( DynamicProperty )propClass.getConstructor( String.class, Class.class, Object.class )
+                    .newInstance( prop.getName(), prop.getType(), narr );
+            }
+            else if( prop.getValue() instanceof DynamicPropertySet[] )
+            {
+                //System.out.println( "2 noDesc: " + prop.getName() );
+                DynamicPropertySet[] oarr = ( DynamicPropertySet[] )prop.getValue();
+                //DynamicPropertySetSupport[] narr = new DynamicPropertySetSupport[ oarr.length ];
+                DynamicPropertySet[] narr = ( DynamicPropertySet[] )Array.newInstance( 
+                    prop.getValue().getClass().getComponentType(), oarr.length );
+
+                for( int i = 0; i < oarr.length; i++ )
+                {
+                    if( oarr[ i ] == null )
+                    {
+                        continue;
+                    }
+                    narr[ i ] = ( DynamicPropertySet )oarr[ i ].clone();
+                }
+                newProp = ( DynamicProperty )propClass.getConstructor( String.class, Class.class, Object.class )
+                    .newInstance( prop.getName(), prop.getType(), narr );
             }
             else
             {
-                newProp = new DynamicProperty( prop.getName(), prop.getType(), prop.getValue() );
+                newProp = ( DynamicProperty )propClass.getConstructor( String.class, Class.class, Object.class )
+                    .newInstance( prop.getName(), prop.getType(), prop.getValue() );
+                //newProp = new DynamicProperty( prop.getName(), prop.getType(), prop.getValue() );
             }
 
             newProp.setHidden( prop.isHidden() );
@@ -404,7 +517,29 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
             while( attributeNames.hasMoreElements() )
             {
                 String attribute = attributeNames.nextElement();
-                newProp.setAttribute( attribute, prop.getAttribute( attribute ) );
+                Object attrVal = prop.getAttribute( attribute );
+                if( attrVal instanceof DynamicPropertySetSupport )
+                {
+                    newProp.setAttribute( attribute, ( ( DynamicPropertySetSupport )attrVal ).clone() );
+                }
+                else if( attrVal instanceof DynamicPropertySetSupport[] )
+                {
+                    DynamicPropertySetSupport[] origArr = ( DynamicPropertySetSupport[] )attrVal;
+                    DynamicPropertySetSupport[] newArr = ( DynamicPropertySetSupport[] )Array.newInstance( 
+                        attrVal.getClass().getComponentType(), origArr.length );
+                    for( int i = 0; i < origArr.length; i++ )
+                    {
+                        if( origArr[ i ] != null )
+                        {
+                            newArr[ i ] = ( DynamicPropertySetSupport )origArr[ i ].clone();
+                        }
+                    }  
+                    newProp.setAttribute( attribute, newArr );
+                }
+                else
+                { 
+                    newProp.setAttribute( attribute, attrVal );
+                }
             }
 
             return newProp;  
@@ -430,7 +565,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
             {
                 retVal.add( cloneProperty( prop ) );
             }
-            catch( java.beans.IntrospectionException wierd )
+            catch( Exception wierd )
             {
                 Logger.getLogger().error( "Unable to clone property " + prop.getName(), wierd );
             }
@@ -522,7 +657,44 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     @Override
     public Iterator<DynamicProperty> propertyIterator()
     {
-        return properties.iterator();
+        return new Iterator<DynamicProperty>()
+        {
+            int cursor;       // index of next element to return
+            int lastRet = -1; // index of last element returned; -1 if no such
+
+            @Override
+            public boolean hasNext()
+            {
+                return cursor < properties.size();
+            }
+
+            @Override
+            public DynamicProperty next()
+            {
+                int i = cursor;
+                if( i >= properties.size() )
+                {
+                    throw new java.util.NoSuchElementException();
+                }
+                cursor = i + 1;
+                return properties.get( lastRet = i );
+            }
+
+            @Override
+            public void remove()
+            {
+                DynamicProperty property = properties.remove( lastRet );
+                propHash.remove( property.getName() );
+                if( useAddIndexes && propDisplayNameHash != null )
+                {
+                    propDisplayNameHash.remove( property.getDisplayName() );
+                }
+                property.setParent( null );
+
+                cursor = lastRet;
+                lastRet = -1;
+            }
+        };
     }
 
     @Override

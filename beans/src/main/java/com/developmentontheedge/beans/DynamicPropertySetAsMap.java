@@ -87,7 +87,7 @@ public class DynamicPropertySetAsMap extends AbstractDynamicPropertySet
             {
                 retVal.add( DynamicPropertySetSupport.cloneProperty( prop ) );
             }
-            catch( java.beans.IntrospectionException wierd )
+            catch( Exception wierd )
             {
                 Logger.getLogger().error( "Unable to clone property " + prop.getName(), wierd );
             }
