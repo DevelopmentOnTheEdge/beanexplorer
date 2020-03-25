@@ -12,11 +12,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Spliterator;
 import java.util.StringTokenizer;
+import java.util.Spliterator;
 import java.util.TreeMap;
 
 /**
@@ -64,21 +64,22 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         this( dps, dps instanceof DynamicPropertySetSupport && ( ( DynamicPropertySetSupport )dps ).isUseAddIndexes() );
     }
 
-    public DynamicPropertySetSupport( Map<String,?> map )
+    public DynamicPropertySetSupport( Map<?,?> map )
     {
-        this( true );
+        this( map, false );
+    }
+
+    public DynamicPropertySetSupport( Map<?,?> map, boolean useAddIndexes )
+    {
+        this( useAddIndexes );
         map.entrySet().stream().forEach( e -> {
-            build( e.getKey(), e.getValue() != null ? e.getValue().getClass() : String.class ).value( e.getValue() );
+            build( e.getKey() !=  null ? e.getKey().toString() : null, e.getValue() != null ? e.getValue().getClass() : String.class ).value( e.getValue() );
         } );
     }
 
     public DynamicPropertySetSupport( boolean useAddIndexes )
     {
         this.useAddIndexes = useAddIndexes;
-        if( useAddIndexes )
-        {
-            propDisplayNameHash = new HashMap<>();
-        }
     }
     
     public boolean isUseAddIndexes()
@@ -94,7 +95,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     protected DynamicProperty findProperty( String name )
     {
         DynamicProperty ret = propHash.get( name );
-        if( ret == null && useAddIndexes )
+        if( ret == null && useAddIndexes && propDisplayNameHash != null )
         {
             ret = propDisplayNameHash.get( name );
         }
@@ -132,6 +133,10 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         propHash.put( pname, property );
         if( useAddIndexes )
         {
+            if( propDisplayNameHash == null )
+            {
+                propDisplayNameHash = new HashMap<>();
+            }  
             propDisplayNameHash.put( property.getDisplayName(), property );
         }
         property.setParent( this );
@@ -195,6 +200,12 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         return builder; 
     }
 
+    public DynamicPropertyBuilder getAsBuilder( String name )
+    {
+        DynamicPropertyBuilder builder = new DynamicPropertyBuilder( findProperty( name ) );
+        return builder; 
+    }
+
     /**
      * Checks if property does exist in this set
      */
@@ -212,7 +223,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         {
             Object retValue = property.getValue();
             propHash.remove( property.getName() );
-            if( useAddIndexes )
+            if( useAddIndexes && propDisplayNameHash != null )
             {
                 propDisplayNameHash.remove( property.getDisplayName() );
             }
@@ -238,19 +249,24 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         if( oldIndex == index )
         {
             return true;
-        }
+        }    
         properties.remove( oldIndex );
-        properties.add( index, property );
+        properties.add( index, property );      
         return true;
     }
 
     public boolean moveBefore( String name, String nameBefore )
     {
+        DynamicProperty property = findProperty( name );
+        int indexOfName = properties.indexOf( property );
         for( int i = 0; i < properties.size(); i++ )
         {
             if( nameBefore.equalsIgnoreCase( properties.get( i ).getName() ) )
             {
-                return moveTo( name, i );
+                if (indexOfName<i)
+                    return moveTo( name, i-1 );
+                else
+                    return moveTo( name, i ); 
             }
         }
         return false;
@@ -258,11 +274,17 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
 
     public boolean moveAfter( String name, String nameAfter )
     {
+        DynamicProperty property = findProperty( name );
+        int indexOfName = properties.indexOf( property );
         for( int i = 0; i < properties.size(); i++ )
         {
             if( nameAfter.equalsIgnoreCase( properties.get( i ).getName() ) )
             {
-                return moveTo( name, i + 1 );
+                
+                if (indexOfName<i)
+                    return moveTo( name, i );
+                else
+                    return moveTo( name, i+1 );               
             }
         }
         return false;
@@ -282,7 +304,9 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
             return false;
         }
 
-        if( useAddIndexes )
+        old.setParent( null );
+
+        if( useAddIndexes && propDisplayNameHash != null )
         {
             propDisplayNameHash.remove( old.getDisplayName() );
         }
@@ -290,6 +314,10 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         propHash.put( prop.getName(), prop );
         if( useAddIndexes )
         {
+            if( propDisplayNameHash == null )
+            {
+                propDisplayNameHash = new HashMap<>();
+            }  
             propDisplayNameHash.put( prop.getDisplayName(), prop );
         }
 
@@ -553,10 +581,6 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         retVal.pcSupport = null;
         retVal.properties = new ArrayList<>();
         retVal.propHash = new TreeMap<>( String.CASE_INSENSITIVE_ORDER );
-        if(retVal.useAddIndexes)
-        {
-            retVal.propDisplayNameHash = new HashMap<>();
-        }
         for( Iterator<DynamicProperty> iter = propertyIterator(); iter.hasNext(); )
         {
             DynamicProperty prop = iter.next();
@@ -1056,7 +1080,11 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     /**
      * Tries to represent column name as some text label for column:
      *
-     * <br/><br/>1. Column name may contain "___":
+     * <br/><br/>1. Column name can be one of the following:
+     * whoInserted___,
+     * whoModified___,
+     * creationDate___,
+     * modificationDate___,
      * then "___" will be removed.
      *
      * <br/><br/>2. Each group of lowercase symbols, started with uppercase symbols, comprehends as word, and this group separated from other
@@ -1136,6 +1164,10 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
             int labLen = label.length();
             for( String dictWord : dictionaryWords )
             {
+                if( dictWord.equalsIgnoreCase( label.toString() ) )
+                {
+                    break; // don't parse "uuid"
+                }
                 if( labLen <= dictWord.length() )
                 {
                     continue;
@@ -1144,6 +1176,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
                 {
                     continue;
                 }
+                //System.out.println( "" + colName + "--->" + dictWord ); 
                 int diff = labLen - dictWord.length();
                 label.setCharAt( diff, Character.toUpperCase( label.charAt( diff ) ) );
                 label.insert( diff, ' ' );
@@ -1153,5 +1186,4 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
 
         return label.toString();
     }
-
 }
