@@ -438,6 +438,59 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         return retVal;
     }
 
+    public static DynamicPropertySet cloneAndSimplify( DynamicPropertySet orig  )
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport( false );
+        orig.forEach( dp -> 
+        {
+            try
+            {
+                dps.add( cloneAndSimplifyProperty( dp ) );
+            }
+            catch( Exception wierd )
+            {
+                System.err.println( "Unable to clone property " + dp.getName() + ", message = " + wierd.getMessage() );
+            }
+        } );
+
+           
+        // System.out.println( "cloneAndSimplify " + dps );
+
+        return dps;
+    }   
+
+    public static DynamicProperty cloneAndSimplifyProperty( DynamicProperty prop )
+        throws java.beans.IntrospectionException, java.lang.reflect.InvocationTargetException, 
+               InstantiationException, NoSuchMethodException, IllegalAccessException
+    {
+        DynamicProperty newProp = new DynamicProperty( prop.getName(), prop.getType(), prop.getValue() );
+
+        newProp.setHidden( prop.isHidden() );
+        newProp.setExpert( prop.isExpert() );
+        newProp.setDisplayName( prop.getDisplayName() );
+        newProp.setShortDescription( prop.getShortDescription() );
+        Enumeration<String> attributeNames = prop.attributeNames();
+        while( attributeNames.hasMoreElements() )
+        {
+            String attribute = attributeNames.nextElement();
+            Object attrVal = prop.getAttribute( attribute );
+            if( attrVal instanceof DynamicPropertySet )
+            {
+                newProp.setAttribute( attribute, cloneAndSimplify( ( DynamicPropertySet )attrVal ) );
+            }
+            else if( attrVal instanceof DynamicPropertySetSupport[] )
+            {
+                newProp.setAttribute( attribute, new DynamicPropertySetSupport[ 0 ] );
+            }
+            else
+            { 
+                newProp.setAttribute( attribute, attrVal );
+            }
+        }
+
+        return newProp;  
+    }
+
     @Override
     public Iterator<String> nameIterator()
     {
@@ -655,6 +708,158 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
         }
     }
 
+    public String asJSON()
+    {
+        StringWriter out = new StringWriter();
+        printPropertiesAsJSON( out, true, "", false );
+        return out.toString();
+    }
+
+    public String asJSON( boolean bSkipEmpty )
+    {
+        StringWriter out = new StringWriter();
+        printPropertiesAsJSON( out, bSkipEmpty, "", false );       
+        return out.toString();
+    }
+    
+    public String fullJSON()
+    {
+        StringWriter out = new StringWriter();
+        printPropertiesAsJSON( out, false, "", false );        
+        return out.toString();
+    }
+
+    public String plainJSON()
+    {
+        StringWriter out = new StringWriter();
+        printPropertiesAsJSON( out, true, "", true );
+        return out.toString();
+    }
+    
+    protected void printPropertiesAsJSON( Writer out, boolean bSkipEmpty, String offset, boolean bNoAttrs )
+    {
+        try
+        {
+            out.write( offset + "{" );
+            int propCount = 0;
+            for( int i = 0; i < properties.size(); i++ )
+            {
+                DynamicProperty dp = properties.get( i );
+                if( bSkipEmpty && dp.getValue() == null )
+                {
+                    continue;
+                }
+                if( bSkipEmpty && dp.getValue() instanceof Object[] && ( ( Object[] )dp.getValue() ).length == 0 )
+                {
+                    continue;
+                }
+
+                if( propCount > 0 )
+                {
+                    out.write( "," );
+                }
+                out.write( "\n" + "  " + offset + makeJSONPropName( dp.getName() ) + ": " );             
+
+                String valStr = "";
+                if( dp.getValue() instanceof DynamicPropertySetSupport ) 
+                {
+                    StringWriter rout = new StringWriter();
+                    ( ( DynamicPropertySetSupport )dp.getValue() ).printPropertiesAsJSON( rout, bSkipEmpty, "  " + offset, bNoAttrs );
+                    valStr = "\n" + rout.toString();
+                }
+/*
+                else if( dp.getValue() instanceof org.mozilla.javascript.Scriptable ) 
+                {
+                    DynamicPropertySetSupport dps = new com.beanexplorer.beans.js.DynamicPropertySetScriptable( ( org.mozilla.javascript.Scriptable )dp.getValue() );
+                    StringWriter rout = new StringWriter();
+                    dps.printPropertiesAsJSON( rout, bSkipEmpty, "  " + offset );
+                    valStr = "\n" + rout.toString();
+                }
+*/
+                else if( dp.getValue() instanceof DynamicPropertySetSupport[] ) 
+                {
+                    int ind = 0; 
+                    StringWriter rout = new StringWriter();
+                    //rout.write( "[" ); 
+                    rout.write( offset + "[" ); 
+                    for( DynamicPropertySetSupport arrBean : ( DynamicPropertySetSupport[] )dp.getValue() )
+                    {
+                        if( ind > 0 )
+                        {
+                            rout.write( "," );
+                        }
+                        //rout.write( "\n" + offset );
+                        rout.write( "\n");
+                        arrBean.printPropertiesAsJSON( rout, bSkipEmpty, "    " + offset, bNoAttrs );
+                        ind++;
+                    }
+                    //rout.write( "\n  ]" ); 
+                    rout.write( "\n" + offset + "  ]" ); 
+                    valStr = "\n  " + rout.toString();
+                }
+                else
+                {
+                    if( dp.getValue() == null )
+                    {
+                        valStr = "null"; 
+                    } 
+                    else if( dp.getValue() instanceof String )
+                    {
+                        valStr = makeJSONStringValue( ( String )dp.getValue() );
+                        if( !bNoAttrs && dp.getAttribute( BeanInfoConstants.TAG_LIST_ATTR ) instanceof Map )
+                        {
+                            Object disp = ( ( Map )dp.getAttribute( BeanInfoConstants.TAG_LIST_ATTR ) ).get( dp.getValue() );
+                            if( disp != null )
+                            { 
+                                valStr += ",\n" + "  " + offset + makeJSONPropName( dp.getName() + ":displayValue" ) + ": "  +
+                                     makeJSONStringValue( ( String )disp );
+                            }
+                        }                         
+                    }
+                    else if( dp.getValue() instanceof String[] )
+                    {
+                        String []vals = ( String[] )dp.getValue(); 
+                        valStr = "[";  
+                        for( int v = 0; v < vals.length; v++ )
+                        {
+                            if( v > 0 )
+                            {
+                                valStr += ",";  
+                            }
+                            valStr += makeJSONStringValue( vals[ v ] );
+                        }                        
+                        valStr += "]";  
+                    }
+                    else if( dp.getValue() instanceof java.util.Date )
+                    {
+                        valStr = "\"" + new java.sql.Date( ( ( java.util.Date )dp.getValue() ).getTime() ) + "\"";
+                    }
+                    else if( dp.getValue() instanceof java.io.File )
+                    {
+                        valStr = makeJSONStringValue( ( ( java.io.File )dp.getValue() ).getCanonicalPath() );
+                    }
+                    else
+                    {
+                        valStr = "" + dp.getValue();
+                    } 
+                }
+                out.write( valStr );
+                //String autoName = makeBetterDisplayName( dp.getName() );
+                if( !bNoAttrs && !dp.getDisplayName().equals( dp.getName() ) )
+                //if( !dp.getDisplayName().equals( autoName ) && !dp.getDisplayName().equals( dp.getName() ) )
+                {
+                    out.write( ",\n" + "  " + offset + makeJSONPropName( dp.getName() + ":displayName" ) + ": "  +
+                         makeJSONStringValue( dp.getDisplayName() ) );
+                }
+                propCount++;
+            }
+            out.write( "\n" + offset + "}" );
+        }
+        catch( Exception e )
+        {
+        }
+    }
+
     @Override
     public int size()
     {
@@ -671,7 +876,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     }
 
     private final static String[] dictionaryWords = {
-            "id", "phone", "number", "background", "name", "value", "column", "description", "code",
+            "uuid", "id", "phone", "number", "background", "name", "value", "column", "description", "code",
             "type", "size", "begin", "end", "price", "status", 
             "border", "borders", "rows", "link", "text", "header"
     };
