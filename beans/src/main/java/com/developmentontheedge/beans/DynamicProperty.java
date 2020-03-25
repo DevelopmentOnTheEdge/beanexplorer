@@ -20,6 +20,7 @@ public class DynamicProperty implements Serializable
     private static final long serialVersionUID = 1L;
     private DynamicPropertySet parent;
 
+    public static final String XML_NAMESPACE = "xml-name-space";
     public static final String XML_ATTRIBUTES = "xml-attributes";
     public static final String XML_ATTRIBUTES_ARRAY = "xml-attributes-array";
 
