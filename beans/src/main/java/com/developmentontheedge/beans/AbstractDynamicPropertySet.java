@@ -362,4 +362,30 @@ public abstract class AbstractDynamicPropertySet implements DynamicPropertySet
         sb.append( '"' );
         return sb.toString();
     }
+
+    public String serializeAsXml( String beanName, String offset )
+    {
+        String retXml = "";
+        try
+        {
+            if( getProperty( beanName ) == null )
+            {
+                retXml += "\n" + offset + "<" + beanName + ">";
+                for( DynamicProperty dp : this )
+                {
+                    retXml += ( ( DynamicProperty )dp ).serializeAsXml( "    " + offset );
+                }
+                retXml += "\n" + offset + "</" + beanName + ">";
+            }
+            else
+            {
+                retXml += ( ( DynamicProperty )getProperty( beanName ) ).serializeAsXml( offset );
+            }
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+        return retXml;
+    }
 }

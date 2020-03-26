@@ -566,6 +566,153 @@ public class DynamicProperty implements Serializable
         }
     }
 
+
+    protected Object[] getOtherArray( Object dpValue )
+    {
+        return null; 
+    }
+
+    protected String getNamespace()
+    {
+        Object ns = getAttribute( XML_NAMESPACE );
+        //System.out.println( getName() + " ns = " + ns );
+        if( ns == null )
+        {
+            return "";
+        }
+
+        return ns.toString() + ":";
+    }  
+
+    public String serializeAsXml( String offset )
+    {
+        String retXml = "";
+        try
+        {
+            Object dpValue = getValue();
+            if( dpValue == null || dpValue instanceof String && "".equals( ( ( String )dpValue ).trim() ) )
+            {
+                //System.out.println( " 11111 " + getName() + ": " + dpValue );
+                retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + "/>";
+            }
+            else
+            {
+                Object []otherArray = null;
+                if( dpValue instanceof DynamicPropertySet )
+                {
+                    //System.out.println( " 22222 " + getName() + ": " + dpValue.getClass() + "\n"  + dpValue );
+                    retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + ">";
+                    for( DynamicProperty dp : ( DynamicPropertySet )dpValue )
+                    {
+                        retXml += ( ( DynamicProperty )dp ).serializeAsXml( "   " + offset );
+                    }
+                    retXml += "\n" + offset + "</" + getNamespace() + getName() + ">";
+                }
+                else if( dpValue instanceof DynamicPropertySet[] )
+                {
+                    //System.out.println( " 444444 " + getName() + ": " + dpValue.getClass() + "\n"  + dpValue );
+
+                    DynamicPropertySet[] arrp = ( DynamicPropertySet[] )dpValue;
+                    DynamicPropertySet []arratt = ( DynamicPropertySet[] )getAttribute( XML_ATTRIBUTES_ARRAY );
+                    if( arratt == null )
+                    {
+                        arratt = new DynamicPropertySet[ arrp.length ];
+                    }
+                    for( int i = 0; i < arrp.length; i++ )
+                    {
+                        DynamicPropertySet dps = arrp[ i ];  
+                        //System.out.println( "---------------------" );
+                        //System.out.println( "dps = " + dps );
+                        //System.out.println( "---------------------" );
+                        retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributesCommon( i < arratt.length ? arratt[ i ] : null ) + ">";
+                        for( DynamicProperty dp : dps )
+                        {
+                            retXml += ( ( DynamicProperty )dp ).serializeAsXml( "   " + offset );
+                        }
+                        retXml += "\n" + offset + "</" + getNamespace() + getName() + ">";
+                    }
+                }
+                else if( ( otherArray = getOtherArray( dpValue ) ) != null )
+                {
+                    //System.out.println( " 55555 " + getName() + ": " + dpValue.getClass() + "\n"  + dpValue );
+                    for( Object scr : otherArray )
+                    {
+                        String value = scr.toString();
+                        value = value.replace( "\\", "\\\\" );
+                        value = value.replace( "\"", "\\\"" );
+                        value = value.replace( "&", "&amp;" );
+                        value = value.replace( ">", "&gt;" );
+                        value = value.replace( "<", "&lt;" );
+
+                        retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + ">" + value + "</" + getNamespace() + getName() + ">";
+                        ;
+                    }
+                }
+                else if( dpValue instanceof Object[] )
+                {
+                    //System.out.println( " 666666 " + getName() + ": " + dpValue.getClass() + "\n"  + dpValue );
+                    for( Object obj : ( Object[] )dpValue )
+                    {
+                        String value = obj.toString().replace( "\\", "\\\\" );
+                        value = value.replace( "\"", "\\\"" );
+                        value = value.replace( "&", "&amp;" );
+                        value = value.replace( ">", "&gt;" );
+                        value = value.replace( "<", "&lt;" );
+
+                        retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + ">" + value + "</" + getNamespace() + getName() + ">";
+                        ;
+                    }
+                }
+                else
+                {
+                    //System.out.println( " 33333 " + getName() + ": " + dpValue );
+                    String value = dpValue.toString().replace( "\\", "\\\\" );
+                    value = value.replace( "\"", "\\\"" );
+                    value = value.replace( "&", "&amp;" );
+                    value = value.replace( ">", "&gt;" );
+                    value = value.replace( "<", "&lt;" );
+
+                    retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + ">" + value + "</" + getNamespace() + getName() + ">";
+                }
+            }
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+
+        return retXml;
+    }
+
+    public String serializeAsXmlAttributes()
+    {
+        return serializeAsXmlAttributesCommon( ( DynamicPropertySet )getAttribute( XML_ATTRIBUTES ) );
+    }
+
+    public String serializeAsXmlAttributesCommon( DynamicPropertySet attrs )
+    {
+        if( attrs == null )
+        {
+            return "";
+        }
+
+        String result = "";
+        for( DynamicProperty attr : attrs )
+        {
+            if( attr.getValue() != null && !"".equals( ( attr.getValue().toString() ).trim() ) )
+            {
+                String val = attr.getValue().toString().replace( "'", "&apos;" );
+                val = val.replace( "\"", "&quot;" );
+                result += " " + attr.getName() + "=\"" + val + "\"";
+            }
+            else
+            {
+                result += " " + attr.getName() + "=\"\"";
+            }
+        }
+        return result;
+    }
+
     @Override
     public String toString()
     {
