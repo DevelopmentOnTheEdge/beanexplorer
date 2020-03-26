@@ -92,7 +92,7 @@ public class DynamicPropertySetSupportTest
     }
 
     @Test
-    public void testClone() throws IntrospectionException
+    public void testClone() throws Exception
     {
         DynamicProperty property = new DynamicProperty("nameR1", "Name", String.class, "value");
         DynamicProperty newProperty;
