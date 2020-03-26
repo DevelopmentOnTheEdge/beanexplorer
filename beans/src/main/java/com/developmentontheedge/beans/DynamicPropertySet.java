@@ -191,5 +191,6 @@ public interface DynamicPropertySet extends Serializable, Cloneable, Iterable<Dy
     DynamicPropertyBuilder getAsBuilder(String name);
 
     Object clone();
-}
 
+    String serializeAsXml( String beanName, String offset );
+}

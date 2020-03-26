@@ -257,4 +257,10 @@ public class PropertiesDPS extends Option implements DynamicPropertySet
         DynamicPropertyBuilder builder = new DynamicPropertyBuilder( getProperty( name ) );
         return builder;
     }
+
+    @Override
+    public String serializeAsXml( String beanName, String offset )
+    {
+        return new DynamicPropertySetDecorator( this ).serializeAsXml( beanName, offset );
+    }
 }

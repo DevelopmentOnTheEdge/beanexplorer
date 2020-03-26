@@ -188,7 +188,14 @@ public class DynamicPropertySetDecorator implements DynamicPropertySet
     }
 
     @Override
-    public DynamicPropertyBuilder getAsBuilder(String name) {
+    public DynamicPropertyBuilder getAsBuilder(String name)
+    {
         return delegateDps.getAsBuilder(name);
+    }
+
+    @Override
+    public String serializeAsXml( String beanName, String offset )
+    {
+        return delegateDps.serializeAsXml( beanName, offset );
     }
 }
