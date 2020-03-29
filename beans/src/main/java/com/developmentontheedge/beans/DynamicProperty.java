@@ -567,6 +567,17 @@ public class DynamicProperty implements Serializable
         }
     }
 
+    public void NS( Object value )
+        throws Exception
+    {
+        setAttribute( DynamicProperty.XML_NAMESPACE, value );
+    }
+
+    public void childrenNS( Object value )
+        throws Exception
+    {
+        setAttributeToAllChildrenIfEmpty( DynamicProperty.XML_NAMESPACE, value );
+    }
 
     protected Object[] getOtherArray( Object dpValue )
     {

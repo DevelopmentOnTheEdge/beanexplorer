@@ -67,6 +67,11 @@ public class PropertiesDPS extends Option implements DynamicPropertySet
         return Long.parseLong(val.toString());
     }
 
+    public <T> T cast( String name, Class<T> clazz )
+    {
+        return clazz.cast( getValue( name ) ); 
+    }
+
     @Override
     public void setValue(String name, Object value)
     {

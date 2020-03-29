@@ -26,6 +26,7 @@ public interface DynamicPropertySet extends Serializable, Cloneable, Iterable<Dy
     Object getValue( String name );
     String getValueAsString( String name );
     Long getValueAsLong(String name);
+    <T> T cast( String name, Class<T> clazz );
 
     /**
      * @param name Name of the property
