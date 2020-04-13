@@ -73,7 +73,48 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     {
         this( useAddIndexes );
         map.entrySet().stream().forEach( e -> {
-            build( e.getKey() !=  null ? e.getKey().toString() : null, e.getValue() != null ? e.getValue().getClass() : String.class ).value( e.getValue() );
+            if( e.getKey() == null )
+            {
+                return; 
+            }
+
+            Object value = e.getValue();
+            Class valueClass = e.getValue() != null ? e.getValue().getClass() : Object.class;
+            if( value instanceof Map )
+            {
+                value = new DynamicPropertySetSupport( ( Map )value, useAddIndexes );
+                valueClass = DynamicPropertySetSupport.class;
+            }
+            else if( value instanceof List )
+            {
+                List list = ( List )value;
+                if( list.size() == 0 )
+                {
+                    value = new Object[ 0 ];
+                    valueClass = Object[].class; 
+                }
+                else if( list.get( 0 ) instanceof Map )
+                {
+                    ArrayList<DynamicPropertySetSupport> dpsList = new ArrayList<>();
+                    for( int i = 0; i < list.size(); i++ )
+                    {
+                        dpsList.add( new DynamicPropertySetSupport( ( Map )list.get( i ), useAddIndexes ) ); 
+                    }
+                    value = dpsList.toArray( new DynamicPropertySetSupport[ 0 ] );
+                    valueClass = DynamicPropertySetSupport[].class; 
+                }
+                else 
+                {
+                    Class elemClass = list.get( 0 ) != null ? list.get( 0 ).getClass() : Object.class;
+                    value = list.toArray( ( Object[] )java.lang.reflect.Array.newInstance( elemClass, 0 ) );
+                    valueClass = java.lang.reflect.Array.newInstance( elemClass, 0 ).getClass(); 
+                }
+            }
+
+            DynamicProperty prop = new DynamicProperty( e.getKey().toString(), valueClass );
+            prop.setValue( value );
+            add( prop );
+            //build( e.getKey().toString(), e.getValue() != null ? e.getValue().getClass() : String.class ).value( e.getValue() );
         } );
     }
 
