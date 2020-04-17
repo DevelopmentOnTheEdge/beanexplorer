@@ -21,6 +21,7 @@ public class DynamicProperty implements Serializable
     private DynamicPropertySet parent;
 
     public static final String XML_ELEMENT_NAME = "xml-element-name";
+    public static final String XML_IGNORE = "xml-ignore";
     public static final String XML_NAMESPACE = "xml-name-space";
     public static final String XML_ATTRIBUTES = "xml-attributes";
     public static final String XML_ATTRIBUTES_ARRAY = "xml-attributes-array";
@@ -602,6 +603,11 @@ public class DynamicProperty implements Serializable
         String retXml = "";
         try
         {
+            if( getAttribute( XML_IGNORE ) != null )
+            {
+                return retXml;
+            }
+
             Object dpValue = getValue();
             String elementName = getName();
             if( getAttribute( XML_ELEMENT_NAME ) != null )
