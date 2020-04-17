@@ -20,6 +20,7 @@ public class DynamicProperty implements Serializable
     private static final long serialVersionUID = 1L;
     private DynamicPropertySet parent;
 
+    public static final String XML_ELEMENT_NAME = "xml-element-name";
     public static final String XML_NAMESPACE = "xml-name-space";
     public static final String XML_ATTRIBUTES = "xml-attributes";
     public static final String XML_ATTRIBUTES_ARRAY = "xml-attributes-array";
@@ -602,10 +603,16 @@ public class DynamicProperty implements Serializable
         try
         {
             Object dpValue = getValue();
+            String elementName = getName();
+            if( getAttribute( XML_ELEMENT_NAME ) != null )
+            {
+                elementName = getAttribute( XML_ELEMENT_NAME ).toString();
+            }
+            elementName = getNamespace() + elementName;
             if( dpValue == null || dpValue instanceof String && "".equals( ( ( String )dpValue ).trim() ) )
             {
                 //System.out.println( " 11111 " + getName() + ": " + dpValue );
-                retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + "/>";
+                retXml += "\n" + offset + "<" + elementName + serializeAsXmlAttributes() + "/>";
             }
             else
             {
@@ -613,12 +620,12 @@ public class DynamicProperty implements Serializable
                 if( dpValue instanceof DynamicPropertySet )
                 {
                     //System.out.println( " 22222 " + getName() + ": " + dpValue.getClass() + "\n"  + dpValue );
-                    retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + ">";
+                    retXml += "\n" + offset + "<" + elementName + serializeAsXmlAttributes() + ">";
                     for( DynamicProperty dp : ( DynamicPropertySet )dpValue )
                     {
                         retXml += ( ( DynamicProperty )dp ).serializeAsXml( "   " + offset );
                     }
-                    retXml += "\n" + offset + "</" + getNamespace() + getName() + ">";
+                    retXml += "\n" + offset + "</" + elementName + ">";
                 }
                 else if( dpValue instanceof DynamicPropertySet[] )
                 {
@@ -636,12 +643,12 @@ public class DynamicProperty implements Serializable
                         //System.out.println( "---------------------" );
                         //System.out.println( "dps = " + dps );
                         //System.out.println( "---------------------" );
-                        retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributesCommon( i < arratt.length ? arratt[ i ] : null ) + ">";
+                        retXml += "\n" + offset + "<" + elementName + serializeAsXmlAttributesCommon( i < arratt.length ? arratt[ i ] : null ) + ">";
                         for( DynamicProperty dp : dps )
                         {
                             retXml += ( ( DynamicProperty )dp ).serializeAsXml( "   " + offset );
                         }
-                        retXml += "\n" + offset + "</" + getNamespace() + getName() + ">";
+                        retXml += "\n" + offset + "</" + elementName + ">";
                     }
                 }
                 else if( ( otherArray = getOtherArray( dpValue ) ) != null )
@@ -656,7 +663,7 @@ public class DynamicProperty implements Serializable
                         value = value.replace( ">", "&gt;" );
                         value = value.replace( "<", "&lt;" );
 
-                        retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + ">" + value + "</" + getNamespace() + getName() + ">";
+                        retXml += "\n" + offset + "<" + elementName + serializeAsXmlAttributes() + ">" + value + "</" + elementName + ">";
                         ;
                     }
                 }
@@ -671,7 +678,7 @@ public class DynamicProperty implements Serializable
                         value = value.replace( ">", "&gt;" );
                         value = value.replace( "<", "&lt;" );
 
-                        retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + ">" + value + "</" + getNamespace() + getName() + ">";
+                        retXml += "\n" + offset + "<" + elementName + serializeAsXmlAttributes() + ">" + value + "</" + elementName + ">";
                         ;
                     }
                 }
@@ -684,7 +691,7 @@ public class DynamicProperty implements Serializable
                     value = value.replace( ">", "&gt;" );
                     value = value.replace( "<", "&lt;" );
 
-                    retXml += "\n" + offset + "<" + getNamespace() + getName() + serializeAsXmlAttributes() + ">" + value + "</" + getNamespace() + getName() + ">";
+                    retXml += "\n" + offset + "<" + elementName + serializeAsXmlAttributes() + ">" + value + "</" + elementName + ">";
                 }
             }
         }
