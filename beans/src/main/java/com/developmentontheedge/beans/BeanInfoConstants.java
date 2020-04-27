@@ -223,6 +223,16 @@ public interface BeanInfoConstants
     /** Indicates that this property value can be used to group a set of beans. */
     String GROUPING_PROPERTY = "grouping";
 
+    /** Indicates that this property value is DynamicPropertySet. */
+    String DYNAMIC_PROPERTY_SET = "dps";
+
+    /** Show parent property name.*/
+    String PARENT_PROPERTY = "parent-property";
+
+    String TAB_ID = "tab-id";
+
+    String TAB_NAME = "tab-name";
+
     String SEMANTIC_RULES = "semantic-rules";
 
     String ARRAY_ITEM_TEMPLATE = "arrayItemTemplate";

@@ -166,9 +166,9 @@ public class DpsTest extends TestUtils
                 "}," +
                 "'meta':{" +
                         "'/p1':{'displayName':'p1','readOnly':true}," +
-                        "'/p2':{'displayName':'p2','type':'DynamicPropertySetSupport'}," +
-                        "'/p2/c1':{'displayName':'c1'}," +
-                        "'/p2/c2':{'displayName':'c2'}" +
+                        "'/p2':{'displayName':'p2','type':'DynamicPropertySetSupport','isDPS':true}," +
+                        "'/p2/c1':{'displayName':'c1','parent':'p2'}," +
+                        "'/p2/c2':{'displayName':'c2','parent':'p2'}" +
                 "}," +
                 "'order':['/p1','/p2','/p2/c1','/p2/c2']" +
                 "}", oneQuotes(JsonFactory.dps(dps).toString()));

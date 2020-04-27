@@ -1,11 +1,9 @@
 package com.developmentontheedge.beans.json;
 
 import com.developmentontheedge.beans.BeanInfoConstants;
-import com.developmentontheedge.beans.BeanInfoEx;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.editors.CustomEditorSupport;
-import com.developmentontheedge.beans.editors.GenericMultiSelectEditor;
 import com.developmentontheedge.beans.editors.PropertyEditorEx;
 import com.developmentontheedge.beans.editors.StringTagEditorSupport;
 import com.developmentontheedge.beans.editors.TagEditorSupport;
@@ -14,20 +12,9 @@ import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.CompositeProperty;
 import com.developmentontheedge.beans.model.FieldMap;
 import com.developmentontheedge.beans.model.Property;
+import com.developmentontheedge.beans.model.SimpleProperty;
+import org.eclipse.yasson.JsonBindingProvider;
 
-import java.awt.Color;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -40,11 +27,46 @@ import javax.json.JsonStructure;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import java.awt.Color;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
 
-import com.developmentontheedge.beans.model.SimpleProperty;
-import org.eclipse.yasson.JsonBindingProvider;
-
-import static com.developmentontheedge.beans.json.JsonPropertyAttributes.*;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.canBeNull;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.columnSize;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.cssClasses;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.defaultValue;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.description;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.dictionary;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.displayName;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.extraAttrs;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.groupClasses;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.groupId;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.groupName;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.hidden;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.inputSize;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.isDPS;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.labelField;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.message;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.multipleSelectionList;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.parent;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.passwordField;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.placeholder;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.rawValue;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.readOnly;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.reloadOnChange;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.status;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.tagList;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.type;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.validationRules;
 import static java.util.Objects.requireNonNull;
 
 
@@ -242,6 +264,12 @@ public class JsonFactory
 
             if(property.getValue() instanceof DynamicPropertySet)
             {
+                /*todo move to place where metadata add*/
+                DynamicPropertySet nestedDPS = (DynamicPropertySet)property.getValue();
+                for(DynamicProperty nestedProp : nestedDPS)
+                {
+                    nestedProp.setAttribute(BeanInfoConstants.PARENT_PROPERTY, property.getName());
+                }
                 dpsMeta((DynamicPropertySet)property.getValue(), json, newPath);
             }
         }
@@ -358,16 +386,21 @@ public class JsonFactory
     {
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        json.add(displayName.name(), property.getDisplayName() );
+        json.add(displayName.name(), property.getDisplayName());
 
-        if(property.getType() != String.class)
+        if (property.getType() != String.class)
         {
-            json.add(type.name(), getTypeName(property.getType()) );
+            json.add(type.name(), getTypeName(property.getType()));
         }
 
-        if(property.isHidden())
+        if (property.isHidden())
         {
-            json.add(hidden.name(), true );
+            json.add(hidden.name(), true);
+        }
+
+        if (property.getValue() instanceof DynamicPropertySet)
+        {
+            json.add(isDPS.name(), true);
         }
 
         addAttr(json, property, reloadOnChange);
@@ -387,8 +420,9 @@ public class JsonFactory
         addAttr(json, property, status);
         addAttr(json, property, message);
         addAttr(json, property, defaultValue);
+        addAttr(json, property, parent);
 
-        if(!property.getBooleanAttribute( BeanInfoConstants.NO_TAG_LIST ))
+        if (!property.getBooleanAttribute(BeanInfoConstants.NO_TAG_LIST))
         {
             addAttr(json, property, tagList);
         }
