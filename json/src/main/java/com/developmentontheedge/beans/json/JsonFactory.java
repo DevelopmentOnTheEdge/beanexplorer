@@ -53,7 +53,6 @@ import static com.developmentontheedge.beans.json.JsonPropertyAttributes.groupId
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.groupName;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.hidden;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.inputSize;
-import static com.developmentontheedge.beans.json.JsonPropertyAttributes.isDPS;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.labelField;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.message;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.multipleSelectionList;
@@ -396,11 +395,6 @@ public class JsonFactory
         if (property.isHidden())
         {
             json.add(hidden.name(), true);
-        }
-
-        if (property.getValue() instanceof DynamicPropertySet)
-        {
-            json.add(isDPS.name(), true);
         }
 
         addAttr(json, property, reloadOnChange);

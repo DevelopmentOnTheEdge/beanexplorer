@@ -166,7 +166,7 @@ public class DpsTest extends TestUtils
                 "}," +
                 "'meta':{" +
                         "'/p1':{'displayName':'p1','readOnly':true}," +
-                        "'/p2':{'displayName':'p2','type':'DynamicPropertySetSupport','isDPS':true}," +
+                        "'/p2':{'displayName':'p2','type':'DynamicPropertySetSupport'}," +
                         "'/p2/c1':{'displayName':'c1','parent':'p2'}," +
                         "'/p2/c2':{'displayName':'c2','parent':'p2'}" +
                 "}," +

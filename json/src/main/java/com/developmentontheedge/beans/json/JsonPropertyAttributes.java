@@ -23,7 +23,6 @@ enum JsonPropertyAttributes
     groupName(BeanInfoConstants.GROUP_NAME, String.class),
     groupClasses(BeanInfoConstants.GROUP_CLASSES, String.class),
 
-    isDPS(BeanInfoConstants.DYNAMIC_PROPERTY_SET, Boolean.class),
     parent(BeanInfoConstants.PARENT_PROPERTY, String.class),
 
     multipleSelectionList(BeanInfoConstants.MULTIPLE_SELECTION_LIST, Boolean.class),
