@@ -219,6 +219,42 @@ public class JsonFactoryDynamicPropertyAttributesTest
     }
 
     @Test
+    public void testTabId()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.TAB_ID, "1");
+
+        assertEquals("{'displayName':'Name','tabId':'1'}",
+                oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).toString())) ;
+
+        dynamicProperty.setAttribute(BeanInfoConstants.TAB_ID, null);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(groupId.name()));
+    }
+
+    @Test
+    public void testTabIdInt()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.TAB_ID, 1);
+
+        assertEquals("{'displayName':'Name','tabId':'1'}",
+                oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).toString())) ;
+
+        dynamicProperty.setAttribute(BeanInfoConstants.TAB_ID, null);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(groupId.name()));
+    }
+
+    @Test
+    public void testTabName()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.TAB_NAME, "tab 1");
+
+        assertEquals("{'displayName':'Name','tabName':'tab 1'}",
+                oneQuotes(JsonFactory.dynamicPropertyMeta(dynamicProperty).toString())) ;
+
+        dynamicProperty.setAttribute(BeanInfoConstants.TAB_NAME, null);
+        assertEquals(false, JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(tabName.name()));
+    }
+
+    @Test
     public void testDefaultValue()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.DEFAULT_VALUE, "test");

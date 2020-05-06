@@ -250,6 +250,21 @@ public class DynamicPropertyBuilder
         return group( groupName, groupName );
     }
 
+    public DynamicPropertyBuilder tabId( int tabId )
+    {
+        return attr( BeanInfoConstants.TAB_ID, tabId );
+    }
+
+    public DynamicPropertyBuilder tabName( String tabName )
+    {
+        return attr( BeanInfoConstants.TAB_NAME, tabName );
+    }
+
+    public DynamicPropertyBuilder tab( int tabId, String tabName )
+    {
+        return tabId( tabId ).tabName( tabName );
+    }
+
     public DynamicPropertyBuilder rawValue( boolean rawValue )
     {
         return attr( BeanInfoConstants.RAW_VALUE, rawValue );

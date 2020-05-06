@@ -24,6 +24,10 @@ public class DPBuilder
     public String groupName = null;
     public String groupClasses = null;
 
+    public String tabID = null;
+    public String tabName = null;
+    public String tabClasses = null;
+
     public String cssClasses = null;
     public String status = null;
     public String message = null;
@@ -71,6 +75,10 @@ public class DPBuilder
         if (groupID != null) attr(BeanInfoConstants.GROUP_ID, groupID);
         if (groupName != null) attr(BeanInfoConstants.GROUP_NAME, groupName);
         if (groupClasses != null) attr(BeanInfoConstants.GROUP_CLASSES, groupClasses);
+
+        if (tabID != null) attr(BeanInfoConstants.TAB_ID, tabID);
+        if (tabName != null) attr(BeanInfoConstants.TAB_NAME, tabName);
+        if (tabClasses != null) attr(BeanInfoConstants.TAB_CLASSES, tabClasses);
 
         if (cssClasses != null) attr(BeanInfoConstants.CSS_CLASSES, cssClasses);
         if (status != null) attr(BeanInfoConstants.STATUS, status);

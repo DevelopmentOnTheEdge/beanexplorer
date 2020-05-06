@@ -63,6 +63,9 @@ import static com.developmentontheedge.beans.json.JsonPropertyAttributes.rawValu
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.readOnly;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.reloadOnChange;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.status;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.tabClasses;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.tabId;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.tabName;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.tagList;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.type;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.validationRules;
@@ -402,6 +405,9 @@ public class JsonFactory
         addAttr(json, property, groupId);
         addAttr(json, property, groupName);
         addAttr(json, property, groupClasses);
+        addAttr(json, property, tabId);
+        addAttr(json, property, tabName);
+        addAttr(json, property, tabClasses);
         addAttr(json, property, readOnly);
         addAttr(json, property, canBeNull);
         addAttr(json, property, multipleSelectionList);

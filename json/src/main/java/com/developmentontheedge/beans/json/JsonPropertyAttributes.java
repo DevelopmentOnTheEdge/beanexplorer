@@ -23,6 +23,10 @@ enum JsonPropertyAttributes
     groupName(BeanInfoConstants.GROUP_NAME, String.class),
     groupClasses(BeanInfoConstants.GROUP_CLASSES, String.class),
 
+    tabId(BeanInfoConstants.TAB_ID, Object.class),
+    tabName(BeanInfoConstants.TAB_NAME, String.class),
+    tabClasses(BeanInfoConstants.TAB_CLASSES, String.class),
+
     parent(BeanInfoConstants.PARENT_PROPERTY, String.class),
 
     multipleSelectionList(BeanInfoConstants.MULTIPLE_SELECTION_LIST, Boolean.class),

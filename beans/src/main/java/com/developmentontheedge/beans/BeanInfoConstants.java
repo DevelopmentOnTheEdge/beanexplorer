@@ -226,9 +226,14 @@ public interface BeanInfoConstants
     /** Show parent property name.*/
     String PARENT_PROPERTY = "parent-property";
 
+    /** Specifies identifier of tab to which the property belongs. */
     String TAB_ID = "tab-id";
 
+    /** Specifies name of tab to which the property belongs. */
     String TAB_NAME = "tab-name";
+
+    /** Specifies css tab of group to which the property belongs. */
+    String TAB_CLASSES = "tab-classes";
 
     String SEMANTIC_RULES = "semantic-rules";
 

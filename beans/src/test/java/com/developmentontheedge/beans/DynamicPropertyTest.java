@@ -24,6 +24,8 @@ public class DynamicPropertyTest
         property.setHidden(true);
         property.setAttribute( GROUP_ID, 0 );
         property.setAttribute( GROUP_NAME, "reasonDocissue" );
+        property.setAttribute( TAB_ID, 1 );
+        property.setAttribute( TAB_NAME, "tab 1" );
         property.setAttribute( RELOAD_ON_CHANGE, true);
         property.setAttribute( TAG_LIST_ATTR, tags );
     }
@@ -39,6 +41,8 @@ public class DynamicPropertyTest
         assertTrue(property.isHidden());
         assertEquals(0, property.getAttribute(GROUP_ID));
         assertEquals("reasonDocissue", property.getAttribute(GROUP_NAME));
+        assertEquals(1, property.getAttribute(TAB_ID));
+        assertEquals("tab 1", property.getAttribute(TAB_NAME));
         assertEquals(true, property.getAttribute(RELOAD_ON_CHANGE));
         assertEquals(tags, property.getAttribute(TAG_LIST_ATTR));
     }

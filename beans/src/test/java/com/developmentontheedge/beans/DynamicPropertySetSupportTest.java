@@ -3,7 +3,6 @@ package com.developmentontheedge.beans;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.beans.IntrospectionException;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,10 @@ import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.beans.BeanInfoConstants.GROUP_ID;
 import static com.developmentontheedge.beans.BeanInfoConstants.RELOAD_ON_CHANGE;
-import static org.junit.Assert.*;
+import static com.developmentontheedge.beans.BeanInfoConstants.TAB_ID;
+import static com.developmentontheedge.beans.BeanInfoConstants.TAB_NAME;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DynamicPropertySetSupportTest
 {
@@ -62,6 +64,8 @@ public class DynamicPropertySetSupportTest
         ((DynamicPropertySetSupport)parameters).setExpertToAllChildren(true);
         ((DynamicPropertySetSupport)parameters).setAttributeToAllChildren(RELOAD_ON_CHANGE, true);
         parameters.setPropertyAttribute(propName, GROUP_ID, 0);
+        parameters.setPropertyAttribute(propName, TAB_ID, 1);
+        parameters.setPropertyAttribute(propName, TAB_NAME, "tab 1");
 
         for (Map.Entry<String, Object> p : parameters.asMap().entrySet()){
             DynamicProperty property = parameters.getProperty(p.getKey());
@@ -71,7 +75,8 @@ public class DynamicPropertySetSupportTest
             assertEquals(true, property.getAttribute(RELOAD_ON_CHANGE));
         }
         assertEquals(0, parameters.getProperty(propName).getAttribute(GROUP_ID));
-
+        assertEquals(1, parameters.getProperty(propName).getAttribute(TAB_ID));
+        assertEquals("tab 1", parameters.getProperty(propName).getAttribute(TAB_NAME));
     }
 
     @Test
