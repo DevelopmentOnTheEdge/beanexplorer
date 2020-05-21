@@ -688,37 +688,52 @@ abstract public class Property implements PropertyChangeListener
     {
         if( listenerList == null )
         {
-            listenerList = new EventListenerList();
-
-            PropertyChangeListener pcl = new PropertyChangeListener()
+            synchronized( this ) 
             {
-                @Override
-                public void propertyChange( PropertyChangeEvent evt )
+                if( listenerList == null )
                 {
-                    Property.this.propertyChange( evt );
+                    listenerList = new EventListenerList();
+
+                    PropertyChangeListener pcl = new PropertyChangeListener()
+                    {
+                        @Override
+                        public void propertyChange( PropertyChangeEvent evt )
+                        {
+                            Property.this.propertyChange( evt );
+                        }
+                    };
+
+                    // If a component implements some interface
+                    // that has addPropertyChangeListener method
+                    // it is capable to fire PropertyChangeEvents itself
+                    // In this case we want to catch these events
+                    // so we will be able preprocess them
+                    bComponentFiresPropertyEventsItself = false;
+                    if ( descriptor instanceof PropertyDescriptor )
+                    {
+                        // we use REAL owner not 'owner' since it can be wrapper
+                        bComponentFiresPropertyEventsItself = invokeAddRemovePropertyChangeListenerMethod(
+                            ownerForPropertyChanges, getName(), "addPropertyChangeListener", pcl );
+                    }
+
+                    if( parent != null && !parent.equals( listener ) )
+                    {
+                        listenerList.add( PropertyChangeListener.class, parent );
+                    }
                 }
-            };
-
-            // If a component implements some interface
-            // that has addPropertyChangeListener method
-            // it is capable to fire PropertyChangeEvents itself
-            // In this case we want to catch these events
-            // so we will be able preprocess them
-            bComponentFiresPropertyEventsItself = false;
-            if ( descriptor instanceof PropertyDescriptor )
-            {
-                // we use REAL owner not 'owner' since it can be wrapper
-                bComponentFiresPropertyEventsItself = invokeAddRemovePropertyChangeListenerMethod(
-                    ownerForPropertyChanges, getName(), "addPropertyChangeListener", pcl );
-            }
-
-            if( parent != null && !parent.equals( listener ) )
-            {
-                listenerList.add( PropertyChangeListener.class, parent );
-            }
+            } //synchronized( this ) 
         }
 
-        listenerList.add( PropertyChangeListener.class, listener );
+        synchronized( listenerList ) 
+        {
+            PropertyChangeListener []previous = listenerList.getListeners( PropertyChangeListener.class );
+         
+            // it is == not equals to avoid adding same listener twice  
+            if( java.util.Arrays.stream( previous ).noneMatch( e -> e == listener ) )
+            {
+                listenerList.add( PropertyChangeListener.class, listener );
+            } 
+        }
     }
 
     public void removePropertyChangeListener( PropertyChangeListener listener )

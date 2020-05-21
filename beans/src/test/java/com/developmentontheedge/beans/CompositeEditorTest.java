@@ -15,7 +15,8 @@ public class CompositeEditorTest extends BeanTest
 
     public void testModelProperties() throws Exception
     {
-        cat.info(model.getNiceDescription());
+        //cat.info(model.getNiceDescription());
+        assertNotNull( model.getNiceDescription() );
         //TODO assertEquals("Property count", new Integer(2), new Integer(model.getPropertyCount()));
     }
 
