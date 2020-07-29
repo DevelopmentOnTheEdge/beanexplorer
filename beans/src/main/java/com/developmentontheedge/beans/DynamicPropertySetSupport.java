@@ -1116,7 +1116,7 @@ public class DynamicPropertySetSupport extends AbstractDynamicPropertySet
     private final static String[] dictionaryWords = {
             "uuid", "id", "phone", "number", "background", "name", "value", "column", "description", "code",
             "type", "size", "begin", "end", "price", "status", 
-            "border", "borders", "rows", "link", "text", "header"
+            "border", "borders", "rows", "link", "text", "header", "level"
     };
 
     /**
