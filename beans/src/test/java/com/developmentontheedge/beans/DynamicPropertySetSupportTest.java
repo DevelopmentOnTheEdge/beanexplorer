@@ -11,6 +11,7 @@ import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.beans.BeanInfoConstants.GROUP_ID;
 import static com.developmentontheedge.beans.BeanInfoConstants.RELOAD_ON_CHANGE;
+import static com.developmentontheedge.beans.BeanInfoConstants.RELOAD_ON_CLICK;
 import static com.developmentontheedge.beans.BeanInfoConstants.TAB_ID;
 import static com.developmentontheedge.beans.BeanInfoConstants.TAB_NAME;
 import static org.junit.Assert.assertEquals;
@@ -63,6 +64,7 @@ public class DynamicPropertySetSupportTest
         ((DynamicPropertySetSupport)parameters).setCanBeNullToAllChildren(true);
         ((DynamicPropertySetSupport)parameters).setExpertToAllChildren(true);
         ((DynamicPropertySetSupport)parameters).setAttributeToAllChildren(RELOAD_ON_CHANGE, true);
+        ((DynamicPropertySetSupport)parameters).setAttributeToAllChildren(RELOAD_ON_CLICK, true);
         parameters.setPropertyAttribute(propName, GROUP_ID, 0);
         parameters.setPropertyAttribute(propName, TAB_ID, 1);
         parameters.setPropertyAttribute(propName, TAB_NAME, "tab 1");
@@ -73,6 +75,7 @@ public class DynamicPropertySetSupportTest
             assertEquals(true, property.isCanBeNull());
             assertEquals(true, property.isExpert());
             assertEquals(true, property.getAttribute(RELOAD_ON_CHANGE));
+            assertEquals(true, property.getAttribute(RELOAD_ON_CLICK));
         }
         assertEquals(0, parameters.getProperty(propName).getAttribute(GROUP_ID));
         assertEquals(1, parameters.getProperty(propName).getAttribute(TAB_ID));

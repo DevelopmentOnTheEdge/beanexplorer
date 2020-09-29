@@ -50,6 +50,16 @@ public class JsonFactoryDynamicPropertyAttributesTest
     }
 
     @Test
+    public void testReloadOnClick()
+    {
+        dynamicProperty.setAttribute(BeanInfoConstants.RELOAD_ON_CLICK, true);
+        assertTrue(JsonFactory.dynamicPropertyMeta(dynamicProperty).getBoolean(reloadOnClick.name()));
+
+        dynamicProperty.setAttribute(BeanInfoConstants.RELOAD_ON_CLICK, false);
+        assertFalse(JsonFactory.dynamicPropertyMeta(dynamicProperty).containsKey(reloadOnClick.name()));
+    }
+
+    @Test
     public void testReadonly()
     {
         dynamicProperty.setReadOnly(true);

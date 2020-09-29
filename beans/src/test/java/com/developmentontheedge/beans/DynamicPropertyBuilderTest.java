@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static com.developmentontheedge.beans.BeanInfoConstants.GROUP_ID;
 import static com.developmentontheedge.beans.BeanInfoConstants.RELOAD_ON_CHANGE;
+import static com.developmentontheedge.beans.BeanInfoConstants.RELOAD_ON_CLICK;
 import static com.developmentontheedge.beans.BeanInfoConstants.TAB_ID;
 import static com.developmentontheedge.beans.BeanInfoConstants.TAB_NAME;
 import static org.junit.Assert.*;
@@ -19,11 +20,13 @@ public class DynamicPropertyBuilderTest
             .tags( tags )
             .value( value )
             .onchange( "this.form.submit()" )
+            .onchange( "this.form.submit()" )
             .columnSize( 200 )
             .hidden( false )
             .nullable()
             .readonly()
             .reloadOnChange()
+            .reloadOnClick()
             .attr(GROUP_ID, 0)
             .tabName("tab 1")
             .tabId(1)
@@ -35,8 +38,9 @@ public class DynamicPropertyBuilderTest
         assertEquals(value, property.getValue());
         assertEquals(String.class, property.getType());
         assertTrue(property.isCanBeNull());
-        assertTrue(!property.isHidden());
+        assertFalse(property.isHidden());
         assertEquals(true, property.getAttribute(RELOAD_ON_CHANGE));
+        assertEquals(true, property.getAttribute(RELOAD_ON_CLICK));
         assertEquals(0, property.getAttribute(GROUP_ID));
         assertEquals(1, property.getAttribute(TAB_ID));
         assertEquals("tab 1", property.getAttribute(TAB_NAME));

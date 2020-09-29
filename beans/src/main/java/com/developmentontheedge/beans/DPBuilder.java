@@ -16,6 +16,7 @@ public class DPBuilder
     public Boolean nullable = null;
     public Boolean readonly = null;
     public Boolean reloadOnChange = null;
+    public Boolean reloadOnClick = null;
     public Boolean rawValue = null;
     public Boolean multiple = null;
     public Boolean passwordField = null;
@@ -68,6 +69,7 @@ public class DPBuilder
         if (nullable != null) property.setCanBeNull(nullable);
         if (readonly != null) property.setReadOnly(readonly);
         if (reloadOnChange != null) attr(BeanInfoConstants.RELOAD_ON_CHANGE, reloadOnChange);
+        if (reloadOnClick != null) attr(BeanInfoConstants.RELOAD_ON_CLICK, reloadOnClick);
         if (rawValue != null) attr(BeanInfoConstants.RAW_VALUE, rawValue);
         if (multiple != null) attr(BeanInfoConstants.MULTIPLE_SELECTION_LIST, multiple);
         if (passwordField != null) attr(BeanInfoConstants.PASSWORD_FIELD, passwordField);

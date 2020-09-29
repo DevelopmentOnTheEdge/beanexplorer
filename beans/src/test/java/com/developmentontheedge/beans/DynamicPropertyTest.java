@@ -27,6 +27,7 @@ public class DynamicPropertyTest
         property.setAttribute( TAB_ID, 1 );
         property.setAttribute( TAB_NAME, "tab 1" );
         property.setAttribute( RELOAD_ON_CHANGE, true);
+        property.setAttribute( RELOAD_ON_CLICK, true);
         property.setAttribute( TAG_LIST_ATTR, tags );
     }
 
@@ -44,6 +45,7 @@ public class DynamicPropertyTest
         assertEquals(1, property.getAttribute(TAB_ID));
         assertEquals("tab 1", property.getAttribute(TAB_NAME));
         assertEquals(true, property.getAttribute(RELOAD_ON_CHANGE));
+        assertEquals(true, property.getAttribute(RELOAD_ON_CLICK));
         assertEquals(tags, property.getAttribute(TAG_LIST_ATTR));
     }
 

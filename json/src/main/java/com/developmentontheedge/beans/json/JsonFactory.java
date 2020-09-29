@@ -62,6 +62,7 @@ import static com.developmentontheedge.beans.json.JsonPropertyAttributes.placeho
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.rawValue;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.readOnly;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.reloadOnChange;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.reloadOnClick;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.status;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.tabClasses;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.tabId;
@@ -401,6 +402,7 @@ public class JsonFactory
         }
 
         addAttr(json, property, reloadOnChange);
+        addAttr(json, property, reloadOnClick);
         addAttr(json, property, rawValue);
         addAttr(json, property, groupId);
         addAttr(json, property, groupName);

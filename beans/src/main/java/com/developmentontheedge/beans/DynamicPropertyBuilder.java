@@ -19,6 +19,7 @@ import java.util.Map;
  * property.tags( tags );
  * property.value( value );
  * property.onchange( "this.form.submit()" );
+ * property.onclick( "this.form.submit()" );
  * property.columnSize( 200 );
  * property.hidden( condition );
  * property.nullable();
@@ -33,6 +34,7 @@ import java.util.Map;
  *      .tags( tags )
  *      .value( value )
  *      .onchange( "this.form.submit()" )
+ *      .onclick( "this.form.submit()" )
  *      .columnSize( 200 )
  *      .hidden( condition )
  *      .nullable()
@@ -162,6 +164,11 @@ public class DynamicPropertyBuilder
         return extraAttr( "onchange", javascript );
     }
 
+    public DynamicPropertyBuilder onclick( String javascript )
+    {
+        return extraAttr( "onclick", javascript );
+    }
+
     public DynamicPropertyBuilder placeholder( String text )
     {
         return extraAttr( "placeholder", text );
@@ -170,6 +177,11 @@ public class DynamicPropertyBuilder
     public DynamicPropertyBuilder reloadOnChange()
     {
         return attr( BeanInfoConstants.RELOAD_ON_CHANGE, true );
+    }
+
+    public DynamicPropertyBuilder reloadOnClick()
+    {
+        return attr( BeanInfoConstants.RELOAD_ON_CLICK, true );
     }
 
     public DynamicPropertyBuilder external( String tableFrom, String column, String tableTo )
