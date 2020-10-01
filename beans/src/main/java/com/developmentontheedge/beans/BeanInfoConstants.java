@@ -262,6 +262,7 @@ public interface BeanInfoConstants
     String USE_SELECT2 = "use-select2";
     String USE_CHOSEN = "use-chosen";
 
+    String PROPERTY_INPUT_TYPE = "inputType";
     String MULTIPLE_SELECTION_LIST = "multiple-selection-list";
     String RICH_TEXT = "rich-text";
     String OLD_RICH_TEXT = "old-rich-text";
@@ -269,6 +270,7 @@ public interface BeanInfoConstants
     String PSEUDO_PROPERTY = "pseudo-property";
     String COLOR_PICKER = "color-picker";
     String LABEL_FIELD = "label-field";
+    String BUTTON_FIELD = "button";
 
     // attributes for text area size
     String INPUT_SIZE_ATTR = "input-size-attr";

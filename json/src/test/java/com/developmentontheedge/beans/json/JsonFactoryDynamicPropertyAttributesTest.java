@@ -166,10 +166,10 @@ public class JsonFactoryDynamicPropertyAttributesTest
     public void testExtraAttributes()
     {
         dynamicProperty.setAttribute(BeanInfoConstants.EXTRA_ATTRS, new String[][]{
-                new String[]{"inputType","Creatable"},new String[]{"matchPos","any"}
+                new String[]{BeanInfoConstants.PROPERTY_INPUT_TYPE,"Creatable"},new String[]{"matchPos","any"}
         });
 
-        assertEquals("[['inputType','Creatable'],['matchPos','any']]",
+        assertEquals("[['" + BeanInfoConstants.PROPERTY_INPUT_TYPE + "','Creatable'],['matchPos','any']]",
                 oneQuotes("" + JsonFactory.dynamicPropertyMeta(dynamicProperty).get(extraAttrs.name())));
 
         dynamicProperty.setAttribute(BeanInfoConstants.EXTRA_ATTRS, null);
