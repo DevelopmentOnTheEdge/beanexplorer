@@ -50,6 +50,7 @@ import static com.developmentontheedge.beans.json.JsonPropertyAttributes.display
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.extraAttrs;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.groupClasses;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.groupId;
+import static com.developmentontheedge.beans.json.JsonPropertyAttributes.groupInitiallyClosed;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.groupName;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.hidden;
 import static com.developmentontheedge.beans.json.JsonPropertyAttributes.inputSize;
@@ -407,6 +408,7 @@ public class JsonFactory
         addAttr(json, property, groupId);
         addAttr(json, property, groupName);
         addAttr(json, property, groupClasses);
+        addAttr(json, property, groupInitiallyClosed);
         addAttr(json, property, tabId);
         addAttr(json, property, tabName);
         addAttr(json, property, tabClasses);

@@ -24,6 +24,7 @@ public class DPBuilder
     public String groupID = null;
     public String groupName = null;
     public String groupClasses = null;
+    public Boolean groupInitiallyClosed = null;
 
     public String tabID = null;
     public String tabName = null;
@@ -77,6 +78,7 @@ public class DPBuilder
         if (groupID != null) attr(BeanInfoConstants.GROUP_ID, groupID);
         if (groupName != null) attr(BeanInfoConstants.GROUP_NAME, groupName);
         if (groupClasses != null) attr(BeanInfoConstants.GROUP_CLASSES, groupClasses);
+        if (groupInitiallyClosed != null) attr(BeanInfoConstants.GROUP_INITIALLY_CLOSED, groupInitiallyClosed);
 
         if (tabID != null) attr(BeanInfoConstants.TAB_ID, tabID);
         if (tabName != null) attr(BeanInfoConstants.TAB_NAME, tabName);

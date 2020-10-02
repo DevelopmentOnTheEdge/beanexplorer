@@ -23,6 +23,7 @@ enum JsonPropertyAttributes
     groupId(BeanInfoConstants.GROUP_ID, Object.class),
     groupName(BeanInfoConstants.GROUP_NAME, String.class),
     groupClasses(BeanInfoConstants.GROUP_CLASSES, String.class),
+    groupInitiallyClosed(BeanInfoConstants.GROUP_INITIALLY_CLOSED, Boolean.class),
 
     tabId(BeanInfoConstants.TAB_ID, Object.class),
     tabName(BeanInfoConstants.TAB_NAME, String.class),
