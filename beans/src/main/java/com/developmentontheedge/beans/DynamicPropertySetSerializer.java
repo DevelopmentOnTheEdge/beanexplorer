@@ -326,8 +326,7 @@ public class DynamicPropertySetSerializer
             Class<?> type = null;
             try
             {
-                type = Class.forName( OLD_PREFIX.matcher( strType ).replaceFirst( NEW_PREFIX ), false, Thread.currentThread()
-                        .getContextClassLoader() );
+                type = classLoader.loadClass(OLD_PREFIX.matcher( strType ).replaceFirst( NEW_PREFIX ));
             }
             catch( ClassNotFoundException e )
             {

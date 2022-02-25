@@ -34,7 +34,14 @@ class ObjectInputStreamWithLoader extends ObjectInputStream
         else
         {
             String name = aClass.getName();
-            return Class.forName(name, false, loader);
+    	    try
+    	    {
+    	        return loader.loadClass(name);
+    	    }
+    	    catch(ClassNotFoundException e)
+    	    {
+    	    }
+    	    return Class.forName(name, false, loader);
         }
     }
 }
