@@ -768,8 +768,7 @@ abstract public class Property implements PropertyChangeListener
         // simply propagate the event
 
         // event fired by component itself
-        if ( getPropertyCount() == 0 && origPropName.indexOf( getName() ) >= 0 ||
-             origPropName.equals( getName() ) )
+        if ( origPropName.equals(getName()) || origPropName.indexOf(getName()) >= 0 && getPropertyCount() == 0 )
         {
             // in this case we want to supply complete name
             int dot = origPropName.indexOf( "." );
