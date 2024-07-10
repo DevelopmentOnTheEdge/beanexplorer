@@ -134,7 +134,10 @@ public class ComponentFactory implements InternalConstants
             // initialize the possible null values
             if( owner == null )
             {
-                if( c.toString().startsWith( "interface" ) || ( c.getModifiers() & Modifier.ABSTRACT ) != 0 )
+                //do not initialize for arrays as composite properties
+                if ( c.isArray() )
+                    return;
+                if ( c.toString().startsWith("interface") || (c.getModifiers() & Modifier.ABSTRACT) != 0 )
                 {
                     // do not bother creating interfaces
                     Logger.getLogger().warn(
