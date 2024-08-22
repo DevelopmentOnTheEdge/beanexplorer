@@ -3,16 +3,38 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>beans</artifactId>
-  <version>3.0.4-SNAPSHOT</version>
+  <version>3.0.4</version>
   <packaging>jar</packaging>
 
   <name>BeanExplorer beans</name>
-  <description>BeanExplorer (Basic version)</description>
+  <description>JavaBeans extensions for BeanExplorer, including DynamicProperySet</description>
+  <url>https://github.com/DevelopmentOnTheEdge/beanexplorer</url>
+
+    <licenses>
+        <license>
+            <name>GNU Affero General Public License (AGPL) version 3.0</name>
+            <url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <organization>Biosoft.Ru LLC</organization>
+            <organizationUrl>https://github.com/DevelopmentOnTheEdge</organizationUrl>
+        </developer>
+    </developers>
+
+  <scm>
+      <connection>scm:git:git://github.com/DevelopmentOnTheEdge/beanexplorer.git</connection>
+      <developerConnection>scm:git:ssh://github.com/DevelopmentOnTheEdge/beanexplorer.git</developerConnection>
+      <url>https://github.com/DevelopmentOnTheEdge/beanexplorer</url>
+  </scm>
+
 
   <parent>
     <groupId>com.developmentontheedge</groupId>
     <artifactId>BeanExplorer</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
 
   <properties>
@@ -75,35 +97,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <quiet>true</quiet>
-              <additionalparam>-Xdoclint:none</additionalparam>
-              <tags>
-                <tag>
-                  <name>todo</name>
-                  <placement>a</placement>
-                  <head>TODO:</head>
-                </tag>
-                <tag>
-                  <name>pending</name>
-                  <placement>a</placement>
-                  <head>PENDING:</head>
-                </tag>
-              </tags>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <groupId>org.apache.felix</groupId>

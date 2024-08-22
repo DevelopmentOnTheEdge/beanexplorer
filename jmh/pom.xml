@@ -7,11 +7,34 @@
   <packaging>jar</packaging>
 
   <name>BeanExplorer JMH tests</name>
+  <description>BeanExplorer JMH tests</description>
+  <url>https://github.com/DevelopmentOnTheEdge/beanexplorer</url>
+
+    <licenses>
+        <license>
+            <name>GNU Affero General Public License (AGPL) version 3.0</name>
+            <url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <organization>Biosoft.Ru LLC</organization>
+            <organizationUrl>https://github.com/DevelopmentOnTheEdge</organizationUrl>
+        </developer>
+    </developers>
+
+  <scm>
+      <connection>scm:git:git://github.com/DevelopmentOnTheEdge/beanexplorer.git</connection>
+      <developerConnection>scm:git:ssh://github.com/DevelopmentOnTheEdge/beanexplorer.git</developerConnection>
+      <url>https://github.com/DevelopmentOnTheEdge/beanexplorer</url>
+  </scm>
+
 
   <parent>
     <groupId>com.developmentontheedge</groupId>
     <artifactId>BeanExplorer</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
 
   <properties>
@@ -68,6 +91,21 @@
           <target>${javac.target}</target>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -104,46 +142,6 @@
         </executions>
       </plugin>
     </plugins>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>2.5</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>2.4</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.9.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.6</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.3</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>2.2.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.17</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 
 </project>

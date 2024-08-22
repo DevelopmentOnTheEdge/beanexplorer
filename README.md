@@ -17,3 +17,19 @@ Specifically the extension allows the developer to:
 * Add and remove properties dynamically usin DynamicProperty concept.
 
 More details, screenshots and tutorial: https://developmentontheedge.github.io/beanexplorer
+
+## Maven
+
+```xml
+<dependency>
+    <groupId>com.developmentontheedge</groupId>
+    <artifactId>beans</artifactId>
+    <version>3.0.4</version>
+</dependency>
+```
+
+## Gradle
+
+```groovy
+implementation group: 'com.developmentontheedge', name: 'beans', version: '3.0.4'
+```

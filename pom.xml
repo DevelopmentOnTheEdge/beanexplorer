@@ -5,9 +5,31 @@
 
   <groupId>com.developmentontheedge</groupId>
   <artifactId>BeanExplorer</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <packaging>pom</packaging>
-  <url>http://developmentontheedge.com/</url>
+
+  <description>BeanExplorer - generate UI on the fly</description>
+  <url>https://github.com/DevelopmentOnTheEdge/beanexplorer</url>
+
+    <licenses>
+        <license>
+            <name>GNU Affero General Public License (AGPL) version 3.0</name>
+            <url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <organization>Biosoft.Ru LLC</organization>
+            <organizationUrl>https://github.com/DevelopmentOnTheEdge</organizationUrl>
+        </developer>
+    </developers>
+
+  <scm>
+      <connection>scm:git:git://github.com/DevelopmentOnTheEdge/beanexplorer.git</connection>
+      <developerConnection>scm:git:ssh://github.com/DevelopmentOnTheEdge/beanexplorer.git</developerConnection>
+      <url>https://github.com/DevelopmentOnTheEdge/beanexplorer</url>
+  </scm>
 
   <modules>
     <module>beans</module>
@@ -15,21 +37,6 @@
     <module>lessons</module>
     <module>jmh</module>
   </modules>
-
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>dote</id>
-      <name>DOTE Repository</name>
-      <url>http://nexus.dote.ru/nexus/content/repositories/releases/</url>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>dote-snapshots</id>
-      <name>DOTE Snapshots</name>
-      <url>http://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +46,33 @@
 
   <build>
     <plugins>
+
+       <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>0.5.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+            <autoPublish>true</autoPublish>
+          </configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+                <execution>
+                    <id>sign-artifacts</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>sign</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -47,6 +81,38 @@
           <target>${java.version}</target>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <quiet>true</quiet>
+              <additionalparam>-Xdoclint:none</additionalparam>
+              <tags>
+                <tag>
+                  <name>todo</name>
+                  <placement>a</placement>
+                  <head>TODO:</head>
+                </tag>
+                <tag>
+                  <name>pending</name>
+                  <placement>a</placement>
+                  <head>PENDING:</head>
+                </tag>
+              </tags>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
     </plugins>
     <pluginManagement>
       <plugins>

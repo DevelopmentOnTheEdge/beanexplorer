@@ -8,11 +8,33 @@
 
   <name>BeanExplorer lessons</name>
   <description>Lessons on usage of BeanExplorer</description>
+  <url>https://github.com/DevelopmentOnTheEdge/beanexplorer</url>
+
+    <licenses>
+        <license>
+            <name>GNU Affero General Public License (AGPL) version 3.0</name>
+            <url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <organization>Biosoft.Ru LLC</organization>
+            <organizationUrl>https://github.com/DevelopmentOnTheEdge</organizationUrl>
+        </developer>
+    </developers>
+
+  <scm>
+      <connection>scm:git:git://github.com/DevelopmentOnTheEdge/beanexplorer.git</connection>
+      <developerConnection>scm:git:ssh://github.com/DevelopmentOnTheEdge/beanexplorer.git</developerConnection>
+      <url>https://github.com/DevelopmentOnTheEdge/beanexplorer</url>
+  </scm>
+
 
   <parent>
     <groupId>com.developmentontheedge</groupId>
     <artifactId>BeanExplorer</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
 
   <properties>
@@ -23,7 +45,7 @@
     <dependency>
       <groupId>com.developmentontheedge</groupId>
       <artifactId>beans</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <version>3.0.4</version>
     </dependency>
   </dependencies>
 
