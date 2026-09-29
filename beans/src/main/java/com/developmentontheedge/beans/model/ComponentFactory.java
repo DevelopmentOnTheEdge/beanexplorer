@@ -14,7 +14,6 @@ import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +31,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.WeakHashMap;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -51,7 +49,13 @@ public class ComponentFactory implements InternalConstants
     public static final int DEFAULT_MAX_PROPERTY_LEVEL = 7;
 
     private static final HashMap<String, Class<?>> classList = new HashMap<>();
-    protected static final WeakHashMap<Object, WeakReference<ComponentModel>> instanceList = new WeakHashMap<>();
+
+    /**
+     * Models created by {@link #getModel(Object, Policy, boolean)}, keyed by
+     * bean identity so that distinct beans never share a model even when they
+     * are {@code equals()}. See {@link IdentityModelCache}.
+     */
+    private static final IdentityModelCache modelCache = new IdentityModelCache();
 
     private static String[] originalBeanInfoSearchPath;
 
@@ -770,32 +774,9 @@ public class ComponentFactory implements InternalConstants
             {
                 putIntoComponentCache( bean, model );
             }
-
-            // Fedor: I think, it can be really slow.
-            // My suggestion is to have double hash:
-            // 1 - hash by class (the class wull not be changed)
-            // 2 - hash by object of the specified class
-            // Now I turn off this option
-
-            /*
-                        // Iterate through all registered components
-                        // It is possible that bean's hashCode was changed
-                        // (see java.awt.Dimension for example).
-                        // In this case we can find a model only
-                        // iterating through all possible values
-                        Iterator iterator = instanceList.values().iterator();
-                        while ( iterator.hasNext() )
-                        {
-                            ComponentModel mdl = ( ComponentModel )iterator.next();
-                            if ( mdl.getBean().equals( bean ) ) // Or should it be reference comparison?
-                            {
-                                iterator.remove(); // remove underlying entry since it is no longer valid
-                                instanceList.put( bean, mdl );
-                                model = mdl;
-                                break;
-                            }
-                        }
-            */
+            // The cache is keyed by bean identity, so a bean whose hashCode()
+            // changes after caching (see java.awt.Dimension, for example) is
+            // still found; no scan over the cached models is needed.
         }
         return model;
     }
@@ -969,20 +950,18 @@ public class ComponentFactory implements InternalConstants
 
     static void putIntoComponentCache(Object bean, ComponentModel model)
     {
-        synchronized( instanceList )
-        {
-            instanceList.put( bean, new WeakReference<>( model ) );
-        }
+        modelCache.put( bean, model );
     }
 
     static ComponentModel getFromComponentCache(Object bean)
     {
-        synchronized( instanceList )
-        {
-            WeakReference<?> ref = instanceList.get( bean );
-            ComponentModel model = (ComponentModel) ( ref == null ? null : ref.get() );
-            return model;
-        }
+        return modelCache.get( bean );
+    }
+
+    /** Number of live cached models; for tests. */
+    static int componentCacheSize()
+    {
+        return modelCache.size();
     }
 
     static Constructor<?> findDefaultPublicConstructor(Class<?> clazz)
