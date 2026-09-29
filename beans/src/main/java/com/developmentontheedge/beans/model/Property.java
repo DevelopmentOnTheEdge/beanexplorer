@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.event.EventListenerList;
 
@@ -100,45 +101,113 @@ abstract public class Property implements PropertyChangeListener
 
     protected Object ownerForPropertyChanges;
 
+    /**
+     * Per-class cache of resolved listener methods, keyed by method name.
+     * <p>The value is a {@code Method[]}, <b>not</b> a holder class from
+     * this library: storing only JDK types ({@code Method[]}, {@code String},
+     * {@code ConcurrentHashMap}) matters because a {@link ClassValue} entry
+     * keeps its value alive for as long as the key class lives. A holder
+     * class from this library would therefore pin <i>this</i> library's
+     * classloader from every firer class's {@code ClassValue} slot —
+     * including JDK classes such as {@code java.awt.Color} when they are
+     * expanded as composite properties — for as long as that firer class
+     * is loaded. JDK types have no classloader of their own to pin.
+     * <p>[0] = name(String, PropertyChangeListener), [1] =
+     * name(PropertyChangeListener); a null element means the class has no
+     * such method. Caching the negative result avoids paying for a
+     * {@code NoSuchMethodException} ({@code fillInStackTrace}) on every
+     * listener registration for a bean that does not implement the
+     * listener interface.
+     * <p>{@link ClassValue} is used rather than a map keyed by class name
+     * or {@code Class}: a name-keyed map would conflate two distinct
+     * classes that share a name under different classloaders (OSGi
+     * bundles, servlet containers), and a {@code Class}-keyed map would
+     * hold a strong reference to each bean class for the life of the JVM,
+     * breaking bundle reload and webapp redeploy. {@code ClassValue}
+     * stores the value on the class itself, so it is collected when the
+     * class is.
+     */
+    private static final ClassValue<ConcurrentHashMap<String, Method[]>> LISTENER_METHODS =
+            new ClassValue<ConcurrentHashMap<String, Method[]>>()
+    {
+        @Override
+        protected ConcurrentHashMap<String, Method[]> computeValue( Class<?> type )
+        {
+            return new ConcurrentHashMap<>( 4 );
+        }
+    };
+
+    /**
+     * Returns the resolved listener methods for {@code (c, name)} as a
+     * two-element {@code Method[]} ({@code [0]} = the named
+     * {@code (String, PropertyChangeListener)} overload, {@code [1]} = the
+     * plain {@code (PropertyChangeListener)} overload; null = absent),
+     * computing (and caching) them on first use. The {@code get} /
+     * {@code putIfAbsent} race is harmless: both threads compute the same
+     * result.
+     */
+    static Method[] listenerMethods( Class<?> c, String name )
+    {
+        ConcurrentHashMap<String, Method[]> byName = LISTENER_METHODS.get( c );
+        Method[] m = byName.get( name );
+        if( m == null )
+        {
+            m = new Method[] {
+                lookup( c, name, String.class, PropertyChangeListener.class ),
+                lookup( c, name, PropertyChangeListener.class ) };
+            byName.putIfAbsent( name, m );
+        }
+        return m;
+    }
+
+    private static Method lookup( Class<?> c, String name, Class<?>... types )
+    {
+        try
+        {
+            return c.getMethod( name, types );
+        }
+        catch( NoSuchMethodException e )
+        {
+            return null;
+        }
+    }
+
     static boolean invokeAddRemovePropertyChangeListenerMethod( Object firer, String propName,
         String methodName, PropertyChangeListener pcl )
         {
             boolean bFirer = false;
-            try
-            {
-                Method method = firer.getClass().getMethod( methodName,
-                    new Class[] { String.class, PropertyChangeListener.class } );
-                method.invoke( firer,
-                    new Object[] { propName, pcl } );
-                method.invoke( firer,
-                    new Object[] { propName + EventConstants.EVT_SET_VALUE, pcl } );
-                method.invoke( firer,
-                    new Object[] { propName + EventConstants.EVT_READ_ONLY, pcl } );
-                method.invoke( firer,
-                    new Object[] { propName + EventConstants.EVT_DISPLAY_NAME, pcl } );
-                method.invoke( firer,
-                    new Object[] { propName + EventConstants.EVT_PROPERTY_ADDED, pcl } );
-                method.invoke( firer,
-                    new Object[] { propName + EventConstants.EVT_PROPERTY_REMOVED, pcl } );
-                bFirer = true;
-            }
-            catch ( NoSuchMethodException ignore ) { }
-            catch ( IllegalAccessException ignore ) { }
-            catch ( InvocationTargetException ignore ) { }
-
-            if ( !bFirer )
+            Method[] lm = listenerMethods( firer.getClass(), methodName );
+            if( lm[0] != null )
             {
                 try
                 {
-                    Method method = firer.getClass().getMethod( methodName,
-                        new Class[] { PropertyChangeListener.class } );
-                    method.invoke( firer,
-                        new Object[] { pcl } );
+                    lm[0].invoke( firer,
+                        new Object[] { propName, pcl } );
+                    lm[0].invoke( firer,
+                        new Object[] { propName + EventConstants.EVT_SET_VALUE, pcl } );
+                    lm[0].invoke( firer,
+                        new Object[] { propName + EventConstants.EVT_READ_ONLY, pcl } );
+                    lm[0].invoke( firer,
+                        new Object[] { propName + EventConstants.EVT_DISPLAY_NAME, pcl } );
+                    lm[0].invoke( firer,
+                        new Object[] { propName + EventConstants.EVT_PROPERTY_ADDED, pcl } );
+                    lm[0].invoke( firer,
+                        new Object[] { propName + EventConstants.EVT_PROPERTY_REMOVED, pcl } );
                     bFirer = true;
                 }
-                catch ( NoSuchMethodException ignore ) { }
-                catch ( InvocationTargetException ignore ) { }
-                catch ( IllegalAccessException ignore ) { }
+                catch( IllegalAccessException ignore ) { }
+                catch( InvocationTargetException ignore ) { }
+            }
+
+            if( !bFirer && lm[1] != null )
+            {
+                try
+                {
+                    lm[1].invoke( firer, new Object[] { pcl } );
+                    bFirer = true;
+                }
+                catch( InvocationTargetException ignore ) { }
+                catch( IllegalAccessException ignore ) { }
             }
             return bFirer;
     }
