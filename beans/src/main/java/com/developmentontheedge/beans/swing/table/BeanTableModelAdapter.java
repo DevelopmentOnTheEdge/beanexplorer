@@ -2,6 +2,8 @@ package com.developmentontheedge.beans.swing.table;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
@@ -80,6 +82,113 @@ public class BeanTableModelAdapter extends AbstractTableModel implements RowMode
     public ColumnModel getColumnModel()
     {
         return columnModel;
+    }
+
+    /**
+     * Maximum number of per-bean ComponentModels kept in {@link #modelCache}.
+     * Package-private so the test in the same package can reference it.
+     */
+    static final int MODEL_CACHE_SIZE = 1000;
+
+    /**
+     * Identity key for the model cache: equal only for the same object.
+     */
+    private static final class IdKey
+    {
+        private final Object object;
+
+        IdKey( Object object )
+        {
+            this.object = object;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return System.identityHashCode( object );
+        }
+
+        @Override
+        public boolean equals( Object obj )
+        {
+            return obj instanceof IdKey && ( (IdKey)obj ).object == object;
+        }
+    }
+
+    // TODO(follow-up): invalidate the per-bean entry on structural
+    //   propertyChange (add/remove of a property) and confirm the
+    //   listeners registered on bean models are removed, not just
+    //   re-registered, across cache clears.
+    /**
+     * Cache of per-bean ComponentModels used by getPropertyAt so that the
+     * expensive introspection path of ComponentFactory.getModel is not
+     * repeated on every cell query.
+     * <p>Keyed by bean identity (see {@link IdKey}) so that the adapter
+     * does not add its own conflation of distinct beans. Note this is
+     * necessary but not sufficient: ComponentFactory's own cache
+     * (instanceList) is equals()-keyed, so two distinct beans that are
+     * equals() still share a model until that is fixed (see
+     * <a href="https://github.com/DevelopmentOnTheEdge/beanexplorer/issues/10">issue 10</a>).
+     * Bounded in size (LRU), so the cache retains at most
+     * {@link #MODEL_CACHE_SIZE} beans and does not keep rows alive for the
+     * adapter's lifetime.
+     * <p>Lock order is {@code this} (the synchronized event listeners)
+     * then {@code modelCache}; getPropertyAt takes only modelCache. The
+     * check-and-fill and the clear are each done under the modelCache lock,
+     * so a concurrent clear cannot interleave between a fill's get() and
+     * put(). (A thread may still read a bean before a tableChanged and fill
+     * after the clear, leaving a bounded entry for a bean that may no
+     * longer be in the table; it is identity-keyed and ages out, never
+     * wrongly hit.)
+     */
+    private final Map<IdKey, ComponentModel> modelCache =
+            new LinkedHashMap<IdKey, ComponentModel>( 64, 0.75f, true )
+    {
+        @Override
+        protected boolean removeEldestEntry( Map.Entry<IdKey, ComponentModel> entry )
+        {
+            return size() > MODEL_CACHE_SIZE;
+        }
+    };
+
+    // ---- test support (package-private, not part of the public API) ----
+
+    /**
+     * Returns the cached ComponentModel for the given bean, or null if the
+     * bean is not currently cached.
+     * <p>Note: this calls {@code get()} on an access-ordered map, so it
+     * updates the LRU order as a side effect. Tests that assert LRU order
+     * should use {@link #containsCachedModel(Object)} instead.
+     */
+    ComponentModel cachedModelFor( Object bean )
+    {
+        synchronized( modelCache )
+        {
+            return modelCache.get( new IdKey( bean ) );
+        }
+    }
+
+    /**
+     * Returns whether a model is currently cached for the given bean,
+     * without changing the LRU order.
+     */
+    boolean containsCachedModel( Object bean )
+    {
+        synchronized( modelCache )
+        {
+            return modelCache.containsKey( new IdKey( bean ) );
+        }
+    }
+
+    /**
+     * Returns the number of entries in the cache.
+     */
+    int cacheSize()
+    {
+        synchronized( modelCache )
+        {
+            return modelCache.size();
+        }
     }
 
     private boolean rowHeader = false;
@@ -241,11 +350,28 @@ public class BeanTableModelAdapter extends AbstractTableModel implements RowMode
             {
                 throw new ArrayIndexOutOfBoundsException( "Bean for row " + row + " not found." );
             }
-            Property property = ComponentFactory.getModel( bean, ComponentFactory.Policy.UI ).findProperty( propertyName );
-            //            Property property = componentModel.findProperty(propertyName);
-            //Logger.debug( cat,"property = " + property + "; value = " +
-            //(property == null ? "null" : property.getValue()) + " Model=" + beanModel );
-            return property;
+            // Use cached model to avoid re-introspecting the bean on every cell query.
+            // The expensive initProperties / addPropertyChangeListener path in
+            // ComponentFactory.getModel is executed only once per distinct bean.
+            // The whole check-and-fill is done under the cache lock so a
+            // concurrent tableChanged cannot clear the cache between the
+            // lookup and the put of a stale model.
+            ComponentModel model;
+            synchronized( modelCache )
+            {
+                IdKey key = new IdKey( bean );
+                model = modelCache.get( key );
+                if( model == null )
+                {
+                    model = ComponentFactory.getModel( bean, ComponentFactory.Policy.UI );
+                    if( model == null )
+                    {
+                        return null;
+                    }
+                    modelCache.put( key, model );
+                }
+            }
+            return model.findProperty( propertyName );
         }
         catch( ArrayIndexOutOfBoundsException exc )
         {
@@ -302,6 +428,15 @@ public class BeanTableModelAdapter extends AbstractTableModel implements RowMode
     @Override
     synchronized public void tableChanged(RowModelEvent evt)
     {
+        // Clear cached models on every refresh, including a null event,
+        // which means "everything changed" and is exactly the case where
+        // stale entries would otherwise survive. Guarded by the cache lock
+        // so a concurrent fill cannot re-insert a stale model after the
+        // clear.
+        synchronized( modelCache )
+        {
+            modelCache.clear();
+        }
         if( evt == null )
             fireTableChanged( new TableModelEvent( this ) );
         else
